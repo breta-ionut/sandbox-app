@@ -1,0 +1,23 @@
+{
+    "name": "ionutbreta/php",
+    "description": "A sandbox PHP application built on top of Symfony components.",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ionut Breta",
+            "email": "breta.ionut@gmail.com"
+        }
+    ],
+    "require": {
+        "psr/event-dispatcher": "^1.0",
+        "symfony/config": "^4.3",
+        "symfony/console": "^4.3",
+        "symfony/dependency-injection": "^4.3",
+        "symfony/filesystem": "^4.3",
+        "symfony/finder": "^4.3",
+        "symfony/http-kernel": "^4.3",
+        "symfony/routing": "^4.3",
+        "symfony/yaml": "^4.3"
+    }
+}
