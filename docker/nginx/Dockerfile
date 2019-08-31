@@ -9,9 +9,9 @@ RUN apt-get update \
         -nodes \
         -days 365 \
         -newkey rsa:2048 \
-        -subj "/C=RO/ST=CJ/L=CJ/O=NA/CN=php" \
-        -keyout /etc/ssl/php.key \
-        -out /etc/ssl/php.crt
+        -subj "/C=RO/ST=CJ/L=CJ/O=NA/CN=sandbox" \
+        -keyout /etc/ssl/sandbox.key \
+        -out /etc/ssl/sandbox.crt
 
 # Copy the config files.
 COPY config/nginx.conf config/ssl.conf /etc/nginx/
@@ -19,6 +19,6 @@ COPY config/nginx.conf config/ssl.conf /etc/nginx/
 # Configure the virtual hosts.
 RUN mkdir /etc/nginx/sites-available && mkdir /etc/nginx/sites-enabled
 
-COPY config/php /etc/nginx/sites-available/
+COPY config/sandbox /etc/nginx/sites-available/
 
-RUN ln -s /etc/nginx/sites-available/php /etc/nginx/sites-enabled/php
+RUN ln -s /etc/nginx/sites-available/sandbox /etc/nginx/sites-enabled/sandbox

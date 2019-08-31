@@ -1,6 +1,6 @@
 {
-    "name": "ionutbreta/php",
-    "description": "A sandbox PHP application built on top of Symfony components.",
+    "name": "ionutbreta/sandbox",
+    "description": "A sandbox application built on top of Symfony components on backend and Vue.js on frontend.",
     "type": "project",
     "license": "MIT",
     "authors": [
@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "": "src/"
+            "App\\": "src/"
         }
     },
     "require": {

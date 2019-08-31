@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace App\Core;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;

@@ -15,4 +15,4 @@ COPY scripts/install_composer.sh /tmp/install_composer.sh
 
 RUN sh /tmp/install_composer.sh && rm /tmp/install_composer.sh
 
-WORKDIR /var/www/php
+WORKDIR /var/www/sandbox
