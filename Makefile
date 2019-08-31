@@ -12,5 +12,8 @@ restart: stop
 		make start
 
 clean:
+		docker system prune
+
+clean-hard:
 		docker system prune -a
 # End of - Docker commands.
