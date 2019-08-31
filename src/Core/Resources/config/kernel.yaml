@@ -1,0 +1,22 @@
+services:
+    Symfony\Component\EventDispatcher\EventDispatcher: ~
+    Symfony\Component\EventDispatcher\EventDispatcherInterface: '@Symfony\Component\EventDispatcher\EventDispatcher'
+
+    Symfony\Component\HttpKernel\Controller\ControllerResolver: ~
+    Symfony\Component\HttpKernel\Controller\ControllerResolverInterface: '@Symfony\Component\HttpKernel\Controller\ControllerResolver'
+
+    Symfony\Component\HttpFoundation\RequestStack: ~
+
+    Symfony\Component\HttpKernel\Controller\ArgumentResolver: ~
+    Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface: '@Symfony\Component\HttpKernel\Controller\ArgumentResolver'
+
+    Symfony\Component\HttpKernel\HttpKernel:
+        arguments:
+            - '@Symfony\Component\EventDispatcher\EventDispatcherInterface'
+            - '@Symfony\Component\HttpKernel\Controller\ControllerResolverInterface'
+            - '@Symfony\Component\HttpFoundation\RequestStack'
+            - '@Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface'
+
+    Symfony\Component\HttpKernel\HttpKernelInterface:
+        alias: Symfony\Component\HttpKernel\HttpKernel
+        public: true
