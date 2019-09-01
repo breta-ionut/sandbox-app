@@ -8,6 +8,8 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\DependencyInjection\RoutingResolverPass;
@@ -97,6 +99,7 @@ class Kernel extends BaseKernel
     private function getCompilerPasses(): array
     {
         return [
+            new RegisterListenersPass(EventDispatcherInterface::class),
             new RoutingResolverPass(),
         ];
     }

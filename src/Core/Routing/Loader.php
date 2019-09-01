@@ -37,8 +37,8 @@ class Loader
     {
         $routes = new RouteCollectionBuilder($loader);
 
-        $routes->import($this->configDir.'/{routes}/*.yaml', 'glob');
-        $routes->import($this->configDir.'/{routes}/'.$this->environment.'/**/*.yaml', 'glob');
+        $routes->import($this->configDir.'/{routes}/*.yaml', '/', 'glob');
+        $routes->import($this->configDir.'/{routes}/'.$this->environment.'/**/*.yaml', '/', 'glob');
 
         return $routes->build();
     }

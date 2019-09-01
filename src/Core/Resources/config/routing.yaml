@@ -1,15 +1,17 @@
 services:
     App\Core\Routing\Loader:
         arguments: ['%kernel.config_dir%', '%kernel.environment%']
+        public: true
+
+    App\Core\Routing\RoutingListener:
+        arguments: ['@Symfony\Component\Routing\Matcher\RequestMatcherInterface']
+        tags: [{name: kernel.event_listener, event: kernel.request, method: onRequest, priority: 32}]
 
     routing.file_locator:
         class: Symfony\Component\Config\FileLocator
 
     routing.resolver:
         class: Symfony\Component\Config\Loader\LoaderResolver
-
-    Symfony\Component\Routing\Loader\DelegatingLoader:
-        arguments: ['@routing.resolver']
 
     Symfony\Component\Routing\Loader\DependencyInjection\ServiceRouterLoader:
         arguments: ['@service_container']
@@ -23,6 +25,10 @@ services:
         arguments: ['@routing.file_locator']
         tags: [routing.loader]
 
+    routing.loader:
+        class: Symfony\Component\Config\Loader\DelegatingLoader
+        arguments: ['@routing.resolver']
+
     App\Core\Routing\RequestContextFactory:
         arguments: ['@Symfony\Component\HttpFoundation\RequestStack']
 
@@ -31,7 +37,7 @@ services:
 
     Symfony\Component\Routing\Router:
         arguments:
-            - '@Symfony\Component\Routing\Loader\DelegatingLoader'
+            - '@routing.loader'
             - App\Core\Routing\Loader::load
             -
                 cache_dir: '%kernel.cache_dir%'
