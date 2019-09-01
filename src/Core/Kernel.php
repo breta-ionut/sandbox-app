@@ -3,12 +3,14 @@
 namespace App\Core;
 
 use App\Core\DependencyInjection\KernelExtension;
+use App\Core\DependencyInjection\RoutingExtension;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use Symfony\Component\Routing\DependencyInjection\RoutingResolverPass;
 
 class Kernel extends BaseKernel
 {
@@ -83,6 +85,7 @@ class Kernel extends BaseKernel
     {
         return [
             new KernelExtension(),
+            new RoutingExtension(),
         ];
     }
 
@@ -93,6 +96,8 @@ class Kernel extends BaseKernel
      */
     private function getCompilerPasses(): array
     {
-        return [];
+        return [
+            new RoutingResolverPass(),
+        ];
     }
 }
