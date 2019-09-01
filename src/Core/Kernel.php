@@ -57,6 +57,14 @@ class Kernel extends BaseKernel
     }
 
     /**
+     * {@inheritDoc}
+     */
+    protected function getKernelParameters()
+    {
+        return array_merge(parent::getKernelParameters(), ['kernel.config_dir' => $this->getProjectDir().'/config']);
+    }
+
+    /**
      * Returns the path to the directory where the app configuration is kept.
      *
      * @return string

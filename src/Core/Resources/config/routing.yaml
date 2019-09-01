@@ -1,0 +1,45 @@
+services:
+    App\Core\Routing\Loader:
+        arguments: ['%kernel.config_dir%', '%kernel.environment%']
+
+    routing.file_locator:
+        class: Symfony\Component\Config\FileLocator
+
+    routing.resolver:
+        class: Symfony\Component\Config\Loader\LoaderResolver
+
+    Symfony\Component\Routing\Loader\DelegatingLoader:
+        arguments: ['@routing.resolver']
+
+    Symfony\Component\Routing\Loader\DependencyInjection\ServiceRouterLoader:
+        arguments: ['@service_container']
+        tags: [routing.loader]
+
+    Symfony\Component\Routing\Loader\GlobFileLoader:
+        arguments: ['@routing.file_locator']
+        tags: [routing.loader]
+
+    Symfony\Component\Routing\Loader\YamlFileLoader:
+        arguments: ['@routing.file_locator']
+        tags: [routing.loader]
+
+    App\Core\Routing\RequestContextFactory:
+        arguments: ['@Symfony\Component\HttpFoundation\RequestStack']
+
+    Symfony\Component\Routing\RequestContext:
+        factory: ['@App\Core\Routing\RequestContextFactory', factory]
+
+    Symfony\Component\Routing\Router:
+        arguments:
+            - '@Symfony\Component\Routing\Loader\DelegatingLoader'
+            - App\Core\Routing\Loader::load
+            -
+                cache_dir: '%kernel.cache_dir%'
+                debug: '%kernel.debug%'
+                resource_type: service
+            - '@Symfony\Component\Routing\RequestContext'
+
+    Symfony\Component\Routing\RouterInterface: '@Symfony\Component\Routing\Router'
+    Symfony\Component\Routing\Generator\UrlGeneratorInterface: '@Symfony\Component\Routing\Router'
+    Symfony\Component\Routing\Matcher\RequestMatcherInterface: '@Symfony\Component\Routing\Router'
+    Symfony\Component\Routing\Matcher\UrlMatcherInterface: '@Symfony\Component\Routing\Router'
