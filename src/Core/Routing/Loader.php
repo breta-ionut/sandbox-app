@@ -35,11 +35,11 @@ class Loader
      */
     public function load(LoaderInterface $loader): RouteCollection
     {
-        $routeCollectionBuilder = new RouteCollectionBuilder($loader);
+        $routes = new RouteCollectionBuilder($loader);
 
-        $routeCollectionBuilder->import($this->configDir.'/{routes}/*.yaml', 'glob');
-        $routeCollectionBuilder->import($this->configDir.'/{routes}/'.$this->environment.'/**/*.yaml', 'glob');
+        $routes->import($this->configDir.'/{routes}/*.yaml', 'glob');
+        $routes->import($this->configDir.'/{routes}/'.$this->environment.'/**/*.yaml', 'glob');
 
-        return $routeCollectionBuilder->build();
+        return $routes->build();
     }
 }
