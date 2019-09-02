@@ -14,6 +14,9 @@ services:
 
     Symfony\Component\HttpFoundation\RequestStack: ~
 
+    Symfony\Component\HttpKernel\Controller\ArgumentResolver: ~
+    Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface: '@Symfony\Component\HttpKernel\Controller\ArgumentResolver'
+
     # Argument value resolvers.
     Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver:
         tags: [{name: controller.argument_value_resolver, priority: -32}]
@@ -34,9 +37,6 @@ services:
     Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver:
         tags: [{name: controller.argument_value_resolver, priority: -64}]
     # End of - Argument value resolvers.
-
-    Symfony\Component\HttpKernel\Controller\ArgumentResolver: ~
-    Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface: '@Symfony\Component\HttpKernel\Controller\ArgumentResolver'
 
     Symfony\Component\HttpKernel\HttpKernel:
         arguments:
