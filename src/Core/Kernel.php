@@ -10,8 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver;
-use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\ControllerArgumentValueResolverPass;
 use Symfony\Component\HttpKernel\DependencyInjection\RegisterControllerArgumentLocatorsPass;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -104,7 +104,7 @@ class Kernel extends BaseKernel
     {
         return [
             new RegisterListenersPass(EventDispatcherInterface::class),
-            new ControllerArgumentValueResolverPass(ArgumentResolverInterface::class),
+            new ControllerArgumentValueResolverPass(ArgumentResolver::class),
             new RegisterControllerArgumentLocatorsPass(ServiceValueResolver::class),
             new RoutingResolverPass(),
         ];

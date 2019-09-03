@@ -14,7 +14,9 @@ services:
 
     Symfony\Component\HttpFoundation\RequestStack: ~
 
-    Symfony\Component\HttpKernel\Controller\ArgumentResolver: ~
+    Symfony\Component\HttpKernel\Controller\ArgumentResolver:
+        arguments: [~, ~]
+
     Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface: '@Symfony\Component\HttpKernel\Controller\ArgumentResolver'
 
     # Argument value resolvers.
