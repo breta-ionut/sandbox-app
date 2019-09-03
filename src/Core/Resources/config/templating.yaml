@@ -1,0 +1,6 @@
+services:
+    App\Core\Templating\EngineFactory:
+        arguments: ['%kernel.project_dir%']
+
+    Symfony\Component\Templating\EngineInterface:
+        factory: ['@App\Core\Templating\EngineFactory', factory]
