@@ -9,6 +9,8 @@ use Symfony\Component\Templating\TemplateNameParser;
 
 class EngineFactory
 {
+    private const TEMPLATE_PATH_PATTERN = '/templates/%name%';
+
     /**
      * @var string
      */
@@ -27,7 +29,7 @@ class EngineFactory
      */
     public function factory(): PhpEngine
     {
-        $loader = new FilesystemLoader($this->projectDir.'/templates/%name%');
+        $loader = new FilesystemLoader($this->projectDir.self::TEMPLATE_PATH_PATTERN);
 
         return new PhpEngine(new TemplateNameParser(), $loader, [new SlotsHelper()]);
     }
