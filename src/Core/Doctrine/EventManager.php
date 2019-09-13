@@ -6,6 +6,9 @@ use Doctrine\Common\EventArgs;
 use Doctrine\Common\EventManager as BaseEventManager;
 use Psr\Container\ContainerInterface;
 
+/**
+ * Event manager which allows lazy-loading of listeners which are also services.
+ */
 class EventManager extends BaseEventManager
 {
     /**
