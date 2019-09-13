@@ -40,7 +40,7 @@ class EventManager extends BaseEventManager
             return;
         }
 
-        $eventArgs = $eventArgs ?: EventArgs::getEmptyInstance();
+        $eventArgs = $eventArgs ?? EventArgs::getEmptyInstance();
         $this->initializeListeners($eventName);
 
         foreach ($this->listeners[$eventName] as $listener) {
