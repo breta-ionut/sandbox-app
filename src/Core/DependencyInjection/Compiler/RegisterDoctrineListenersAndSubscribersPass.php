@@ -31,7 +31,7 @@ class RegisterDoctrineListenersAndSubscribersPass implements CompilerPassInterfa
         // Collect and register the event subscribers.
         foreach ($this->findAndSortTaggedServices(self::SUBSCRIBER_TAG, $container) as $subscriber) {
             $class = $parameterBag->resolveValue($container->getDefinition((string) $subscriber));
-            if (!is_a($class, EventSubscriber::class)) {
+            if (!is_a($class, EventSubscriber::class, true)) {
                 throw new LogicException(sprintf(
                     '`%s` was registered as a Doctrine event subscriber but doesn\'t implement `%s`.',
                     $subscriber,
