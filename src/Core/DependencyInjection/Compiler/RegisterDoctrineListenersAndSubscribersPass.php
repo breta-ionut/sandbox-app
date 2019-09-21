@@ -60,14 +60,14 @@ class RegisterDoctrineListenersAndSubscribersPass implements CompilerPassInterfa
         krsort($listeners);
         $listeners = array_merge(...$listeners);
 
-        $listenersRefs = [];
+        $listenerRefs = [];
         foreach ($listeners as $id => $events) {
             $eventManager->addMethodCall('addEventListener', [$events, $id]);
 
-            $listenersRefs[$id] = new Reference($id);
+            $listenerRefs[$id] = new Reference($id);
         }
 
         // Build and inject a service locator containing the listeners for having them lazily loaded at runtime.
-        $eventManager->setArgument('$container', ServiceLocatorTagPass::register($container, $listenersRefs));
+        $eventManager->setArgument('$container', ServiceLocatorTagPass::register($container, $listenerRefs));
     }
 }
