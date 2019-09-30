@@ -20,6 +20,9 @@ use Symfony\Component\Routing\DependencyInjection\RoutingResolverPass;
 
 class Kernel extends BaseKernel
 {
+    public const APP_NAME = 'Sandbox';
+    public const APP_VERSION = '0.0.1';
+
     /**
      * {@inheritDoc}
      */
