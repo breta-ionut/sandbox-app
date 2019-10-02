@@ -2,10 +2,12 @@
 
 namespace App\Core\Console;
 
+use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
+use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -21,6 +23,11 @@ class Application extends BaseApplication
      * @var bool
      */
     private $commandsRegistered = false;
+
+    /**
+     * @var \Throwable[]
+     */
+    private $registrationErrors = [];
 
     /**
      * @param KernelInterface $kernel
@@ -108,6 +115,29 @@ class Application extends BaseApplication
         return parent::all($namespace);
     }
 
+    /**
+     * @param ContainerInterface $container
+     * @param string $id
+     *
+     * @throws LogicException
+     */
+    private function registerServiceAsCommand(ContainerInterface $container, string $id): void
+    {
+        if (!$container->has($id)) {
+            throw new LogicException(sprintf('No service with id `%s` found to register as a command.', $id));
+        }
+
+        $command = $container->get($id);
+        if (!$command instanceof Command) {
+            throw new LogicException(sprintf('Service `%s` isn\'t a valid command.', $id));
+        }
+
+        $this->add($command);
+    }
+
+    /**
+     * @throws LogicException
+     */
     private function registerCommands(): void
     {
         if ($this->commandsRegistered) {
@@ -119,11 +149,27 @@ class Application extends BaseApplication
         $this->kernel->boot();
         $container = $this->kernel->getContainer();
 
-        $this->setCommandLoader($container->get(CommandLoaderInterface::class));
+        // Try to retrieve and register the application's command loader.
+        if (!$container->has(CommandLoaderInterface::class)
+            || !($commandLoader = $container->get(CommandLoaderInterface::class)) instanceof CommandLoaderInterface
+        ) {
+            throw new LogicException(sprintf(
+                'Expecting a command loader with the `%s` id in the container in order to run.',
+                CommandLoaderInterface::class
+            ));
+        }
 
+        /** @var CommandLoaderInterface $commandLoader */
+        $this->setCommandLoader($commandLoader);
+
+        // Try to register the commands defined as services, if any.
         if ($container->hasParameter('console.command.ids')) {
             foreach ($container->getParameter('console.command.ids') as $id) {
-                $this->add($container->get($id));
+                try {
+                    $this->registerServiceAsCommand($container, $id);
+                } catch (\Throwable $exception) {
+                    $this->registrationErrors[] = $exception;
+                }
             }
         }
     }
