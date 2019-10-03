@@ -9,7 +9,10 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
 use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class Application extends BaseApplication
@@ -25,7 +28,7 @@ class Application extends BaseApplication
     private $commandsRegistered = false;
 
     /**
-     * @var \Throwable[]
+     * @var \Exception[]
      */
     private $registrationErrors = [];
 
@@ -48,6 +51,9 @@ class Application extends BaseApplication
     {
         $this->registerCommands();
         $this->setDispatcher($this->kernel->getContainer()->get(EventDispatcherInterface::class));
+
+        $this->renderRegistrationErrors($input, $output);
+        $this->registrationErrors = [];
 
         return parent::doRun($input, $output);
     }
@@ -117,7 +123,7 @@ class Application extends BaseApplication
 
     /**
      * @param ContainerInterface $container
-     * @param string $id
+     * @param string             $id
      *
      * @throws LogicException
      */
@@ -135,9 +141,6 @@ class Application extends BaseApplication
         $this->add($command);
     }
 
-    /**
-     * @throws LogicException
-     */
     private function registerCommands(): void
     {
         if ($this->commandsRegistered) {
@@ -149,28 +152,36 @@ class Application extends BaseApplication
         $this->kernel->boot();
         $container = $this->kernel->getContainer();
 
-        // Try to retrieve and register the application's command loader.
-        if (!$container->has(CommandLoaderInterface::class)
-            || !($commandLoader = $container->get(CommandLoaderInterface::class)) instanceof CommandLoaderInterface
-        ) {
-            throw new LogicException(sprintf(
-                'Expecting a command loader with the `%s` id in the container in order to run.',
-                CommandLoaderInterface::class
-            ));
-        }
+        $this->setCommandLoader($container->get(CommandLoaderInterface::class));
 
-        /** @var CommandLoaderInterface $commandLoader */
-        $this->setCommandLoader($commandLoader);
-
-        // Try to register the commands defined as services, if any.
         if ($container->hasParameter('console.command.ids')) {
             foreach ($container->getParameter('console.command.ids') as $id) {
                 try {
                     $this->registerServiceAsCommand($container, $id);
-                } catch (\Throwable $exception) {
+                } catch (\Exception $exception) {
                     $this->registrationErrors[] = $exception;
+                } catch (\Throwable $exception) {
+                    $this->registrationErrors[] = new FatalThrowableError($exception);
                 }
             }
+        }
+    }
+
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     */
+    private function renderRegistrationErrors(InputInterface $input, OutputInterface $output): void
+    {
+        if ($output instanceof ConsoleOutputInterface) {
+            $output = $output->getErrorOutput();
+        }
+
+        $style = new SymfonyStyle($input, $output);
+        $style->warning('Some commands could not be registered:');
+
+        foreach ($this->registrationErrors as $registrationError) {
+            $this->renderException($registrationError, $output);
         }
     }
 }
