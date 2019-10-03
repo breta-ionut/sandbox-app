@@ -9,6 +9,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
 use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -42,6 +43,20 @@ class Application extends BaseApplication
         parent::__construct($name, $version);
 
         $this->kernel = $kernel;
+
+        $definition = $this->getDefinition();
+        $definition->addOption(
+            new InputOption(
+                '--env',
+                '-e',
+                InputOption::VALUE_REQUIRED,
+                'The environment name.',
+                $kernel->getEnvironment()
+            )
+        );
+        $definition->addOption(
+            new InputOption('--no-debug', null, InputOption::VALUE_NONE, 'Switches off debug mode.')
+        );
     }
 
     /**
