@@ -1,0 +1,35 @@
+#!/usr/bin/env php
+<?php
+
+use App\Core\Console\Application;
+use App\Core\Kernel;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Debug\Debug;
+
+if (false === in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
+    echo sprintf('Error: The console should be invoked via the CLI version of PHP, not the `%s` SAPI.', PHP_SAPI);
+
+    exit(1);
+}
+
+set_time_limit(0);
+
+require __DIR__.'/../vendor/autoload.php';
+
+$input = new ArgvInput();
+
+if (null !== ($env = $input->getParameterOption(['--env', '-e'], null, true))) {
+    putenv('APP_ENV='.$_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $env);
+}
+if ($input->hasParameterOption(['--no-debug'], true)) {
+    putenv('APP_DEBUG='.$_SERVER['APP_DEBUG'] = $_ENV['APP_DEBUG'] = '0');
+}
+
+$debug = (bool) ($_SERVER['APP_DEBUG'] ?? true);
+if ($debug) {
+    Debug::enable();
+}
+
+$kernel = new Kernel($_SERVER['APP_ENV'] ?? 'dev', $debug);
+$application = new Application($kernel, Kernel::APP_NAME, Kernel::APP_VERSION);
+$application->run($input);
