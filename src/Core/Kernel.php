@@ -4,12 +4,12 @@ namespace App\Core;
 
 use App\Core\DependencyInjection\KernelExtension;
 use App\Core\DependencyInjection\RoutingExtension;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver;
 use Symfony\Component\HttpKernel\DependencyInjection\ControllerArgumentValueResolverPass;
