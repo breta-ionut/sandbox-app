@@ -6,7 +6,10 @@ services:
 
     Symfony\Component\EventDispatcher\EventDispatcher: ~
     Symfony\Component\EventDispatcher\EventDispatcherInterface: '@Symfony\Component\EventDispatcher\EventDispatcher'
-    Psr\EventDispatcher\EventDispatcherInterface: '@Symfony\Component\EventDispatcher\EventDispatcher'
+
+    Psr\EventDispatcher\EventDispatcherInterface:
+        alias: Symfony\Component\EventDispatcher\EventDispatcher
+        public: true
 
     Symfony\Component\HttpKernel\Controller\ContainerControllerResolver:
         arguments: ['@service_container']
