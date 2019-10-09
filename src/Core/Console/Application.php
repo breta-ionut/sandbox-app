@@ -198,7 +198,7 @@ class Application extends BaseApplication
         $style->warning('Some commands could not be registered:');
 
         foreach ($this->registrationErrors as $registrationError) {
-            $this->renderException($registrationError, $output);
+            $this->doRenderException($registrationError, $output);
         }
     }
 }
