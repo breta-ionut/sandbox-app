@@ -2,10 +2,13 @@
 
 namespace App\Core;
 
+use App\Core\DependencyInjection\ConsoleExtension;
 use App\Core\DependencyInjection\KernelExtension;
 use App\Core\DependencyInjection\RoutingExtension;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
+use Symfony\Component\Console\DependencyInjection\AddConsoleCommandPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
@@ -94,6 +97,7 @@ class Kernel extends BaseKernel
     {
         return [
             new KernelExtension(),
+            new ConsoleExtension(),
             new RoutingExtension(),
         ];
     }
@@ -109,6 +113,7 @@ class Kernel extends BaseKernel
             new RegisterListenersPass(EventDispatcherInterface::class),
             new ControllerArgumentValueResolverPass(ArgumentResolver::class),
             new RegisterControllerArgumentLocatorsPass(ServiceValueResolver::class),
+            new AddConsoleCommandPass(CommandLoaderInterface::class),
             new RoutingResolverPass(),
         ];
     }
