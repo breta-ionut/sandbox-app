@@ -60,6 +60,14 @@ class Application extends BaseApplication
     }
 
     /**
+     * @return KernelInterface
+     */
+    public function getKernel(): KernelInterface
+    {
+        return $this->kernel;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function doRun(InputInterface $input, OutputInterface $output)
