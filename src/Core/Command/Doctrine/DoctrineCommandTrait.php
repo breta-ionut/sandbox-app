@@ -40,4 +40,12 @@ trait DoctrineCommandTrait
 
         parent::setHelperSet($helperSet);
     }
+
+    protected function configure()
+    {
+        parent::configure();
+
+        $this->setName(self::$defaultName)
+            ->setAliases([]);
+    }
 }
