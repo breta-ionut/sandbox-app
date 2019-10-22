@@ -49,7 +49,7 @@ class DoctrineMigrationsConfiguration implements ConfigurationInterface
 
                 ->scalarNode('namespace')
                     ->cannotBeEmpty()
-                    ->defaultValue('App\Migrations')
+                    ->defaultValue('AppMigrations')
                 ->end()
 
                 ->enumNode('organized_by')
