@@ -15,8 +15,16 @@ services:
     Doctrine\ORM\EntityManager:
         factory: ['@App\Core\Doctrine\EntityManagerFactory', factory]
 
-    Doctrine\Common\Persistence\ObjectManager: '@Doctrine\ORM\EntityManager'
-    Doctrine\ORM\EntityManagerInterface: '@Doctrine\ORM\EntityManager'
+    Doctrine\Common\Persistence\ObjectManager:
+        alias: Doctrine\ORM\EntityManager
+        public: true
+
+    Doctrine\ORM\EntityManagerInterface:
+        alias: Doctrine\ORM\EntityManager
+        public: true
+
+    Doctrine\DBAL\Connection:
+        factory: ['@Doctrine\ORM\EntityManager', getConnection]
 
     # Commands.
     App\Core\Command\Doctrine\ORM\ClearMetadataCacheCommand: {tags: [console.command]}
