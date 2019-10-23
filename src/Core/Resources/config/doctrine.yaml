@@ -1,0 +1,34 @@
+services:
+    App\Core\Doctrine\RepositoryFactory: ~
+
+    App\Core\Doctrine\EventManager: ~
+
+    App\Core\Doctrine\EntityManagerFactory:
+        arguments:
+            - ~
+            - '%kernel.config_dir%'
+            - '@App\Core\Doctrine\RepositoryFactory'
+            - '@App\Core\Doctrine\EventManager'
+            - '%kernel.cache_dir%'
+            - '%kernel.environment%'
+
+    Doctrine\ORM\EntityManager:
+        factory: ['@App\Core\Doctrine\EntityManagerFactory', factory]
+
+    Doctrine\Common\Persistence\ObjectManager: '@Doctrine\ORM\EntityManager'
+    Doctrine\ORM\EntityManagerInterface: '@Doctrine\ORM\EntityManager'
+
+    # Commands.
+    App\Core\Command\Doctrine\ORM\ClearMetadataCacheCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\ORM\ClearQueryCacheCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\ORM\ClearResultCacheCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\ORM\CreateSchemaCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\ORM\DropSchemaCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\ORM\EnsureProductionSettingsCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\ORM\InfoCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\ORM\MappingDescribeCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\ORM\RunDqlCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\ORM\RunSqlCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\ORM\UpdateSchemaCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\ORM\ValidateSchemaCommand: {tags: [console.command]}
+    # End of - Commands.

@@ -27,6 +27,16 @@ class EntityManagerFactory
     private $configDir;
 
     /**
+     * @var RepositoryFactory
+     */
+    private $repositoryFactory;
+
+    /**
+     * @var EventManager
+     */
+    private $eventManager;
+
+    /**
      * @var string
      */
     private $cacheDir;
@@ -37,15 +47,25 @@ class EntityManagerFactory
     private $environment;
 
     /**
-     * @param array  $connectionParams
-     * @param string $configDir
-     * @param string $cacheDir
-     * @param string $environment
+     * @param array             $connectionParams
+     * @param string            $configDir
+     * @param RepositoryFactory $repositoryFactory
+     * @param EventManager      $eventManager
+     * @param string            $cacheDir
+     * @param string            $environment
      */
-    public function __construct(array $connectionParams, string $configDir, string $cacheDir, string $environment)
-    {
+    public function __construct(
+        array $connectionParams,
+        string $configDir,
+        RepositoryFactory $repositoryFactory,
+        EventManager $eventManager,
+        string $cacheDir,
+        string $environment
+    ) {
         $this->connectionParams = $connectionParams;
         $this->configDir = $configDir;
+        $this->repositoryFactory = $repositoryFactory;
+        $this->eventManager = $eventManager;
         $this->cacheDir = $cacheDir;
         $this->environment = $environment;
     }
@@ -72,7 +92,8 @@ class EntityManagerFactory
 
         $config = Setup::createConfiguration($isDevMode, $proxyDir);
         $config->setMetadataDriverImpl(new XmlDriver(new SymfonyFileLocator($prefixes)));
+        $config->setRepositoryFactory($this->repositoryFactory);
 
-        return EntityManager::create($this->connectionParams, $config);
+        return EntityManager::create($this->connectionParams, $config, $this->eventManager);
     }
 }
