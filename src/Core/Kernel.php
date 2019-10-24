@@ -2,7 +2,11 @@
 
 namespace App\Core;
 
+use App\Core\DependencyInjection\Compiler\RegisterDoctrineListenersAndSubscribersPass;
+use App\Core\DependencyInjection\Compiler\ServiceEntityRepositoriesPass;
 use App\Core\DependencyInjection\ConsoleExtension;
+use App\Core\DependencyInjection\DoctrineExtension;
+use App\Core\DependencyInjection\DoctrineMigrationsExtension;
 use App\Core\DependencyInjection\KernelExtension;
 use App\Core\DependencyInjection\RoutingExtension;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -99,6 +103,8 @@ class Kernel extends BaseKernel
             new KernelExtension(),
             new ConsoleExtension(),
             new RoutingExtension(),
+            new DoctrineExtension(),
+            new DoctrineMigrationsExtension(),
         ];
     }
 
@@ -115,6 +121,8 @@ class Kernel extends BaseKernel
             new RegisterControllerArgumentLocatorsPass(ServiceValueResolver::class),
             new AddConsoleCommandPass(CommandLoaderInterface::class),
             new RoutingResolverPass(),
+            new ServiceEntityRepositoriesPass(),
+            new RegisterDoctrineListenersAndSubscribersPass(),
         ];
     }
 }
