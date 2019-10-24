@@ -44,7 +44,7 @@ class DoctrineMigrationsConfiguration implements ConfigurationInterface
 
                 ->scalarNode('dir')
                     ->cannotBeEmpty()
-                    ->defaultValue('%kernel.root_dir%/src/Migrations')
+                    ->defaultValue('%kernel.project_dir%/src/Migrations')
                 ->end()
 
                 ->scalarNode('namespace')
