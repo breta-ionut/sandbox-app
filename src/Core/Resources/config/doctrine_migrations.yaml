@@ -1,0 +1,13 @@
+services:
+    # Commands.
+    App\Core\Command\Doctrine\Migrations\DiffCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\Migrations\DumpSchemaCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\Migrations\ExecuteCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\Migrations\GenerateCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\Migrations\LatestCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\Migrations\MigrateCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\Migrations\RollupCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\Migrations\StatusCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\Migrations\UpToDateCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\Migrations\VersionCommand: {tags: [console.command]}
+    # End of - Commands.
