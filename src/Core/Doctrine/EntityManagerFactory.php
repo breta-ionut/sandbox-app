@@ -79,15 +79,19 @@ class EntityManagerFactory
         $proxyDir = sprintf(self::PROXY_DIR_PATTERN, $this->cacheDir);
 
         // Determine the associations between the mapping files and the entities of the application.
-        $finder = (new Finder())
-            ->in(sprintf(self::MAPPING_DIR_PATTERN, $this->configDir))
-            ->depth(0)
-            ->directories();
-
         $prefixes = [];
-        /** @var SplFileInfo $file */
-        foreach ($finder as $file) {
-            $prefixes[$file->getRealPath()] = sprintf(self::NAMESPACE_PREFIX_PATTERN, $file);
+        $mappingDir = sprintf(self::MAPPING_DIR_PATTERN, $this->configDir);
+
+        if (is_dir($mappingDir)) {
+            $finder = (new Finder())
+                ->in($mappingDir)
+                ->depth(0)
+                ->directories();
+
+            /** @var SplFileInfo $file */
+            foreach ($finder as $file) {
+                $prefixes[$file->getRealPath()] = sprintf(self::NAMESPACE_PREFIX_PATTERN, $file);
+            }
         }
 
         $config = Setup::createConfiguration($isDevMode, $proxyDir);

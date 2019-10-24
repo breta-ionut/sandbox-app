@@ -13,6 +13,8 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
 class DoctrineMigrationsExtension extends ConfigurableExtension
 {
+    use ConfigurationExtensionTrait;
+
     /**
      * {@inheritDoc}
      */
@@ -41,7 +43,8 @@ class DoctrineMigrationsExtension extends ConfigurableExtension
             ->addMethodCall('setMigrationsDirectory', [$config['dir']])
             ->addMethodCall('setMigrationsNamespace', [$config['namespace']])
             ->addMethodCall('setCustomTemplate', [$config['custom_template']])
-            ->addMethodCall('setAllOrNothing', [$config['all_or_nothing']]);
+            ->addMethodCall('setAllOrNothing', [$config['all_or_nothing']])
+            ->setPublic(true);
 
         switch ($config['organized_by']) {
             case 'year':

@@ -52,19 +52,17 @@ class RegisterDoctrineListenersAndSubscribersPass implements CompilerPassInterfa
             $listeners[$attributes[0]['priority'] ?? 0][$id] = (array) $attributes[0]['event'];
         }
 
-        if (!$listeners) {
-            return;
-        }
-
-        // Sort the listeners in order to have them registered according to their priorities.
-        krsort($listeners);
-        $listeners = array_merge(...$listeners);
-
         $listenerRefs = [];
-        foreach ($listeners as $id => $events) {
-            $eventManager->addMethodCall('addEventListener', [$events, $id]);
+        if ($listeners) {
+            // Sort the listeners in order to have them registered according to their priorities.
+            krsort($listeners);
+            $listeners = array_merge(...$listeners);
 
-            $listenerRefs[$id] = new Reference($id);
+            foreach ($listeners as $id => $events) {
+                $eventManager->addMethodCall('addEventListener', [$events, $id]);
+
+                $listenerRefs[$id] = new Reference($id);
+            }
         }
 
         // Build and inject a service locator containing the listeners for having them lazily loaded at runtime.
