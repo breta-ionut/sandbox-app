@@ -90,7 +90,7 @@ class Application extends BaseApplication
     {
         return parent::getLongVersion()
             .sprintf(
-                ' (env: <comment>%s</>, debug: <comment>%s</>)',
+                ' (env: <comment>%s</comment>, debug: <comment>%s</comment>)',
                 $this->kernel->getEnvironment(),
                 $this->kernel->isDebug() ? 'true' : 'false'
             );
