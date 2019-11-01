@@ -85,15 +85,12 @@ EOT
             if ($createDatabase) {
                 $schemaManager->createDatabase($escapedName);
 
-                $style->success(sprintf('Successfully created database "%s".', $name));
+                $style->success(sprintf('Created database "%s".', $name));
             } else {
                 $style->success(sprintf('Database "%s" already exists.', $name));
             }
         } catch (\Throwable $exception) {
-            $style->error([
-                sprintf('An error occurred while creating the "%s" database.', $name),
-                $exception->getMessage(),
-            ]);
+            $style->error([sprintf('Could not create database "%s".', $name), $exception->getMessage()]);
 
             return self::CODE_ERROR;
         } finally {
