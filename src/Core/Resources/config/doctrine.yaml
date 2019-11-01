@@ -30,6 +30,11 @@ services:
     App\Core\Command\Doctrine\ORM\ClearMetadataCacheCommand: {tags: [console.command]}
     App\Core\Command\Doctrine\ORM\ClearQueryCacheCommand: {tags: [console.command]}
     App\Core\Command\Doctrine\ORM\ClearResultCacheCommand: {tags: [console.command]}
+
+    App\Core\Command\Doctrine\ORM\CreateDatabaseCommand:
+        arguments: ['@Doctrine\DBAL\Connection']
+        tags: [console.command]
+
     App\Core\Command\Doctrine\ORM\CreateSchemaCommand: {tags: [console.command]}
     App\Core\Command\Doctrine\ORM\DropSchemaCommand: {tags: [console.command]}
     App\Core\Command\Doctrine\ORM\EnsureProductionSettingsCommand: {tags: [console.command]}
