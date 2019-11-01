@@ -90,7 +90,7 @@ EOT
                 $style->success(sprintf('Database "%s" already exists.', $name));
             }
         } catch (\Throwable $exception) {
-            $style->error([sprintf('Could not create database "%s".', $name), $exception->getMessage()]);
+            $style->error([sprintf('Could not create database "%s":', $name), $exception->getMessage()]);
 
             return self::CODE_ERROR;
         } finally {
