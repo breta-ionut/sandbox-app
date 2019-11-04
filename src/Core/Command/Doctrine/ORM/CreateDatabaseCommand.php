@@ -12,7 +12,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CreateDatabaseCommand extends Command
 {
-    private const CODE_ERROR = 1;
+    private const RETURN_CODE_ERROR = 1;
 
     /**
      * {@inheritDoc}
@@ -68,7 +68,7 @@ EOT
         if (null === $name) {
             $style->error('A "path" or "dbname" connection parameter is required to determine the database to create.');
 
-            return self::CODE_ERROR;
+            return self::RETURN_CODE_ERROR;
         }
 
         // Strip all references to the database name from the parameters before initiating the connection, in order to
@@ -92,7 +92,7 @@ EOT
         } catch (\Throwable $exception) {
             $style->error([sprintf('Error occurred while creating database "%s":', $name), $exception->getMessage()]);
 
-            return self::CODE_ERROR;
+            return self::RETURN_CODE_ERROR;
         } finally {
             $connection->close();
         }
