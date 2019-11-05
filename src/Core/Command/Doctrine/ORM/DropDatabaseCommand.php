@@ -84,8 +84,7 @@ EOT
 
         if (!$input->getOption('force')) {
             $style->caution([
-                'ATTENTION: This operation should not be executed in a production environment.',
-                '',
+                'This operation should not be executed in a production environment.',
                 sprintf('Would drop the database "%s".', $name),
                 'Run the command with --force for executing the operation.',
                 'All data will be lost!',
