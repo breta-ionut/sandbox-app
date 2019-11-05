@@ -36,6 +36,11 @@ services:
         tags: [console.command]
 
     App\Core\Command\Doctrine\ORM\CreateSchemaCommand: {tags: [console.command]}
+
+    App\Core\Command\Doctrine\ORM\DropDatabaseCommand:
+        arguments: ['@Doctrine\DBAL\Connection']
+        tags: [console.command]
+
     App\Core\Command\Doctrine\ORM\DropSchemaCommand: {tags: [console.command]}
     App\Core\Command\Doctrine\ORM\EnsureProductionSettingsCommand: {tags: [console.command]}
     App\Core\Command\Doctrine\ORM\InfoCommand: {tags: [console.command]}

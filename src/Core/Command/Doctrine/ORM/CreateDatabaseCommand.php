@@ -73,7 +73,7 @@ EOT
 
         // Strip all references to the database name from the parameters before initiating the connection, in order to
         // prevent errors if the database doesn't exist.
-        unset($params['path'], $params['dbname'], $params['url']);
+        unset($params['dbname'], $params['url']);
         $connection = DriverManager::getConnection($params);
 
         $schemaManager = $connection->getSchemaManager();
