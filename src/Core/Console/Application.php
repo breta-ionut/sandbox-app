@@ -13,7 +13,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class Application extends BaseApplication
@@ -139,7 +138,7 @@ class Application extends BaseApplication
     /**
      * {@inheritDoc}
      */
-    public function all($namespace = null)
+    public function all(string $namespace = null)
     {
         $this->registerCommands();
 
@@ -183,10 +182,8 @@ class Application extends BaseApplication
             foreach ($container->getParameter('console.command.ids') as $id) {
                 try {
                     $this->registerServiceAsCommand($container, $id);
-                } catch (\Exception $exception) {
-                    $this->registrationErrors[] = $exception;
                 } catch (\Throwable $exception) {
-                    $this->registrationErrors[] = new FatalThrowableError($exception);
+                    $this->registrationErrors[] = $exception;
                 }
             }
         }
@@ -206,7 +203,7 @@ class Application extends BaseApplication
         $style->warning('Some commands could not be registered:');
 
         foreach ($this->registrationErrors as $registrationError) {
-            $this->doRenderException($registrationError, $output);
+            $this->doRenderThrowable($registrationError, $output);
         }
     }
 }

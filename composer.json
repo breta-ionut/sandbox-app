@@ -18,14 +18,15 @@
         "doctrine/migrations": "^2.1",
         "doctrine/orm": "^2.6",
         "psr/event-dispatcher": "^1.0",
-        "symfony/config": "^4.3",
-        "symfony/console": "^4.3",
-        "symfony/dependency-injection": "^4.3",
-        "symfony/filesystem": "^4.3",
-        "symfony/finder": "^4.3",
-        "symfony/http-kernel": "^4.3",
-        "symfony/routing": "^4.3",
-        "symfony/templating": "^4.3",
-        "symfony/yaml": "^4.3"
+        "symfony/asset": "^5.0",
+        "symfony/config": "^5.0",
+        "symfony/console": "^5.0",
+        "symfony/dependency-injection": "^5.0",
+        "symfony/filesystem": "^5.0",
+        "symfony/finder": "^5.0",
+        "symfony/http-kernel": "^5.0",
+        "symfony/routing": "^5.0",
+        "symfony/templating": "^5.0",
+        "symfony/yaml": "^5.0"
     }
 }
