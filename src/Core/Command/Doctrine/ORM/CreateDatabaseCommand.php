@@ -12,6 +12,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CreateDatabaseCommand extends Command
 {
+    private const RETURN_CODE_SUCCESS = 0;
     private const RETURN_CODE_ERROR = 1;
 
     /**
@@ -89,6 +90,8 @@ EOT
             } else {
                 $style->success(sprintf('Database "%s" already exists.', $name));
             }
+
+            return self::RETURN_CODE_SUCCESS;
         } catch (\Throwable $exception) {
             $style->error([sprintf('Error occurred while creating database "%s":', $name), $exception->getMessage()]);
 

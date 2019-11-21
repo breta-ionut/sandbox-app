@@ -13,7 +13,7 @@ services:
     routing.resolver:
         class: Symfony\Component\Config\Loader\LoaderResolver
 
-    Symfony\Component\Routing\Loader\DependencyInjection\ServiceRouterLoader:
+    Symfony\Component\Routing\Loader\ContainerLoader:
         arguments: ['@service_container']
         tags: [routing.loader]
 
