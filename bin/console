@@ -2,7 +2,7 @@
 <?php
 
 use App\Core\Console\Application;
-use App\Core\Kernel;
+use App\Kernel;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\ErrorHandler\Debug;
 

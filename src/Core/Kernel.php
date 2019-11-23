@@ -27,17 +27,13 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\DependencyInjection\RoutingResolverPass;
 
-class Kernel extends BaseKernel
+abstract class Kernel extends BaseKernel
 {
-    public const APP_NAME = 'Sandbox';
-    public const APP_VERSION = '0.0.1';
-
     /**
      * {@inheritDoc}
      */
     public function registerBundles()
     {
-        // This app doesn't rely on and doesn't use bundles.
         return [];
     }
 
@@ -95,7 +91,7 @@ class Kernel extends BaseKernel
     }
 
     /**
-     * Returns the application's core container extensions.
+     * Returns the core container extensions.
      *
      * @return ExtensionInterface[]
      */
@@ -113,7 +109,7 @@ class Kernel extends BaseKernel
     }
 
     /**
-     * Returns the application's core compiler passes.
+     * Returns the core compiler passes.
      *
      * @return CompilerPassInterface[]
      */
