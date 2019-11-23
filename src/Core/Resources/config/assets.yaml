@@ -1,0 +1,5 @@
+services:
+    Symfony\Component\Asset\Context\RequestStackContext:
+        arguments: ['@Symfony\Component\HttpFoundation\RequestStack']
+
+    Symfony\Component\Asset\Context\ContextInterface: '@Symfony\Component\Asset\Context\RequestStackContext'

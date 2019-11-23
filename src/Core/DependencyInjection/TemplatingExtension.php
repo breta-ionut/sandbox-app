@@ -6,6 +6,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\Templating\Helper\HelperInterface;
 
 class TemplatingExtension extends Extension
 {
@@ -16,5 +17,8 @@ class TemplatingExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('templating.yaml');
+
+        $container->registerForAutoconfiguration(HelperInterface::class)
+            ->addTag('templating.helper');
     }
 }
