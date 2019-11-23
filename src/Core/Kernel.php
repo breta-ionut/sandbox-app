@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Core\DependencyInjection\AssetsExtension;
 use App\Core\DependencyInjection\Compiler\RegisterDoctrineListenersAndSubscribersPass;
 use App\Core\DependencyInjection\Compiler\ServiceEntityRepositoriesPass;
 use App\Core\DependencyInjection\ConsoleExtension;
@@ -9,6 +10,7 @@ use App\Core\DependencyInjection\DoctrineExtension;
 use App\Core\DependencyInjection\DoctrineMigrationsExtension;
 use App\Core\DependencyInjection\KernelExtension;
 use App\Core\DependencyInjection\RoutingExtension;
+use App\Core\DependencyInjection\TemplatingExtension;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
@@ -105,6 +107,8 @@ class Kernel extends BaseKernel
             new RoutingExtension(),
             new DoctrineExtension(),
             new DoctrineMigrationsExtension(),
+            new TemplatingExtension(),
+            new AssetsExtension(),
         ];
     }
 
