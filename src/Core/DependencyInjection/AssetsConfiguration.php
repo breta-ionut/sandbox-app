@@ -27,6 +27,10 @@ class AssetsConfiguration implements ConfigurationInterface
                     ->requiresAtLeastOneElement()
 
                     ->scalarPrototype()->end()
+
+                    ->beforeNormalization()
+                        ->castToArray()
+                    ->end()
                 ->end()
 
                 ->scalarNode('version')->end()
@@ -41,7 +45,7 @@ class AssetsConfiguration implements ConfigurationInterface
 
             ->validate()
                 ->ifTrue(static function (array $v): bool {
-                    return isset($v['base_path'], $v['base_urls']);
+                    return '' !== $v['base_path'] && $v['base_urls'];
                 })
                 ->thenInvalid('Cannot have both a "base_path" and "base_urls" for the assets.')
             ->end()

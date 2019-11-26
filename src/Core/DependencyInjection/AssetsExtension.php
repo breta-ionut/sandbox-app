@@ -71,7 +71,7 @@ class AssetsExtension extends ConfigurableExtension
         $versionStrategy = new Reference(VersionStrategyInterface::class);
         $context = new Reference(ContextInterface::class);
 
-        if (isset($config['base_urls'])) {
+        if ($config['base_urls']) {
             return new Definition(UrlPackage::class, [$config['base_urls'], $versionStrategy, $context]);
         }
 
