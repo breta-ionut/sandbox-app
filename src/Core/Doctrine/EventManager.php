@@ -14,17 +14,17 @@ class EventManager extends BaseEventManager
     /**
      * @var ContainerInterface
      */
-    private $container;
+    private ContainerInterface $container;
 
     /**
      * @var array
      */
-    private $listeners = [];
+    private array $listeners = [];
 
     /**
      * @var array
      */
-    private $initialized = [];
+    private array $initialized = [];
 
     /**
      * @param ContainerInterface $container

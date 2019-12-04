@@ -17,14 +17,14 @@ class RepositoryFactory implements RepositoryFactoryInterface
      *
      * @var ContainerInterface
      */
-    private $container;
+    private ContainerInterface $container;
 
     /**
      * The instantiated repositories which are not services.
      *
      * @var ObjectRepository[]
      */
-    private $repositories = [];
+    private array $repositories = [];
 
     /**
      * @param ContainerInterface $container

@@ -14,7 +14,7 @@ class RoutingListener
     /**
      * @var RequestMatcherInterface
      */
-    private $requestMatcher;
+    private RequestMatcherInterface $requestMatcher;
 
     /**
      * @param RequestMatcherInterface $requestMatcher

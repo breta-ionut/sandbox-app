@@ -11,12 +11,12 @@ class Loader
     /**
      * @var string
      */
-    private $configDir;
+    private string $configDir;
 
     /**
      * @var string
      */
-    private $environment;
+    private string $environment;
 
     /**
      * @param string $configDir

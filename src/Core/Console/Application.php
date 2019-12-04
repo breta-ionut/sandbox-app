@@ -20,17 +20,17 @@ class Application extends BaseApplication
     /**
      * @var KernelInterface
      */
-    private $kernel;
+    private KernelInterface $kernel;
 
     /**
      * @var bool
      */
-    private $commandsRegistered = false;
+    private bool $commandsRegistered = false;
 
     /**
-     * @var \Exception[]
+     * @var \Throwable[]
      */
-    private $registrationErrors = [];
+    private array $registrationErrors = [];
 
     /**
      * @param KernelInterface $kernel

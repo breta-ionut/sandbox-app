@@ -10,7 +10,7 @@ class AssetsHelper extends Helper
     /**
      * @var PackageInterface
      */
-    private $package;
+    private PackageInterface $package;
 
     /**
      * @param PackageInterface $package

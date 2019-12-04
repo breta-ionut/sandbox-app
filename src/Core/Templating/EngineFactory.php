@@ -14,12 +14,12 @@ class EngineFactory
     /**
      * @var string
      */
-    private $projectDir;
+    private string $projectDir;
 
     /**
      * @var HelperInterface[]|iterable
      */
-    private $helpers;
+    private iterable $helpers;
 
     /**
      * @param string                     $projectDir

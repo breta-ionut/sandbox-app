@@ -19,32 +19,32 @@ class EntityManagerFactory
     /**
      * @var array
      */
-    private $connectionParams;
+    private array $connectionParams;
 
     /**
      * @var string
      */
-    private $configDir;
+    private string $configDir;
 
     /**
      * @var RepositoryFactory
      */
-    private $repositoryFactory;
+    private RepositoryFactory $repositoryFactory;
 
     /**
      * @var EventManager
      */
-    private $eventManager;
+    private EventManager $eventManager;
 
     /**
      * @var string
      */
-    private $cacheDir;
+    private string $cacheDir;
 
     /**
      * @var string
      */
-    private $environment;
+    private string $environment;
 
     /**
      * @param array             $connectionParams
