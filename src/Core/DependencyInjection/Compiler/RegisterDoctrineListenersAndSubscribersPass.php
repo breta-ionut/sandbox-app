@@ -33,7 +33,7 @@ class RegisterDoctrineListenersAndSubscribersPass implements CompilerPassInterfa
             $class = $parameterBag->resolveValue($container->getDefinition((string) $subscriber));
             if (!is_a($class, EventSubscriber::class, true)) {
                 throw new LogicException(sprintf(
-                    '`%s` was registered as a Doctrine event subscriber but doesn\'t implement `%s`.',
+                    '"%s" was registered as a Doctrine event subscriber but doesn\'t implement "%s".',
                     $subscriber,
                     EventSubscriber::class
                 ));
@@ -46,7 +46,7 @@ class RegisterDoctrineListenersAndSubscribersPass implements CompilerPassInterfa
         $listeners = [];
         foreach ($container->findTaggedServiceIds(self::LISTENER_TAG) as $id => $attributes) {
             if (!isset($attributes[0]['event'])) {
-                throw new LogicException(sprintf('No event(s) specified for Doctrine event listener `%s`.', $id));
+                throw new LogicException(sprintf('No event(s) specified for Doctrine event listener "%s".', $id));
             }
 
             $listeners[$attributes[0]['priority'] ?? 0][$id] = (array) $attributes[0]['event'];

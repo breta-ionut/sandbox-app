@@ -3,7 +3,7 @@
 namespace App\Core\DependencyInjection\Compiler;
 
 use App\Core\Doctrine\RepositoryFactory;
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -28,7 +28,7 @@ class ServiceEntityRepositoriesPass implements CompilerPassInterface
             $class = $parameterBag->resolveValue($container->getDefinition($id)->getClass());
             if (!is_a($class, ObjectRepository::class, true)) {
                 throw new LogicException(sprintf(
-                    '`%s` was registered as a Doctrine service entity repository but doesn\'t implement `%s`.',
+                    '"%s" was registered as a Doctrine service entity repository but doesn\'t implement "%s".',
                     $id,
                     ObjectRepository::class
                 ));

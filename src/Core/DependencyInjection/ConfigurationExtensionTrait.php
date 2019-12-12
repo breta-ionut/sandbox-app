@@ -25,12 +25,12 @@ trait ConfigurationExtensionTrait
         $reflection = $container->getReflectionClass($class);
 
         if (null === $reflection) {
-            throw new LogicException(sprintf('No extension configuration class `%s` defined.', $class));
+            throw new LogicException(sprintf('No extension configuration class "%s" defined.', $class));
         }
 
         if (!$reflection->implementsInterface(ConfigurationInterface::class)) {
             throw new LogicException(sprintf(
-                'The extension configuration class `%s` must implement `%s`.',
+                'The extension configuration class "%s" must implement "%s".',
                 $class,
                 ConfigurationInterface::class
             ));
@@ -40,7 +40,7 @@ trait ConfigurationExtensionTrait
             || (($constructor = $reflection->getConstructor()) && $constructor->getNumberOfRequiredParameters())
         ) {
             throw new LogicException(sprintf(
-                'The extension configuration class `%s` is not instantiable or its constructor requires arguments.',
+                'The extension configuration class "%s" is not instantiable or its constructor requires arguments.',
                 $class
             ));
         }

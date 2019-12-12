@@ -154,12 +154,12 @@ class Application extends BaseApplication
     private function registerServiceAsCommand(ContainerInterface $container, string $id): void
     {
         if (!$container->has($id)) {
-            throw new LogicException(sprintf('No service with id `%s` found to register as a command.', $id));
+            throw new LogicException(sprintf('No service with id "%s" found to register as a command.', $id));
         }
 
         $command = $container->get($id);
         if (!$command instanceof Command) {
-            throw new LogicException(sprintf('Service `%s` isn\'t a valid command.', $id));
+            throw new LogicException(sprintf('Service "%s" isn\'t a valid command.', $id));
         }
 
         $this->add($command);

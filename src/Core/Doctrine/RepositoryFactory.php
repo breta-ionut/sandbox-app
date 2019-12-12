@@ -2,9 +2,9 @@
 
 namespace App\Core\Doctrine;
 
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Repository\RepositoryFactory as RepositoryFactoryInterface;
+use Doctrine\Persistence\ObjectRepository;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -60,7 +60,7 @@ class RepositoryFactory implements RepositoryFactoryInterface
 
         if (!is_a($repositoryClass, ObjectRepository::class, true)) {
             throw new \LogicException(sprintf(
-                'Repository class `%s` of entity `%s` doesn\'t implement `%s`.',
+                'Repository class "%s" of entity "%s" doesn\'t implement "%s".',
                 $repositoryClass,
                 $entityName,
                 ObjectRepository::class
