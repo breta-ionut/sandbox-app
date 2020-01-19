@@ -33,6 +33,10 @@ services:
 
     node:
         image: node:latest
+        command: tail -F anything
+        restart: on-failure
+        volumes: ["./:/var/www/sandbox"]
+        working_dir: /var/www/sandbox
 
     nginx:
         build:
