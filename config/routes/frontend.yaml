@@ -1,0 +1,3 @@
+app_frontend_index_index:
+    path: /
+    controller: 'App\Frontend\Controller\IndexController:index'

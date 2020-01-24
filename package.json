@@ -1,0 +1,19 @@
+{
+    "name": "ionutbreta-sandbox",
+    "version": "0.1.0",
+    "description": "A sandbox application built on top of Symfony components on backend and Vue.js on frontend.",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/breta-ionut/sandbox-app.git"
+    },
+    "author": "Ionut Breta <breta.ionut@gmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "vue": "^2.6.11",
+        "vue-router": "^3.1.5"
+    },
+    "devDependencies": {
+        "webpack": "^4.41.5",
+        "webpack-cli": "^3.3.10"
+    }
+}
