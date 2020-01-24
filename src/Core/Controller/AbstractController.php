@@ -40,26 +40,6 @@ abstract class AbstractController implements ServiceSubscriberInterface
     }
 
     /**
-     * @param string        $template
-     * @param array         $parameters
-     * @param Response|null $response
-     *
-     * @return Response
-     */
-    protected function render(string $template, array $parameters = [], Response $response = null): Response
-    {
-        $content = $this->container
-            ->get(EngineInterface::class)
-            ->render($template, $parameters);
-
-        if (null === $response) {
-            $response = new Response();
-        }
-
-        return $response->setContent($content);
-    }
-
-    /**
      * @return EntityManagerInterface
      */
     protected function getEntityManager(): EntityManagerInterface
@@ -82,6 +62,26 @@ abstract class AbstractController implements ServiceSubscriberInterface
         return $this->container
             ->get(UrlGeneratorInterface::class)
             ->generate($route, $parameters, $referenceType);
+    }
+
+    /**
+     * @param string        $template
+     * @param array         $parameters
+     * @param Response|null $response
+     *
+     * @return Response
+     */
+    protected function render(string $template, array $parameters = [], Response $response = null): Response
+    {
+        $content = $this->container
+            ->get(EngineInterface::class)
+            ->render($template, $parameters);
+
+        if (null === $response) {
+            $response = new Response();
+        }
+
+        return $response->setContent($content);
     }
 
     /**
