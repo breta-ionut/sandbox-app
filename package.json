@@ -16,9 +16,12 @@
         "vue-loader": "^15.8.3",
         "vue-template-compiler": "^2.6.11",
         "webpack": "^4.41.5",
-        "webpack-cli": "^3.3.10"
+        "webpack-cli": "^3.3.10",
+        "webpack-dev-server": "^3.10.1",
+        "webpack-manifest-plugin": "^2.2.0"
     },
     "scripts": {
-        "build-dev": "webpack --config assets/webpack.config.dev.js"
+        "build-dev": "webpack --config assets/webpack.config.dev.js",
+        "run-dev": "webpack-dev-server --config assets/webpack.config.dev.js"
     }
 }
