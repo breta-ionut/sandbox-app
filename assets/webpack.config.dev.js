@@ -4,6 +4,7 @@ const path = require('path')
 const webpack = require('webpack')
 const { VueLoaderPlugin } = require('vue-loader')
 const ManifestPlugin = require('webpack-manifest-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
     mode: 'development',
@@ -34,5 +35,6 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         new VueLoaderPlugin(),
         new ManifestPlugin(),
+        new CleanWebpackPlugin()
     ]
 }
