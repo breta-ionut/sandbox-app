@@ -20,8 +20,18 @@ module.exports = {
         index: path.resolve(__dirname, './js/index.js')
     },
     output: {
-        path: path.resolve(__dirname, '../public/build/js'),
-        filename: '[name].js'
+        path: path.resolve(__dirname, '../public/build'),
+        filename: (chunkData) => {
+            const filename = '[name].js'
+
+            switch (chunkData.contentHashType) {
+                case 'javascript':
+                    return 'js/' + filename
+
+                default:
+                    return filename
+            }
+        }
     },
     module: {
         rules: [
