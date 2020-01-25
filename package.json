@@ -19,10 +19,11 @@
         "webpack": "^4.41.5",
         "webpack-cli": "^3.3.10",
         "webpack-dev-server": "^3.10.1",
-        "webpack-manifest-plugin": "^2.2.0"
+        "webpack-manifest-plugin": "^2.2.0",
+        "webpack-merge": "^4.2.2"
     },
     "scripts": {
-        "build-dev": "webpack --config assets/webpack.config.dev.js",
-        "run-dev": "webpack-dev-server --config assets/webpack.config.dev.js"
+        "start": "webpack-dev-server --config assets/webpack.dev.js",
+        "build": "webpack --config assets/webpack.prod.js"
     }
 }
