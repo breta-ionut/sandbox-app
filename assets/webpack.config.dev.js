@@ -12,7 +12,7 @@ module.exports = {
         host: '0.0.0.0',
         port: 8080,
         contentBase: path.resolve(__dirname, '../public/build'),
-        writeToDisk: (filename) => 'manifest.json' === filename,
+        writeToDisk: (filename) => 'manifest.json' === path.basename(filename),
         allowedHosts: ['localhost', 'sandbox.local'],
         hot: true,
         watchOptions: {
