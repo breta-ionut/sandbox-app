@@ -1,8 +1,8 @@
 'use strict'
 
 const path = require('path')
-const { VueLoaderPlugin } = require('vue-loader')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const {VueLoaderPlugin} = require('vue-loader')
+const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 
 module.exports = {
     entry: {
