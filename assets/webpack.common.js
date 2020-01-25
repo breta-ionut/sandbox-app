@@ -39,8 +39,10 @@ module.exports = {
                     'css-loader',
                     {
                         loader: 'sass-loader',
-                        sourceMap: true,
-                        sassOptions: {compressed: true}
+                        options: {
+                            sourceMap: true,
+                            sassOptions: {compressed: true}
+                        }
                     }
                 ]
             }
