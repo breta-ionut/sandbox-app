@@ -14,7 +14,7 @@ module.exports = merge(commonConfig, {
         https: true,
         contentBase: path.resolve(__dirname, '../public/build'),
         writeToDisk: (filename) => 'manifest.json' === path.basename(filename),
-        allowedHosts: ['localhost'],
+        allowedHosts: ['localhost', 'sandbox.local'],
         headers: {'Access-Control-Allow-Origin': '*'},
         hot: true,
         watchOptions: {poll: true}
