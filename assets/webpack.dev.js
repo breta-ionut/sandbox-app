@@ -19,8 +19,8 @@ module.exports = merge(commonConfig, {
         hot: true,
         watchOptions: {poll: true}
     },
-    output: {publicPath: 'https://localhost:8080'},
+    output: {publicPath: 'https://localhost:8080/'},
     plugins: [
-        new ManifestPlugin({publicPath: 'https://localhost:8080'})
+        new ManifestPlugin({publicPath: 'https://localhost:8080/'})
     ]
 })
