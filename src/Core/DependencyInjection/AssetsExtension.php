@@ -73,7 +73,7 @@ class AssetsExtension extends ConfigurableExtension
         $versionStrategy = $this->createVersionStrategy($container, $name, $config);
         $context = new Reference(ContextInterface::class);
 
-        $definition = isset($config['base_urls'])
+        $definition = $config['base_urls']
             ? new Definition(UrlPackage::class, [$config['base_urls'], $versionStrategy, $context])
             : new Definition(PathPackage::class, [$config['base_path'], $versionStrategy, $context]);
 
