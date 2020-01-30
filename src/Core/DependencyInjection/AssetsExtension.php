@@ -32,7 +32,7 @@ class AssetsExtension extends ConfigurableExtension
 
         $packages = [];
         foreach ($mergedConfig['packages'] as $packageName => $packageConfig) {
-            $packages[] = $this->createPackage($container, $packageName, $packageConfig);
+            $packages[$packageName] = $this->createPackage($container, $packageName, $packageConfig);
         }
 
         $container->setDefinition(Packages::class, new Definition(null, [$defaultPackage, $packages]));
