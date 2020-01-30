@@ -3,13 +3,12 @@
 namespace App\Core\DependencyInjection;
 
 use Symfony\Component\Asset\Context\ContextInterface;
-use Symfony\Component\Asset\PackageInterface;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\Asset\PathPackage;
 use Symfony\Component\Asset\UrlPackage;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
 use Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy;
-use Symfony\Component\Asset\VersionStrategy\VersionStrategyInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -29,52 +28,58 @@ class AssetsExtension extends ConfigurableExtension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('assets.yaml');
 
-        // Build and register the version strategy definition.
-        $versionStrategy = $this->createVersionStrategy($mergedConfig);
+        $defaultPackage = $this->createPackage($container, '_default', $mergedConfig);
 
-        $container->setDefinition($versionStrategy->getClass(), $versionStrategy);
-        $container->setAlias(VersionStrategyInterface::class, $versionStrategy->getClass());
-
-        // Build and register the application assets package definition.
-        $package = $this->createPackage($mergedConfig);
-
-        $container->setDefinition($package->getClass(), $package);
-        $container->setAlias(PackageInterface::class, $package->getClass());
-    }
-
-    /**
-     * @param array $config
-     *
-     * @return Definition
-     */
-    private function createVersionStrategy(array $config): Definition
-    {
-        switch (true) {
-            case isset($config['version']):
-                return new Definition(StaticVersionStrategy::class, [$config['version'], $config['version_format']]);
-
-            case isset($config['json_manifest_path']):
-                return new Definition(JsonManifestVersionStrategy::class, [$config['json_manifest_path']]);
-
-            default:
-                return new Definition(EmptyVersionStrategy::class);
+        $packages = [];
+        foreach ($mergedConfig['packages'] as $packageName => $packageConfig) {
+            $packages[] = $this->createPackage($container, $packageName, $packageConfig);
         }
+
+        $container->register(Packages::class, new Definition(null, [$defaultPackage, $packages]));
     }
 
     /**
-     * @param array $config
+     * @param ContainerBuilder $container
+     * @param string           $packageName
+     * @param array            $config
      *
-     * @return Definition
+     * @return Reference
      */
-    private function createPackage(array $config): Definition
+    private function createVersionStrategy(ContainerBuilder $container, string $packageName, array $config): Reference
     {
-        $versionStrategy = new Reference(VersionStrategyInterface::class);
+        if (isset($config['version'])) {
+            $definition = new Definition(StaticVersionStrategy::class, [$config['version'], $config['version_format']]);
+        } elseif (isset($config['json_manifest_path'])) {
+            $definition = new Definition(JsonManifestVersionStrategy::class, [$config['json_manifest_path']]);
+        } else {
+            $definition = new Definition(EmptyVersionStrategy::class);
+        }
+
+        $id = 'assets.version.'.$packageName;
+        $container->register($id, $definition);
+
+        return new Reference($id);
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param string           $name
+     * @param array            $config
+     *
+     * @return Reference
+     */
+    private function createPackage(ContainerBuilder $container, string $name, array $config): Reference
+    {
+        $versionStrategy = $this->createVersionStrategy($container, $name, $config);
         $context = new Reference(ContextInterface::class);
 
-        if ($config['base_urls']) {
-            return new Definition(UrlPackage::class, [$config['base_urls'], $versionStrategy, $context]);
-        }
+        $definition = isset($config['base_urls'])
+            ? new Definition(UrlPackage::class, [$config['base_urls'], $versionStrategy, $context])
+            : new Definition(PathPackage::class, [$config['base_path'], $versionStrategy, $context]);
 
-        return new Definition(PathPackage::class, [$config['base_path'], $versionStrategy, $context]);
+        $id = 'assets.package.'.$name;
+        $container->register($id, $definition);
+
+        return new Reference($id);
     }
 }
