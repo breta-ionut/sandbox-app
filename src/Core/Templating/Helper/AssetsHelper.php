@@ -2,22 +2,22 @@
 
 namespace App\Core\Templating\Helper;
 
-use Symfony\Component\Asset\PackageInterface;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\Templating\Helper\Helper;
 
 class AssetsHelper extends Helper
 {
     /**
-     * @var PackageInterface
+     * @var Packages
      */
-    private PackageInterface $package;
+    private Packages $packages;
 
     /**
-     * @param PackageInterface $package
+     * @param Packages $packages
      */
-    public function __construct(PackageInterface $package)
+    public function __construct(Packages $packages)
     {
-        $this->package = $package;
+        $this->packages = $packages;
     }
 
     /**
@@ -29,12 +29,13 @@ class AssetsHelper extends Helper
     }
 
     /**
-     * @param string $path
+     * @param string      $path
+     * @param string|null $packageName
      *
      * @return string
      */
-    public function getUrl(string $path): string
+    public function getUrl(string $path, string $packageName = null): string
     {
-        return $this->package->getUrl($path);
+        return $this->packages->getUrl($path, $packageName);
     }
 }

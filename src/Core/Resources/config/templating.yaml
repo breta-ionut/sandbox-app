@@ -1,6 +1,6 @@
 services:
     App\Core\Templating\Helper\AssetsHelper:
-        arguments: ['@Symfony\Component\Asset\PackageInterface']
+        arguments: ['@Symfony\Component\Asset\Packages']
         tags: [templating.helper]
 
     Symfony\Component\Templating\Helper\SlotsHelper:
