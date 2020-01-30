@@ -35,7 +35,7 @@ class AssetsExtension extends ConfigurableExtension
             $packages[] = $this->createPackage($container, $packageName, $packageConfig);
         }
 
-        $container->register(Packages::class, new Definition(null, [$defaultPackage, $packages]));
+        $container->setDefinition(Packages::class, new Definition(null, [$defaultPackage, $packages]));
     }
 
     /**
@@ -56,7 +56,7 @@ class AssetsExtension extends ConfigurableExtension
         }
 
         $id = 'assets.version.'.$packageName;
-        $container->register($id, $definition);
+        $container->setDefinition($id, $definition);
 
         return new Reference($id);
     }
@@ -78,7 +78,7 @@ class AssetsExtension extends ConfigurableExtension
             : new Definition(PathPackage::class, [$config['base_path'], $versionStrategy, $context]);
 
         $id = 'assets.package.'.$name;
-        $container->register($id, $definition);
+        $container->setDefinition($id, $definition);
 
         return new Reference($id);
     }
