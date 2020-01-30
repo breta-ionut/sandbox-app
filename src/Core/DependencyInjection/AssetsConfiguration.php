@@ -2,7 +2,7 @@
 
 namespace App\Core\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Builder\NodeDefinition;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -15,35 +15,19 @@ class AssetsConfiguration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('assets');
         $root = $treeBuilder->getRootNode();
-        $packageDefinition = $this->getPackageDefinition();
 
-        $root
-            ->append($packageDefinition)
-
-            ->fixXmlConfig('package')
-
-            ->children()
-                ->arrayNode('packages')
-                    ->useAttributeAsKey('name')
-                    ->normalizeKeys(false)
-
-                    ->arrayPrototype()
-                        ->append($packageDefinition)
-                    ->end()
-                ->end()
-            ->end();
+        $this->addDefaultPackageSection($root);
+        $this->addPackagesSection($root);
 
         return $treeBuilder;
     }
 
     /**
-     * @return NodeDefinition
+     * @param ArrayNodeDefinition $root
      */
-    private function getPackageDefinition(): NodeDefinition
+    private function addDefaultPackageSection(ArrayNodeDefinition $root): void
     {
-        $node = (new TreeBuilder('package'))->getRootNode();
-
-        return $node
+        $root
             ->fixXmlConfig('base_url')
 
             ->children()
@@ -75,14 +59,73 @@ class AssetsConfiguration implements ConfigurationInterface
                 ->ifTrue(static function (array $v): bool {
                     return '' !== $v['base_path'] && $v['base_urls'];
                 })
-                ->thenInvalid('Cannot have both a "base_path" and "base_urls" for a package.')
+                ->thenInvalid('Cannot have both a "base_path" and "base_urls" for the default package.')
             ->end()
 
             ->validate()
                 ->ifTrue(static function (array $v): bool {
                     return isset($v['version'], $v['json_manifest_path']);
                 })
-                ->thenInvalid('Cannot specify both a "version" and a "json_manifest_path" for a package.')
+                ->thenInvalid('Cannot specify both a "version" and a "json_manifest_path" for the default package.')
+            ->end();
+    }
+
+    /**
+     * @param ArrayNodeDefinition $root
+     */
+    private function addPackagesSection(ArrayNodeDefinition $root): void
+    {
+        $root
+            ->fixXmlConfig('package')
+
+            ->children()
+                ->arrayNode('packages')
+                    ->useAttributeAsKey('name')
+                    ->normalizeKeys(false)
+
+                    ->arrayPrototype()
+                        ->fixXmlConfig('base_url')
+
+                        ->children()
+                            ->scalarNode('base_path')
+                                ->defaultValue('')
+                            ->end()
+
+                            ->arrayNode('base_urls')
+                                ->requiresAtLeastOneElement()
+
+                                ->scalarPrototype()->end()
+
+                                ->beforeNormalization()
+                                    ->castToArray()
+                                ->end()
+                            ->end()
+
+                            ->scalarNode('version')->end()
+
+                            ->scalarNode('version_format')
+                                ->cannotBeEmpty()
+                                ->defaultValue('%%s?%%s')
+                            ->end()
+
+                            ->scalarNode('json_manifest_path')->end()
+                        ->end()
+
+                        ->validate()
+                            ->ifTrue(static function (array $v): bool {
+                                return '' !== $v['base_path'] && $v['base_urls'];
+                            })
+                            ->thenInvalid('Cannot have both a "base_path" and "base_urls" for a package.')
+                        ->end()
+
+                        ->validate()
+                            ->ifTrue(static function (array $v): bool {
+                                return isset($v['version'], $v['json_manifest_path']);
+                            })
+                            ->thenInvalid('Cannot specify both a "version" and a "json_manifest_path" for a package.')
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
     }
 }
