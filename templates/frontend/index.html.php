@@ -13,5 +13,5 @@
 <?php $view['slots']->stop(); ?>
 
 <?php $view['slots']->start('javascripts'); ?>
-    <script src="<?= $view['assets']->getUrl('index.js') ?>"></script>
+    <script src="<?= $view['assets']->getUrl('index.js'); ?>"></script>
 <?php $view['slots']->stop(); ?>
