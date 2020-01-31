@@ -48,10 +48,6 @@ module.exports = {
             }
         ]
     },
-    resolve: {
-        alias: {vue: 'vue/dist/vue.js'},
-        extensions: ['*', '.js', '.vue', '.json']
-    },
     plugins: [
         new VueLoaderPlugin(),
         new CleanWebpackPlugin()
