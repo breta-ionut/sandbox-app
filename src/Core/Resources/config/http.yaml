@@ -48,5 +48,5 @@ services:
 
     Symfony\Component\HttpKernel\EventListener\ResponseListener:
         arguments: ['%kernel.charset%']
-        tags: [kernel.event_subscriber]}
+        tags: [kernel.event_subscriber]
     # End of - Listeners.
