@@ -3,10 +3,6 @@ services:
         arguments: ['%kernel.config_dir%', '%kernel.environment%']
         public: true
 
-    App\Core\Routing\RoutingListener:
-        arguments: ['@Symfony\Component\Routing\Matcher\RequestMatcherInterface']
-        tags: [{name: kernel.event_listener, event: kernel.request, method: onRequest, priority: 32}]
-
     routing.file_locator:
         class: Symfony\Component\Config\FileLocator
 
@@ -29,11 +25,7 @@ services:
         class: Symfony\Component\Config\Loader\DelegatingLoader
         arguments: ['@routing.resolver']
 
-    App\Core\Routing\RequestContextFactory:
-        arguments: ['@Symfony\Component\HttpFoundation\RequestStack']
-
-    Symfony\Component\Routing\RequestContext:
-        factory: ['@App\Core\Routing\RequestContextFactory', factory]
+    Symfony\Component\Routing\RequestContext: ~
 
     Symfony\Component\Routing\Router:
         arguments:
@@ -49,3 +41,13 @@ services:
     Symfony\Component\Routing\Generator\UrlGeneratorInterface: '@Symfony\Component\Routing\Router'
     Symfony\Component\Routing\Matcher\RequestMatcherInterface: '@Symfony\Component\Routing\Router'
     Symfony\Component\Routing\Matcher\UrlMatcherInterface: '@Symfony\Component\Routing\Router'
+
+    Symfony\Component\HttpKernel\EventListener\RouterListener:
+        arguments:
+            - '@Symfony\Component\Routing\Matcher\RequestMatcherInterface'
+            - '@Symfony\Component\HttpFoundation\RequestStack'
+            - '@Symfony\Component\Routing\RequestContext'
+            - ~
+            - '%kernel.project_dir%'
+            - '%kernel.debug%'
+        tags: [kernel.event_subscriber]
