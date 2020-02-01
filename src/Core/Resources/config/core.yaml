@@ -1,0 +1,18 @@
+services:
+    kernel:
+        class: App\Core\Kernel
+        public: true
+        synthetic: true
+
+    Symfony\Component\DependencyInjection\ParameterBag\ContainerBag:
+        arguments: ['@service_container']
+
+    Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface: '@Symfony\Component\DependencyInjection\ParameterBag\ContainerBag'
+    Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface: '@Symfony\Component\DependencyInjection\ParameterBag\ContainerBag'
+
+    Symfony\Component\EventDispatcher\EventDispatcher: ~
+    Symfony\Component\EventDispatcher\EventDispatcherInterface: '@Symfony\Component\EventDispatcher\EventDispatcher'
+
+    Psr\EventDispatcher\EventDispatcherInterface:
+        alias: Symfony\Component\EventDispatcher\EventDispatcher
+        public: true
