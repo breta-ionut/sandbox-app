@@ -42,3 +42,11 @@ services:
     Symfony\Component\HttpKernel\HttpKernelInterface:
         alias: Symfony\Component\HttpKernel\HttpKernel
         public: true
+
+    # Listeners.
+    Symfony\Component\HttpKernel\EventListener\ValidateRequestListener:
+
+    Symfony\Component\HttpKernel\EventListener\ResponseListener:
+        arguments: ['%kernel.charset%']
+        tags: [kernel.event_subscriber]}
+    # End of - Listeners.
