@@ -50,3 +50,32 @@ services:
         arguments: ['%kernel.charset%']
         tags: [kernel.event_subscriber]
     # End of - Listeners.
+
+    # Session.
+    Symfony\Component\HttpFoundation\Session\Storage\MetadataBag:
+        arguments: [_app_meta]
+
+    Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage:
+        arguments: [[], ~, '@Symfony\Component\HttpFoundation\Session\Storage\MetadataBag']
+
+    Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage:
+        arguments: [~, MOCKSESSID, '@Symfony\Component\HttpFoundation\Session\Storage\MetadataBag']
+
+    Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag:
+        arguments: [_app_attributes]
+
+    Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface: '@Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag'
+
+    Symfony\Component\HttpFoundation\Session\Flash\FlashBag:
+        arguments: [_app_flashes]
+
+    Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface: '@Symfony\Component\HttpFoundation\Session\Flash\FlashBag'
+
+    Symfony\Component\HttpFoundation\Session\Session:
+        arguments:
+            - ~
+            - '@Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface'
+            - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
+
+    Symfony\Component\HttpFoundation\Session\SessionInterface: '@Symfony\Component\HttpFoundation\Session\Session'
+    # End of - Session.
