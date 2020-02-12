@@ -7,10 +7,10 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\SessionHandlerFactory;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
@@ -73,6 +73,6 @@ class HttpExtension extends ConfigurableExtension
                 ->setArgument('$handler', $storageHandler);
         }
 
-        $container->getDefinition(Session::class)->setArgument('$storage', new Reference($storageId));
+        $container->setAlias(SessionStorageInterface::class, $storageId);
     }
 }
