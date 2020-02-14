@@ -31,6 +31,7 @@
         "symfony/yaml": "^5.0",
         "symfony/security-core": "^5.0",
         "symfony/security-http": "^5.0",
-        "symfony/security-csrf": "^5.0"
+        "symfony/security-csrf": "^5.0",
+        "predis/predis": "^1.1"
     }
 }
