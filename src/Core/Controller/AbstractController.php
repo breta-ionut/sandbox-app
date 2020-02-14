@@ -5,6 +5,7 @@ namespace App\Core\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\EngineInterface;
@@ -95,5 +96,31 @@ abstract class AbstractController implements ServiceSubscriberInterface
         }
 
         return $response->setContent($content);
+    }
+
+    /**
+     * @param string $url
+     * @param int    $status
+     *
+     * @return RedirectResponse
+     */
+    protected function redirect(string $url, int $status = Response::HTTP_FOUND): RedirectResponse
+    {
+        return new RedirectResponse($url, $status);
+    }
+
+    /**
+     * @param string $route
+     * @param array  $parameters
+     * @param int    $status
+     *
+     * @return RedirectResponse
+     */
+    protected function redirectToRoute(
+        string $route,
+        array $parameters = [],
+        int $status = Response::HTTP_FOUND
+    ): RedirectResponse {
+        return $this->redirect($this->generateUrl($route, $parameters), $status);
     }
 }
