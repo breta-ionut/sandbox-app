@@ -45,6 +45,15 @@ services:
 
     # Listeners.
     Symfony\Component\HttpKernel\EventListener\ValidateRequestListener:
+        tags: [kernel.event_subscriber]
+
+    App\Core\Http\SessionListener:
+        arguments:
+            - !service_locator
+                Symfony\Component\HttpFoundation\Session\SessionInterface: '@Symfony\Component\HttpFoundation\Session\SessionInterface'
+                Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface: '@Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface'
+                Symfony\Component\HttpFoundation\RequestStack: '@Symfony\Component\HttpFoundation\RequestStack'
+        tags: [kernel.event_subscriber]
 
     Symfony\Component\HttpKernel\EventListener\ResponseListener:
         arguments: ['%kernel.charset%']
@@ -73,7 +82,7 @@ services:
 
     Symfony\Component\HttpFoundation\Session\Session:
         arguments:
-            - ~
+            - '@Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface'
             - '@Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface'
             - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
 

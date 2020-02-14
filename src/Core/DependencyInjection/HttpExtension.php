@@ -40,7 +40,7 @@ class HttpExtension extends ConfigurableExtension
      */
     private function createSessionStorageHandler(ContainerBuilder $container, array $config): Reference
     {
-        if ($config['id']) {
+        if (isset($config['id'])) {
             return new Reference($config['id']);
         }
 
