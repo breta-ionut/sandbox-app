@@ -18,6 +18,19 @@ abstract class AbstractController implements ServiceSubscriberInterface
     protected ContainerInterface $container;
 
     /**
+     * {@inheritDoc}
+     */
+    public static function getSubscribedServices()
+    {
+        return [
+            ContainerBagInterface::class,
+            EngineInterface::class,
+            EntityManagerInterface::class,
+            UrlGeneratorInterface::class,
+        ];
+    }
+
+    /**
      * @param ContainerInterface $container
      *
      * @required
@@ -82,18 +95,5 @@ abstract class AbstractController implements ServiceSubscriberInterface
         }
 
         return $response->setContent($content);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public static function getSubscribedServices()
-    {
-        return [
-            ContainerBagInterface::class,
-            EngineInterface::class,
-            EntityManagerInterface::class,
-            UrlGeneratorInterface::class,
-        ];
     }
 }
