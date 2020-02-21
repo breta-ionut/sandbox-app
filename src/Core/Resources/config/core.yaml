@@ -16,3 +16,6 @@ services:
     Psr\EventDispatcher\EventDispatcherInterface:
         alias: Symfony\Component\EventDispatcher\EventDispatcher
         public: true
+
+    Symfony\Component\HttpKernel\Log\Logger: ~
+    Psr\Log\LoggerInterface: '@Symfony\Component\HttpKernel\Log\Logger'
