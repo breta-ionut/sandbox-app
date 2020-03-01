@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Core\Templating\Helper;
 
 use Symfony\Component\Asset\Packages;

@@ -1,13 +1,15 @@
 #!/usr/bin/env php
 <?php
 
+declare(strict_types=1);
+
 use App\Core\Console\Application;
 use App\Kernel;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\ErrorHandler\Debug;
 
-if (false === in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
-    echo sprintf('Error: The console should be invoked via the CLI version of PHP, not the `%s` SAPI.', PHP_SAPI);
+if (!in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
+    echo sprintf('Error: The console should be invoked via the CLI version of PHP, not the "%s" SAPI.', PHP_SAPI);
 
     exit(1);
 }
