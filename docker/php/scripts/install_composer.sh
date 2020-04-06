@@ -14,7 +14,7 @@ fi
 php composer-setup.php --quiet --install-dir=/usr/local/bin --filename=composer
 RESULT=$?
 
-mkdir /home/php-user/.composer && chown -R php-user /home/php-user/.composer
+mkdir -p /home/php-user/.composer && chown -R php-user /home/php-user/.composer
 rm composer-setup.php
 
 exit $RESULT
