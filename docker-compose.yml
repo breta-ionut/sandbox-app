@@ -23,7 +23,7 @@ services:
         build:
             context: ./docker/php
             args:
-                PHP_USER_ID: ${UID}
+                PHP_USER_ID: ${UID_DOCKER}
         restart: on-failure
         volumes: ["./:/var/www/sandbox"]
         environment:
