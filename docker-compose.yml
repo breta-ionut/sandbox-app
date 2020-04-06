@@ -24,6 +24,7 @@ services:
             context: ./docker/php
         restart: on-failure
         volumes: ["./:/var/www/sandbox"]
+        user: ${USER_DOCKER}
         environment:
             PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
             APP_ENV: ${APP_ENV}
