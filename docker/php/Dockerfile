@@ -2,7 +2,7 @@ FROM php:7.4-fpm
 
 ARG PHP_USER_ID
 
-RUN useradd -r -u $PHP_USER_ID php-user
+RUN useradd -r -u $PHP_USER_ID php
 
 # Install packages needed to run the app.
 RUN apt-get update && apt-get install -y git zip
@@ -19,6 +19,6 @@ COPY scripts/install_composer.sh /tmp/install_composer.sh
 
 RUN sh /tmp/install_composer.sh && rm /tmp/install_composer.sh
 
-USER php-user
+USER php
 
 WORKDIR /var/www/sandbox
