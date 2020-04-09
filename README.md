@@ -11,4 +11,4 @@ experimenting.
 ## Usage
 
 1. You can access the application at http://sandbox.local
-2. Before accessing it though, you must build the frontend: run `make build-front`
+2. In order to also have a working app, you must build the frontend: run `make build-front`
