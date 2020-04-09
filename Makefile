@@ -24,7 +24,10 @@ clean-hard:
 		docker system prune -a --volumes -f
 # End of - Docker commands.
 
-# Front-end commands.
+# Frontend commands.
 start-front:
         docker-compose exec npm run start
-# End of - Front-end commands.
+
+build-front:
+        docker-compose exec npm run build
+# End of - Frontend commands.
