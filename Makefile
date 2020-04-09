@@ -12,10 +12,10 @@ restart: stop
 		make start
 
 init:
-        cp .env.dist .env \
-        make start \
-        docker-compose exec php composer install \
-        docker-compose exec node npm install
+		cp .env.dist .env
+		make start
+		docker-compose exec php composer install
+		docker-compose exec node npm install
 
 clean:
 		docker system prune -f
@@ -26,8 +26,8 @@ clean-hard:
 
 # Frontend commands.
 start-front:
-        docker-compose exec npm run start
+		docker-compose exec npm run start
 
 build-front:
-        docker-compose exec npm run build
+		docker-compose exec npm run build
 # End of - Frontend commands.
