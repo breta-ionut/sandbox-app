@@ -26,8 +26,8 @@ clean-hard:
 
 # Frontend commands.
 start-front:
-		docker-compose exec npm run start
+		docker-compose exec node npm run start
 
 build-front:
-		docker-compose exec npm run build
+		docker-compose exec node npm run build
 # End of - Frontend commands.
