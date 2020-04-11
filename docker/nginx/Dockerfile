@@ -1,6 +1,5 @@
 FROM nginx:latest
 
-# Generate DH parameters and self-signed certificates for the app.
 RUN apt-get update \
     && apt-get install -y openssl \
     && openssl dhparam -out /etc/nginx/dhparam.pem 4096 \
@@ -13,12 +12,8 @@ RUN apt-get update \
         -keyout /etc/ssl/sandbox.key \
         -out /etc/ssl/sandbox.crt
 
-# Copy the config files.
 COPY config/nginx.conf config/ssl.conf /etc/nginx/
 
-# Configure the virtual hosts.
 RUN mkdir /etc/nginx/sites-available && mkdir /etc/nginx/sites-enabled
-
 COPY config/sandbox /etc/nginx/sites-available/
-
 RUN ln -s /etc/nginx/sites-available/sandbox /etc/nginx/sites-enabled/sandbox
