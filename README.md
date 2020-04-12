@@ -10,5 +10,15 @@ experimenting.
 
 ## Usage
 
-1. You can access the application at http://sandbox.local
-2. In order to also have a working app, you must build the frontend: run `make build-front`
+1. In order to have a working app, you must build the frontend: `make start-front`
+2. The app is available at https://sandbox.local
+
+## Development
+
+### PHP
+
+1. In order to enable Xdebug for CLI scripts, run into the console `exd`. For disabling it, run `dxd`
+
+### Frontend
+
+1. For HMR, start the webpack-dev-server: `make start-front`
