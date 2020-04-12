@@ -1,0 +1,118 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Core\DependencyInjection;
+
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+
+class SecurityConfiguration implements ConfigurationInterface
+{
+    /**
+     * {@inheritDoc}
+     */
+    public function getConfigTreeBuilder()
+    {
+        $treeBuilder = new TreeBuilder('security');
+        $root = $treeBuilder->getRootNode();
+
+        $this->addEncodersSection($root);
+
+        return $treeBuilder;
+    }
+
+    /**
+     * @param ArrayNodeDefinition $root
+     */
+    private function addEncodersSection(ArrayNodeDefinition $root): void
+    {
+        $root
+            ->fixXmlConfig('encoder')
+
+            ->children()
+                ->arrayNode('encoders')
+                    ->useAttributeAsKey('class')
+                    ->normalizeKeys(false)
+
+                    ->arrayPrototype()
+                        ->info(\sprintf(
+                            'See %s::getEncoderConfigFromAlgorithm() on how to configure the encoders.',
+                            EncoderFactory::class
+                        ))
+
+                        ->beforeNormalization()
+                            ->ifString()
+                            ->then(static function (string $value): array {
+                                return ['algorithm' => $value];
+                            })
+                        ->end()
+
+                        ->children()
+                            ->scalarNode('algorithm')
+                                ->cannotBeEmpty()
+                            ->end()
+
+                            ->arrayNode('migrate_from')
+                                ->beforeNormalization()
+                                    ->castToArray()
+                                ->end()
+
+                                ->scalarPrototype()
+                                    ->cannotBeEmpty()
+                                ->end()
+                            ->end()
+
+                            ->booleanNode('ignore_case')
+                                ->defaultFalse()
+                            ->end()
+
+                            ->scalarNode('hash_algorithm')
+                                ->info('See hash_algos() for a list of supported algorithms.')
+
+                                ->cannotBeEmpty()
+                                ->defaultValue('sha512')
+                            ->end()
+
+                            ->booleanNode('encode_as_base64')->end()
+
+                            ->integerNode('iterations')
+                                ->min(1)
+                            ->end()
+
+                            ->integerNode('key_length')
+                                ->min(0)
+                            ->end()
+
+                            ->integerNode('time_cost')
+                                ->min(3)
+                            ->end()
+
+                            ->integerNode('memory_cost')
+                                ->min(10)
+                            ->end()
+
+                            ->integerNode('cost')
+                                ->min(4)
+                                ->max(31)
+                            ->end()
+
+                            ->scalarNode('native_algorithm')
+                                ->info('An algorithm accepted by password_hash().')
+
+                                ->cannotBeEmpty()
+                            ->end()
+
+                            ->scalarNode('id')
+                                ->info('The id of a custom password encoder.')
+
+                                ->cannotBeEmpty()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+    }
+}
