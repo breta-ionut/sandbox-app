@@ -27,19 +27,6 @@ class HttpConfiguration implements ConfigurationInterface
                         ->arrayNode('handler')
                             ->addDefaultsIfNotSet()
 
-                            ->children()
-                                ->scalarNode('id')
-                                    ->cannotBeEmpty()
-                                ->end()
-
-                                ->scalarNode('url')
-                                    ->info('The URL of the connection to be used by the session storage handler.')
-                                    ->example('redis://localhost:6379')
-
-                                    ->defaultValue('file://%kernel.cache_dir%/sessions')
-                                ->end()
-                            ->end()
-
                             ->beforeNormalization()
                                 ->ifTrue(static function (array $value): bool {
                                     return isset($value['id']);
@@ -51,6 +38,19 @@ class HttpConfiguration implements ConfigurationInterface
 
                                     return $value;
                                 })
+                            ->end()
+
+                            ->children()
+                                ->scalarNode('id')
+                                    ->cannotBeEmpty()
+                                ->end()
+
+                                ->scalarNode('url')
+                                    ->info('The URL of the connection to be used by the session storage handler.')
+                                    ->example('redis://localhost:6379')
+
+                                    ->defaultValue('file://%kernel.cache_dir%/sessions')
+                                ->end()
                             ->end()
                         ->end()
 

@@ -20,6 +20,7 @@ class SecurityConfiguration implements ConfigurationInterface
         $root = $treeBuilder->getRootNode();
 
         $this->addEncodersSection($root);
+        $this->addAccessControlSection($root);
 
         return $treeBuilder;
     }
@@ -109,6 +110,90 @@ class SecurityConfiguration implements ConfigurationInterface
                                 ->info('The id of a custom password encoder.')
 
                                 ->cannotBeEmpty()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+    }
+
+    /**
+     * @param ArrayNodeDefinition $root
+     */
+    private function addAccessControlSection(ArrayNodeDefinition $root): void
+    {
+        $root
+            ->fixXmlConfig('rule', 'access_control')
+
+            ->children()
+                ->arrayNode('access_control')
+                    ->cannotBeOverwritten()
+
+                    ->arrayPrototype()
+                        ->fixXmlConfig('method')
+                        ->fixXmlConfig('ip')
+                        ->fixXmlConfig('attribute')
+                        ->fixXmlConfig('role')
+
+                        ->children()
+                            ->scalarNode('path')
+                                ->cannotBeEmpty()
+                            ->end()
+
+                            ->scalarNode('host')->end()
+
+                            ->scalarNode('port')->end()
+
+                            ->arrayNode('methods')
+                                ->requiresAtLeastOneElement()
+
+                                ->beforeNormalization()
+                                    ->castToArray()
+                                ->end()
+
+                                ->scalarPrototype()
+                                    ->cannotBeEmpty()
+                                ->end()
+                            ->end()
+
+                            ->arrayNode('ips')
+                                ->requiresAtLeastOneElement()
+
+                                ->beforeNormalization()
+                                    ->castToArray()
+                                ->end()
+
+                                ->scalarPrototype()->end()
+                            ->end()
+
+                            ->arrayNode('attributes')
+                                ->requiresAtLeastOneElement()
+                                ->useAttributeAsKey('name')
+                                ->normalizeKeys(false)
+
+                                ->scalarPrototype()
+                                    ->cannotBeEmpty()
+                                ->end()
+                            ->end()
+
+                            ->enumNode('scheme')
+                                ->values(['http', 'https'])
+                            ->end()
+
+                            ->arrayNode('roles')
+                                ->requiresAtLeastOneElement()
+
+                                ->beforeNormalization()
+                                    ->castToArray()
+                                ->end()
+
+                                ->scalarPrototype()
+                                    ->cannotBeEmpty()
+                                ->end()
+                            ->end()
+
+                            ->enumNode('channel')
+                                ->values(['http', 'https'])
                             ->end()
                         ->end()
                     ->end()

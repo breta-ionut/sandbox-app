@@ -40,11 +40,11 @@ class AssetsConfiguration implements ConfigurationInterface
                 ->arrayNode('base_urls')
                     ->requiresAtLeastOneElement()
 
-                    ->scalarPrototype()->end()
-
                     ->beforeNormalization()
                         ->castToArray()
                     ->end()
+
+                    ->scalarPrototype()->end()
                 ->end()
 
                 ->scalarNode('version')->end()
@@ -96,11 +96,11 @@ class AssetsConfiguration implements ConfigurationInterface
                             ->arrayNode('base_urls')
                                 ->requiresAtLeastOneElement()
 
-                                ->scalarPrototype()->end()
-
                                 ->beforeNormalization()
                                     ->castToArray()
                                 ->end()
+
+                                ->scalarPrototype()->end()
                             ->end()
 
                             ->scalarNode('version')->end()
