@@ -120,6 +120,98 @@ class SecurityConfiguration implements ConfigurationInterface
     /**
      * @param ArrayNodeDefinition $root
      */
+    private function addFirewallsSection(ArrayNodeDefinition $root): void
+    {
+        $root
+            ->fixXmlConfig('firewall')
+
+            ->children()
+                ->arrayNode('firewalls')
+                    ->useAttributeAsKey('name')
+                    ->normalizeKeys(false)
+
+                    ->arrayPrototype()
+                        ->fixXmlConfig('method')
+                        ->fixXmlConfig('ip')
+                        ->fixXmlConfig('attribute')
+
+                        ->children()
+                            ->scalarNode('path')
+                                ->cannotBeEmpty()
+                            ->end()
+
+                            ->scalarNode('host')->end()
+
+                            ->scalarNode('port')->end()
+
+                            ->arrayNode('methods')
+                                ->requiresAtLeastOneElement()
+
+                                ->beforeNormalization()
+                                    ->castToArray()
+                                ->end()
+
+                                ->scalarPrototype()
+                                    ->cannotBeEmpty()
+                                ->end()
+                            ->end()
+
+                            ->arrayNode('ips')
+                                ->requiresAtLeastOneElement()
+
+                                ->beforeNormalization()
+                                    ->castToArray()
+                                ->end()
+
+                                ->scalarPrototype()->end()
+                            ->end()
+
+                            ->arrayNode('attributes')
+                                ->requiresAtLeastOneElement()
+                                ->useAttributeAsKey('name')
+                                ->normalizeKeys(false)
+
+                                ->scalarPrototype()
+                                    ->cannotBeEmpty()
+                                ->end()
+                            ->end()
+
+                            ->enumNode('scheme')
+                                ->values(['http', 'https'])
+                            ->end()
+
+                            ->booleanNode('security')
+                                ->defaultTrue()
+                            ->end()
+
+                            ->arrayNode('anonymous')
+                                ->canBeEnabled()
+
+                                ->children()
+                                    ->scalarNode('secret')
+                                        ->cannotBeEmpty()
+                                    ->end()
+                                ->end()
+                            ->end()
+
+                            ->booleanNode('stateless')
+                                ->defaultTrue()
+                            ->end()
+
+                            ->scalarNode('access_denied_url')->end()
+
+                            ->scalarNode('access_denied_handler')
+                                ->cannotBeEmpty()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+    }
+
+    /**
+     * @param ArrayNodeDefinition $root
+     */
     private function addAccessControlSection(ArrayNodeDefinition $root): void
     {
         $root
