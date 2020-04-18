@@ -7,6 +7,7 @@ namespace App\Core\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 
 class SecurityConfiguration implements ConfigurationInterface
@@ -202,6 +203,85 @@ class SecurityConfiguration implements ConfigurationInterface
 
                             ->scalarNode('access_denied_handler')
                                 ->cannotBeEmpty()
+                            ->end()
+
+                            ->arrayNode('logout')
+                                ->fixXmlConfig('clear_cookie')
+                                ->fixXmlConfig('handler')
+                                ->canBeEnabled()
+
+                                ->children()
+                                    ->scalarNode('path')
+                                        ->cannotBeEmpty()
+                                    ->end()
+
+                                    ->scalarNode('csrf_parameter')
+                                        ->cannotBeEmpty()
+                                    ->end()
+
+                                    ->scalarNode('csrf_token_id')
+                                        ->cannotBeEmpty()
+                                    ->end()
+
+                                    ->scalarNode('target')->end()
+
+                                    ->scalarNode('success_handler')
+                                        ->cannotBeEmpty()
+                                    ->end()
+
+                                    ->booleanNode('invalidate_session')
+                                        ->defaultTrue()
+                                    ->end()
+
+                                    ->arrayNode('clear_cookies')
+                                        ->useAttributeAsKey('name')
+                                        ->normalizeKeys(false)
+
+                                        ->beforeNormalization()
+                                            ->ifTrue(static function ($value): bool {
+                                                return \is_string($value)
+                                                    || (\is_array($value)
+                                                        && \is_int(\array_key_first($value))
+                                                        && \is_string(\reset($value)
+                                                    ));
+                                            })
+                                            ->then(static function ($value): array {
+                                                return \array_map(static function (string $value): array {
+                                                    return ['name' => $value];
+                                                }, (array) $value);
+                                            })
+                                        ->end()
+
+                                        ->arrayPrototype()
+                                            ->children()
+                                                ->scalarNode('path')
+                                                    ->defaultNull()
+                                                ->end()
+
+                                                ->scalarNode('domain')
+                                                    ->defaultNull()
+                                                ->end()
+
+                                                ->booleanNode('secure')->end()
+
+                                                ->enumNode('samesite')
+                                                    ->values([
+                                                        null,
+                                                        Cookie::SAMESITE_NONE,
+                                                        Cookie::SAMESITE_LAX,
+                                                        Cookie::SAMESITE_STRICT,
+                                                    ])
+                                                ->end()
+                                            ->end()
+                                        ->end()
+                                    ->end()
+
+                                    ->arrayNode('handlers')
+                                        ->scalarPrototype()
+                                            ->cannotBeEmpty()
+                                        ->end()
+                                    ->end()
+                                ->end()
                             ->end()
                         ->end()
                     ->end()
