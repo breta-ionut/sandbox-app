@@ -8,7 +8,9 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
 class SecurityConfiguration implements ConfigurationInterface
 {
@@ -21,7 +23,9 @@ class SecurityConfiguration implements ConfigurationInterface
         $root = $treeBuilder->getRootNode();
 
         $this->addEncodersSection($root);
+        $this->addFirewallsSection($root);
         $this->addAccessControlSection($root);
+        $this->addOtherSettingsSection($root);
 
         return $treeBuilder;
     }
@@ -379,6 +383,55 @@ class SecurityConfiguration implements ConfigurationInterface
                             ->enumNode('channel')
                                 ->values(['http', 'https'])
                             ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+    }
+
+    /**
+     * @param ArrayNodeDefinition $root
+     */
+    private function addOtherSettingsSection(ArrayNodeDefinition $root): void
+    {
+        $root
+            ->children()
+                ->booleanNode('erase_credentials')
+                    ->defaultTrue()
+                ->end()
+
+                ->enumNode('session_authentication_strategy')
+                    ->values([
+                        SessionAuthenticationStrategy::NONE,
+                        SessionAuthenticationStrategy::MIGRATE,
+                        SessionAuthenticationStrategy::INVALIDATE,
+                    ])
+                    ->defaultValue(SessionAuthenticationStrategy::MIGRATE)
+                ->end()
+
+                ->booleanNode('always_authenticate_before_granting')
+                    ->defaultFalse()
+                ->end()
+
+                ->arrayNode('access_decision_manager')
+                    ->addDefaultsIfNotSet()
+
+                    ->children()
+                        ->enumNode('strategy')
+                            ->values([
+                                AccessDecisionManager::STRATEGY_AFFIRMATIVE,
+                                AccessDecisionManager::STRATEGY_CONSENSUS,
+                                AccessDecisionManager::STRATEGY_UNANIMOUS,
+                            ])
+                            ->defaultValue(AccessDecisionManager::STRATEGY_AFFIRMATIVE)
+                        ->end()
+
+                        ->booleanNode('allow_if_all_abstain')
+                            ->defaultFalse()
+                        ->end()
+
+                        ->booleanNode('allow_if_equal_granted_denied')
+                            ->defaultTrue()
                         ->end()
                     ->end()
                 ->end()
