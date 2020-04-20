@@ -291,6 +291,10 @@ class SecurityConfiguration implements ConfigurationInterface
                             ->scalarNode('user_provider')
                                 ->cannotBeEmpty()
                             ->end()
+
+                            ->scalarNode('user_checker')
+                                ->cannotBeEmpty()
+                            ->end()
                         ->end()
                     ->end()
                 ->end()
