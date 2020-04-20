@@ -283,6 +283,14 @@ class SecurityConfiguration implements ConfigurationInterface
                                     ->end()
                                 ->end()
                             ->end()
+
+                            ->scalarNode('authenticator')
+                                ->cannotBeEmpty()
+                            ->end()
+
+                            ->scalarNode('user_provider')
+                                ->cannotBeEmpty()
+                            ->end()
                         ->end()
                     ->end()
                 ->end()
