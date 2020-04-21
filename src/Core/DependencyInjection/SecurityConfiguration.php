@@ -290,7 +290,7 @@ class SecurityConfiguration implements ConfigurationInterface
                                 ->end()
                             ->end()
 
-                            ->scalarNode('authenticator')
+                            ->scalarNode('watchdog')
                                 ->cannotBeEmpty()
                             ->end()
 
