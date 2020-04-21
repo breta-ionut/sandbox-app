@@ -227,7 +227,9 @@ class SecurityConfiguration implements ConfigurationInterface
                                         ->cannotBeEmpty()
                                     ->end()
 
-                                    ->scalarNode('target')->end()
+                                    ->scalarNode('target')
+                                        ->defaultValue('/')
+                                    ->end()
 
                                     ->scalarNode('success_handler')
                                         ->cannotBeEmpty()
