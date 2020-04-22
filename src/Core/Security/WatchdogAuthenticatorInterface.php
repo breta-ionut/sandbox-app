@@ -11,6 +11,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 
+/**
+ * The contract of watchdog authenticators. Through them one can implement various authentication systems, adapted to
+ * its own needs (e.g. form login, API token based authentication).
+ *
+ * The watchdog authenticator concentrates all methods used throughout the authentication flow in one place, providing a
+ * better overview and a higher degree of control over the process.
+ */
 interface WatchdogAuthenticatorInterface extends AuthenticationEntryPointInterface
 {
     /**
