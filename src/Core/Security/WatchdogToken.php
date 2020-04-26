@@ -12,9 +12,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class WatchdogToken extends AbstractToken implements WatchdogTokenInterface
 {
-    /**
-     * @var string
-     */
     private string $firewall;
 
     /**

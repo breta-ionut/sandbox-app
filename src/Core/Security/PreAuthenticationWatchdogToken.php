@@ -19,9 +19,6 @@ class PreAuthenticationWatchdogToken extends AbstractToken implements WatchdogTo
      */
     private $credentials;
 
-    /**
-     * @var string
-     */
     private string $firewall;
 
     /**
