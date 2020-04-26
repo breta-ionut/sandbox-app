@@ -13,7 +13,7 @@ use Symfony\Component\Security\Http\SecurityEvents;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class WatchdogAuthenticationHandler
+class WatchdogAuthenticationHelper
 {
     private TokenStorageInterface $tokenStorage;
     private EventDispatcherInterface $eventDispatcher;
