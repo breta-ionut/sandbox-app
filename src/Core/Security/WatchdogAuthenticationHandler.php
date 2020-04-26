@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Core\Security;
 
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -26,27 +24,23 @@ class WatchdogAuthenticationHandler
     private array $statelessFirewalls;
 
     private SessionAuthenticationStrategyInterface $sessionAuthenticationStrategy;
-    private LoggerInterface $logger;
 
     /**
      * @param TokenStorageInterface                  $tokenStorage
      * @param EventDispatcherInterface               $eventDispatcher
      * @param string[]                               $statelessFirewalls
      * @param SessionAuthenticationStrategyInterface $sessionAuthenticationStrategy
-     * @param LoggerInterface|null                   $logger
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $eventDispatcher,
         array $statelessFirewalls,
-        SessionAuthenticationStrategyInterface $sessionAuthenticationStrategy,
-        LoggerInterface $logger = null
+        SessionAuthenticationStrategyInterface $sessionAuthenticationStrategy
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->eventDispatcher = $eventDispatcher;
         $this->statelessFirewalls = $statelessFirewalls;
         $this->sessionAuthenticationStrategy = $sessionAuthenticationStrategy;
-        $this->logger = $logger ?? new NullLogger();
     }
 
     /**
