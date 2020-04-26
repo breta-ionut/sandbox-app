@@ -19,8 +19,8 @@ class WatchdogToken extends AbstractToken implements WatchdogTokenInterface
 
     /**
      * @param UserInterface $user
-     * @param string $firewall
-     * @param string[] $roles
+     * @param string        $firewall
+     * @param string[]      $roles
      */
     public function __construct(UserInterface $user, string $firewall, array $roles = [])
     {

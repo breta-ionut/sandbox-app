@@ -43,7 +43,7 @@ interface WatchdogAuthenticatorInterface extends AuthenticationEntryPointInterfa
      * authentication fails (an UsernameNotFoundException gets thrown further). The authentication can also be stopped
      * by throwing an AuthenticationException directly from the method.
      *
-     * @param mixed $credentials
+     * @param mixed                 $credentials
      * @param UserProviderInterface $userProvider
      *
      * @return UserInterface|null
@@ -56,7 +56,7 @@ interface WatchdogAuthenticatorInterface extends AuthenticationEntryPointInterfa
      * Checks if the previously determined credentials are valid. If they aren't (false is returned), the authentication
      * fails. The authentication can also be stopped by throwing an AuthenticationException.
      *
-     * @param $credentials
+     * @param mixed         $credentials
      * @param UserInterface $user
      *
      * @return bool
@@ -69,7 +69,7 @@ interface WatchdogAuthenticatorInterface extends AuthenticationEntryPointInterfa
      * Creates an authenticated token for the given user and firewall.
      *
      * @param UserInterface $user
-     * @param string $firewall
+     * @param string        $firewall
      *
      * @return WatchdogTokenInterface
      */
@@ -80,7 +80,7 @@ interface WatchdogAuthenticatorInterface extends AuthenticationEntryPointInterfa
      * request continues. Exceptions can also be thrown from this method in the idea that they will get handled later
      * (i.e. by an exception listener).
      *
-     * @param Request $request
+     * @param Request                 $request
      * @param AuthenticationException $exception
      *
      * @return Response|null
@@ -91,7 +91,7 @@ interface WatchdogAuthenticatorInterface extends AuthenticationEntryPointInterfa
      * Called when the authentication succeeds. The resulting response, if any, gets returned immediately, otherwise the
      * request continues.
      *
-     * @param Request $request
+     * @param Request                $request
      * @param WatchdogTokenInterface $token
      *
      * @return Response|null
