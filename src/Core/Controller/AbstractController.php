@@ -15,9 +15,6 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 abstract class AbstractController implements ServiceSubscriberInterface
 {
-    /**
-     * @var ContainerInterface
-     */
     protected ContainerInterface $container;
 
     /**

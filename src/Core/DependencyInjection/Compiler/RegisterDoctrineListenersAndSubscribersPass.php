@@ -33,8 +33,8 @@ class RegisterDoctrineListenersAndSubscribersPass implements CompilerPassInterfa
         // Collect and register the event subscribers.
         foreach ($this->findAndSortTaggedServices(self::SUBSCRIBER_TAG, $container) as $subscriber) {
             $class = $parameterBag->resolveValue($container->getDefinition((string) $subscriber));
-            if (!is_a($class, EventSubscriber::class, true)) {
-                throw new LogicException(sprintf(
+            if (!\is_a($class, EventSubscriber::class, true)) {
+                throw new LogicException(\sprintf(
                     '"%s" was registered as a Doctrine event subscriber but doesn\'t implement "%s".',
                     $subscriber,
                     EventSubscriber::class
@@ -48,7 +48,7 @@ class RegisterDoctrineListenersAndSubscribersPass implements CompilerPassInterfa
         $listeners = [];
         foreach ($container->findTaggedServiceIds(self::LISTENER_TAG) as $id => $attributes) {
             if (!isset($attributes[0]['event'])) {
-                throw new LogicException(sprintf('No event(s) specified for Doctrine event listener "%s".', $id));
+                throw new LogicException(\sprintf('No event(s) specified for Doctrine event listener "%s".', $id));
             }
 
             $listeners[$attributes[0]['priority'] ?? 0][$id] = (array) $attributes[0]['event'];
@@ -57,8 +57,8 @@ class RegisterDoctrineListenersAndSubscribersPass implements CompilerPassInterfa
         $listenerRefs = [];
         if ($listeners) {
             // Sort the listeners in order to have them registered according to their priorities.
-            krsort($listeners);
-            $listeners = array_merge(...$listeners);
+            \krsort($listeners);
+            $listeners = \array_merge(...$listeners);
 
             foreach ($listeners as $id => $events) {
                 $eventManager->addMethodCall('addEventListener', [$events, $id]);

@@ -18,34 +18,11 @@ class EntityManagerFactory
 
     private const PROXY_DIR_PATTERN = '%s/doctrine/Proxies';
 
-    /**
-     * @var array
-     */
     private array $connectionParams;
-
-    /**
-     * @var string
-     */
     private string $configDir;
-
-    /**
-     * @var RepositoryFactory
-     */
     private RepositoryFactory $repositoryFactory;
-
-    /**
-     * @var EventManager
-     */
     private EventManager $eventManager;
-
-    /**
-     * @var string
-     */
     private string $cacheDir;
-
-    /**
-     * @var string
-     */
     private string $environment;
 
     /**
@@ -77,14 +54,14 @@ class EntityManagerFactory
      */
     public function factory(): EntityManager
     {
-        $isDevMode = in_array($this->environment, ['dev', 'test']);
-        $proxyDir = sprintf(self::PROXY_DIR_PATTERN, $this->cacheDir);
+        $isDevMode = \in_array($this->environment, ['dev', 'test']);
+        $proxyDir = \sprintf(self::PROXY_DIR_PATTERN, $this->cacheDir);
 
         // Determine the associations between the mapping files and the entities of the application.
         $prefixes = [];
-        $mappingDir = sprintf(self::MAPPING_DIR_PATTERN, $this->configDir);
+        $mappingDir = \sprintf(self::MAPPING_DIR_PATTERN, $this->configDir);
 
-        if (is_dir($mappingDir)) {
+        if (\is_dir($mappingDir)) {
             $finder = (new Finder())
                 ->in($mappingDir)
                 ->depth(0)
@@ -92,7 +69,7 @@ class EntityManagerFactory
 
             /** @var SplFileInfo $file */
             foreach ($finder as $file) {
-                $prefixes[$file->getRealPath()] = sprintf(self::NAMESPACE_PREFIX_PATTERN, $file);
+                $prefixes[$file->getRealPath()] = \sprintf(self::NAMESPACE_PREFIX_PATTERN, $file);
             }
         }
 

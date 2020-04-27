@@ -23,10 +23,7 @@ class DropDatabaseCommand extends Command
      */
     protected static $defaultName = 'doctrine:database:drop';
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
     /**
      * @param Connection $connection
@@ -102,21 +99,21 @@ EOT
         $connection = DriverManager::getConnection($params);
 
         $schemaManager = $connection->getSchemaManager();
-        $dropDatabase = !$input->getOption('if-exists') || in_array($name, $schemaManager->listDatabases(), true);
+        $dropDatabase = !$input->getOption('if-exists') || \in_array($name, $schemaManager->listDatabases(), true);
         $escapedName = !$isFile ? $connection->getDatabasePlatform()->quoteSingleIdentifier($name) : $name;
 
         try {
             if ($dropDatabase) {
                 $schemaManager->dropDatabase($escapedName);
 
-                $style->success(sprintf('Dropped database "%s".', $name));
+                $style->success(\sprintf('Dropped database "%s".', $name));
             } else {
-                $style->success(sprintf('Database "%s" doesn\'t exist.', $name));
+                $style->success(\sprintf('Database "%s" doesn\'t exist.', $name));
             }
 
             return self::RETURN_CODE_SUCCESS;
         } catch (\Throwable $exception) {
-            $style->error([sprintf('Error occurred while dropping database "%s":', $name), $exception->getMessage()]);
+            $style->error([\sprintf('Error occurred while dropping database "%s":', $name), $exception->getMessage()]);
 
             return self::RETURN_CODE_ERROR;
         } finally {

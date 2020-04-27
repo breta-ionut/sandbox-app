@@ -16,8 +16,6 @@ class RepositoryFactory implements RepositoryFactoryInterface
 {
     /**
      * Contains the repositories registered as services.
-     *
-     * @var ContainerInterface
      */
     private ContainerInterface $container;
 
@@ -55,13 +53,13 @@ class RepositoryFactory implements RepositoryFactoryInterface
             $repositoryClass = $entityManager->getConfiguration()->getDefaultRepositoryClassName();
         }
 
-        $repositoryHash = spl_object_hash($entityManager).':'.$entityName;
+        $repositoryHash = \spl_object_hash($entityManager).':'.$entityName;
         if (isset($this->repositories[$repositoryHash])) {
             return $this->repositories[$repositoryHash];
         }
 
-        if (!is_a($repositoryClass, ObjectRepository::class, true)) {
-            throw new \LogicException(sprintf(
+        if (!\is_a($repositoryClass, ObjectRepository::class, true)) {
+            throw new \LogicException(\sprintf(
                 'Repository class "%s" of entity "%s" doesn\'t implement "%s".',
                 $repositoryClass,
                 $entityName,

@@ -13,19 +13,8 @@ use Psr\Container\ContainerInterface;
  */
 class EventManager extends BaseEventManager
 {
-    /**
-     * @var ContainerInterface
-     */
     private ContainerInterface $container;
-
-    /**
-     * @var array
-     */
     private array $listeners = [];
-
-    /**
-     * @var array
-     */
     private array $initialized = [];
 
     /**
@@ -49,7 +38,7 @@ class EventManager extends BaseEventManager
         $this->initializeListeners($eventName);
 
         foreach ($this->listeners[$eventName] as $listener) {
-            call_user_func([$listener, $eventName], $eventArgs);
+            \call_user_func([$listener, $eventName], $eventArgs);
         }
     }
 
@@ -59,7 +48,7 @@ class EventManager extends BaseEventManager
     public function getListeners($event = null)
     {
         if (null === $event) {
-            foreach (array_keys($this->listeners) as $event) {
+            foreach (\array_keys($this->listeners) as $event) {
                 $this->initializeListeners($event);
             }
 
@@ -93,7 +82,7 @@ class EventManager extends BaseEventManager
         foreach ((array) $events as $event) {
             $this->listeners[$event][$hash] = $listener;
 
-            if (is_string($listener)) {
+            if (\is_string($listener)) {
                 $this->initialized[$event] = false;
             }
         }
@@ -121,7 +110,7 @@ class EventManager extends BaseEventManager
         }
 
         foreach ($this->listeners[$event] as $hash => $listener) {
-            if (is_string($listener)) {
+            if (\is_string($listener)) {
                 $this->listeners[$event][$hash] = $this->container->get($listener);
             }
         }
@@ -136,6 +125,6 @@ class EventManager extends BaseEventManager
      */
     private function getHash($listener): string
     {
-        return is_string($listener) ? 'service:'.$listener : spl_object_hash($listener);
+        return \is_string($listener) ? 'service:'.$listener : \spl_object_hash($listener);
     }
 }

@@ -22,10 +22,7 @@ class CreateDatabaseCommand extends Command
      */
     protected static $defaultName = 'doctrine:database:create';
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
     /**
      * @param Connection $connection
@@ -81,21 +78,21 @@ EOT
 
         $schemaManager = $connection->getSchemaManager();
         $createDatabase = !$input->getOption('if-not-exists')
-            || !in_array($name, $schemaManager->listDatabases(), true);
+            || !\in_array($name, $schemaManager->listDatabases(), true);
         $escapedName = !$isFile ? $connection->getDatabasePlatform()->quoteSingleIdentifier($name) : $name;
 
         try {
             if ($createDatabase) {
                 $schemaManager->createDatabase($escapedName);
 
-                $style->success(sprintf('Created database "%s".', $name));
+                $style->success(\sprintf('Created database "%s".', $name));
             } else {
-                $style->success(sprintf('Database "%s" already exists.', $name));
+                $style->success(\sprintf('Database "%s" already exists.', $name));
             }
 
             return self::RETURN_CODE_SUCCESS;
         } catch (\Throwable $exception) {
-            $style->error([sprintf('Error occurred while creating database "%s":', $name), $exception->getMessage()]);
+            $style->error([\sprintf('Error occurred while creating database "%s":', $name), $exception->getMessage()]);
 
             return self::RETURN_CODE_ERROR;
         } finally {

@@ -23,15 +23,15 @@ trait ConfigurationExtensionTrait
      */
     public function getConfiguration(array $config, ContainerBuilder $container)
     {
-        $class = str_replace('Extension', 'Configuration', get_class($this));
+        $class = \str_replace('Extension', 'Configuration', \get_class($this));
         $reflection = $container->getReflectionClass($class);
 
         if (null === $reflection) {
-            throw new LogicException(sprintf('No extension configuration class "%s" defined.', $class));
+            throw new LogicException(\sprintf('No extension configuration class "%s" defined.', $class));
         }
 
         if (!$reflection->implementsInterface(ConfigurationInterface::class)) {
-            throw new LogicException(sprintf(
+            throw new LogicException(\sprintf(
                 'The extension configuration class "%s" must implement "%s".',
                 $class,
                 ConfigurationInterface::class
@@ -41,7 +41,7 @@ trait ConfigurationExtensionTrait
         if (!$reflection->isInstantiable()
             || (($constructor = $reflection->getConstructor()) && $constructor->getNumberOfRequiredParameters())
         ) {
-            throw new LogicException(sprintf(
+            throw new LogicException(\sprintf(
                 'The extension configuration class "%s" is not instantiable or its constructor requires arguments.',
                 $class
             ));

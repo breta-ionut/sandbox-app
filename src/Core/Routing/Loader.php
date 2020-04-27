@@ -10,14 +10,7 @@ use Symfony\Component\Routing\RouteCollectionBuilder;
 
 class Loader
 {
-    /**
-     * @var string
-     */
     private string $configDir;
-
-    /**
-     * @var string
-     */
     private string $environment;
 
     /**

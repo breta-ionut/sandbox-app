@@ -19,14 +19,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class Application extends BaseApplication
 {
-    /**
-     * @var KernelInterface
-     */
     private KernelInterface $kernel;
-
-    /**
-     * @var bool
-     */
     private bool $commandsRegistered = false;
 
     /**
@@ -90,7 +83,7 @@ class Application extends BaseApplication
     public function getLongVersion()
     {
         return parent::getLongVersion()
-            .sprintf(
+            .\sprintf(
                 ' (env: <comment>%s</comment>, debug: <comment>%s</comment>)',
                 $this->kernel->getEnvironment(),
                 $this->kernel->isDebug() ? 'true' : 'false'
@@ -156,12 +149,12 @@ class Application extends BaseApplication
     private function registerServiceAsCommand(ContainerInterface $container, string $id): void
     {
         if (!$container->has($id)) {
-            throw new LogicException(sprintf('No service with id "%s" found to register as a command.', $id));
+            throw new LogicException(\sprintf('No service with id "%s" found to register as a command.', $id));
         }
 
         $command = $container->get($id);
         if (!$command instanceof Command) {
-            throw new LogicException(sprintf('Service "%s" isn\'t a valid command.', $id));
+            throw new LogicException(\sprintf('Service "%s" isn\'t a valid command.', $id));
         }
 
         $this->add($command);

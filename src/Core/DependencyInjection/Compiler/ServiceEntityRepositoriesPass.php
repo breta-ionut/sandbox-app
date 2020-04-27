@@ -26,10 +26,10 @@ class ServiceEntityRepositoriesPass implements CompilerPassInterface
         $parameterBag = $container->getParameterBag();
         $repositories = [];
 
-        foreach (array_keys($container->findTaggedServiceIds(self::SERVICE_ENTITY_REPOSITORY_TAG)) as $id) {
+        foreach (\array_keys($container->findTaggedServiceIds(self::SERVICE_ENTITY_REPOSITORY_TAG)) as $id) {
             $class = $parameterBag->resolveValue($container->getDefinition($id)->getClass());
-            if (!is_a($class, ObjectRepository::class, true)) {
-                throw new LogicException(sprintf(
+            if (!\is_a($class, ObjectRepository::class, true)) {
+                throw new LogicException(\sprintf(
                     '"%s" was registered as a Doctrine service entity repository but doesn\'t implement "%s".',
                     $id,
                     ObjectRepository::class

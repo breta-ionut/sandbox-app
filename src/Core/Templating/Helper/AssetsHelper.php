@@ -9,9 +9,6 @@ use Symfony\Component\Templating\Helper\Helper;
 
 class AssetsHelper extends Helper
 {
-    /**
-     * @var Packages
-     */
     private Packages $packages;
 
     /**

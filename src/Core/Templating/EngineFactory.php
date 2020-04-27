@@ -13,9 +13,6 @@ class EngineFactory
 {
     private const TEMPLATE_PATH_PATTERN = '/templates/%name%';
 
-    /**
-     * @var string
-     */
     private string $projectDir;
 
     /**
@@ -39,7 +36,7 @@ class EngineFactory
     public function factory(): PhpEngine
     {
         $loader = new FilesystemLoader($this->projectDir.self::TEMPLATE_PATH_PATTERN);
-        $helpers = is_array($this->helpers) ? $this->helpers : iterator_to_array($this->helpers);
+        $helpers = \is_array($this->helpers) ? $this->helpers : \iterator_to_array($this->helpers);
 
         return new PhpEngine(new TemplateNameParser(), $loader, $helpers);
     }

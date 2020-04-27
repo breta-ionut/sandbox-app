@@ -20,10 +20,7 @@ class MappingDescribeCommand extends Command
      */
     protected static $defaultName = 'doctrine:mapping:describe';
 
-    /**
-     * @var MappingDescribeCommand
-     */
-    private $command;
+    private BaseMappingDescribeCommand $command;
 
     /**
      * {@inheritDoc}
@@ -38,7 +35,7 @@ class MappingDescribeCommand extends Command
     /**
      * {@inheritDoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->command = new BaseMappingDescribeCommand();
 
