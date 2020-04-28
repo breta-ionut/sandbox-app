@@ -84,7 +84,7 @@ class WatchdogAuthenticationListener extends AbstractListener
             $token = new PreAuthenticationWatchdogToken($credentials, $this->firewall);
 
             $this->logger->debug(
-                'Passing the watchdog token to the AuthenticationProviderManager.',
+                'Passing the PreAuthenticationWatchdogToken with the credentials to the AuthenticationProviderManager.',
                 ['firewall' => $this->firewall]
             );
 
