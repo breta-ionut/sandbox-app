@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\Security;
 
+use App\Core\Security\Token\PreAuthenticationWatchdogToken;
+use App\Core\Security\Token\WatchdogTokenInterface;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationExpiredException;

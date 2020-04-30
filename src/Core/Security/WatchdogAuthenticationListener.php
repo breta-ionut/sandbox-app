@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\Security;
 
+use App\Core\Security\Token\PreAuthenticationWatchdogToken;
+use App\Core\Security\Token\WatchdogTokenInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
