@@ -13,6 +13,7 @@ use App\Core\DependencyInjection\DoctrineExtension;
 use App\Core\DependencyInjection\DoctrineMigrationsExtension;
 use App\Core\DependencyInjection\HttpExtension;
 use App\Core\DependencyInjection\RoutingExtension;
+use App\Core\DependencyInjection\SecurityExtension;
 use App\Core\DependencyInjection\TemplatingExtension;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -107,6 +108,7 @@ abstract class Kernel extends BaseKernel
             new RoutingExtension(),
             new DoctrineExtension(),
             new DoctrineMigrationsExtension(),
+            new SecurityExtension(),
             new TemplatingExtension(),
             new AssetsExtension(),
         ];
