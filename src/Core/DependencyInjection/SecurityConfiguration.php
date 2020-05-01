@@ -302,6 +302,15 @@ class SecurityConfiguration implements ConfigurationInterface
                                 ->cannotBeEmpty()
                             ->end()
                         ->end()
+
+                        ->validate()
+                            ->ifTrue(static function (array $value): bool {
+                                return isset($value['watchdog']) && !isset($value['user_provider']);
+                            })
+                            ->thenInvalid(
+                                'In order to use watchdog authentication, a user provider must also be declared.'
+                            )
+                        ->end()
                     ->end()
                 ->end()
             ->end();
