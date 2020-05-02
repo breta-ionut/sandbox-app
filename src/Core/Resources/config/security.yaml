@@ -122,7 +122,7 @@ services:
         arguments:
             - '@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
             - '@Symfony\Component\Security\Http\HttpUtils'
-            - ~ # Logout success handler.
+            - ~ # Success handler.
             - ~ # Options.
             - '@Symfony\Component\Security\Csrf\CsrfTokenManagerInterface'
 
