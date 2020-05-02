@@ -152,7 +152,13 @@ services:
     # End of - Authentication.
 
     # Authorization.
-    Symfony\Component\Security\Core\Authorization\AccessDecisionManager: ~
+    Symfony\Component\Security\Core\Authorization\AccessDecisionManager:
+        arguments:
+            - ~ # Voters.
+            - ~ # Strategy.
+            - ~ # Allow if all abstain decisions.
+            - ~ # Allow if equal granted denied decisions.
+
     Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface: '@Symfony\Component\Security\Core\Authorization\AccessDecisionManager'
 
     Symfony\Component\Security\Core\Authorization\AuthorizationChecker:
@@ -160,6 +166,7 @@ services:
             - '@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
             - '@Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface'
             - '@Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface'
+            - ~ # Always authenticate.
 
     Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface: '@Symfony\Component\Security\Core\Authorization\AuthorizationChecker'
 
