@@ -1,6 +1,9 @@
 services:
     # Encoders.
-    Symfony\Component\Security\Core\Encoder\EncoderFactory: ~
+    Symfony\Component\Security\Core\Encoder\EncoderFactory:
+        arguments:
+            - ~ # Encoders.
+
     Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface: '@Symfony\Component\Security\Core\Encoder\EncoderFactory'
 
     Symfony\Component\Security\Core\Encoder\UserPasswordEncoder:
@@ -11,6 +14,9 @@ services:
 
     # Authentication.
     Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager:
+        arguments:
+            - ~ # Providers.
+            - ~ # Erase credentials.
         calls: [[setEventDispatcher, ['@Symfony\Contracts\EventDispatcher\EventDispatcherInterface']]]
 
     Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface: '@Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager'
@@ -35,31 +41,35 @@ services:
 
     Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler:
         abstract: true
-        arguments: ['@Symfony\Component\Security\Http\HttpUtils']
+        arguments:
+            - '@Symfony\Component\Security\Http\HttpUtils'
+            - ~ # Target URL.
 
     Symfony\Component\Security\Http\Logout\CookieClearingLogoutHandler:
         abstract: true
+        arguments:
+            - ~ # Cookies.
 
     Symfony\Component\Security\Http\Logout\CsrfTokenClearingLogoutHandler:
-        abstract: true
         arguments: ['@Symfony\Component\Security\Csrf\TokenStorage\ClearableTokenStorageInterface']
 
-    Symfony\Component\Security\Http\Logout\SessionLogoutHandler:
-        abstract: true
+    Symfony\Component\Security\Http\Logout\SessionLogoutHandler: ~
 
-    Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy: ~
+    Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy:
+        arguments:
+            - ~ # Strategy.
+
     Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface: '@Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy'
 
     App\Core\Security\WatchdogAuthenticationHelper:
         arguments:
             - '@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
             - '@Symfony\Contracts\EventDispatcher\EventDispatcherInterface'
-            - ~
+            - ~ # Stateless firewalls.
             - '@Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface'
 
     # Listeners.
     Symfony\Component\Security\Http\Firewall\AccessListener:
-        abstract: true
         arguments:
             - '@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
             - '@Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface'
@@ -67,10 +77,9 @@ services:
             - '@Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface'
 
     Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener:
-        abstract: true
         arguments:
             - '@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
-            - ~
+            - ~ # Secret.
             - '@Psr\Log\LoggerInterface'
             - '@Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface'
 
