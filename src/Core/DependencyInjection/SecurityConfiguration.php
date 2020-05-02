@@ -189,14 +189,8 @@ class SecurityConfiguration implements ConfigurationInterface
                                 ->defaultTrue()
                             ->end()
 
-                            ->arrayNode('anonymous')
-                                ->canBeEnabled()
-
-                                ->children()
-                                    ->scalarNode('secret')
-                                        ->cannotBeEmpty()
-                                    ->end()
-                                ->end()
+                            ->booleanNode('anonymous')
+                                ->defaultFalse()
                             ->end()
 
                             ->booleanNode('stateless')
@@ -419,6 +413,8 @@ class SecurityConfiguration implements ConfigurationInterface
                     ])
                     ->defaultValue(SessionAuthenticationStrategy::MIGRATE)
                 ->end()
+
+                ->scalarNode('anonymous_secret')->end()
 
                 ->booleanNode('always_authenticate_before_granting')
                     ->defaultFalse()
