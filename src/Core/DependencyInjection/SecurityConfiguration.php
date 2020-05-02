@@ -442,6 +442,14 @@ class SecurityConfiguration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+
+                ->scalarNode('http_port')
+                    ->defaultValue(80)
+                ->end()
+
+                ->scalarNode('https_port')
+                    ->defaultValue(443)
+                ->end()
             ->end();
     }
 }
