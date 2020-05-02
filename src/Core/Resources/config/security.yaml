@@ -30,6 +30,11 @@ services:
     Symfony\Component\Security\Core\User\UserChecker: ~
     Symfony\Component\Security\Core\User\UserCheckerInterface: '@Symfony\Component\Security\Core\User\UserChecker'
 
+    Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint:
+        arguments:
+            - ~ # HTTP port.
+            - ~ # HTTPS port.
+
     Symfony\Component\Security\Http\Firewall:
         arguments:
             - '@Symfony\Component\Security\Http\FirewallMap'
@@ -84,15 +89,17 @@ services:
             - '@Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface'
 
     Symfony\Component\Security\Http\Firewall\ChannelListener:
-        abstract: true
-        arguments: ['@Symfony\Component\Security\Http\AccessMapInterface', ~, '@Psr\Log\LoggerInterface']
+        arguments:
+            - '@Symfony\Component\Security\Http\AccessMapInterface'
+            - '@Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint'
+            - '@Psr\Log\LoggerInterface'
 
     Symfony\Component\Security\Http\Firewall\ContextListener:
         abstract: true
         arguments:
             - '@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
-            - ~
-            - ~
+            - ~ # User providers.
+            - ~ # Firewall.
             - '@Psr\Log\LoggerInterface'
             - '@Symfony\Contracts\EventDispatcher\EventDispatcherInterface'
             - '@Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface'
@@ -103,30 +110,45 @@ services:
             - '@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
             - '@Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface'
             - '@Symfony\Component\Security\Http\HttpUtils'
-            - ~
-            - ~
-            - ~
-            - ~
+            - ~ # Firewall.
+            - ~ # Authentication entry point.
+            - ~ # Error page.
+            - ~ # Access denied handler.
             - '@Psr\Log\LoggerInterface'
+            - ~ # Stateless.
 
     Symfony\Component\Security\Http\Firewall\LogoutListener:
         abstract: true
         arguments:
             - '@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
             - '@Symfony\Component\Security\Http\HttpUtils'
-            - ~
-            - ~
+            - ~ # Logout success handler.
+            - ~ # Options.
             - '@Symfony\Component\Security\Csrf\CsrfTokenManagerInterface'
 
     App\Core\Security\WatchdogAuthenticationListener:
         abstract: true
         arguments:
-            - ~
-            - ~
+            - ~ # Firewall.
+            - ~ # Authenticator.
             - '@Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface'
             - '@App\Core\Security\WatchdogAuthenticationHelper'
             - '@Psr\Log\LoggerInterface'
     # End of - Listeners.
+
+    # Providers.
+    Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider:
+        arguments:
+            - ~ # Secret.
+
+    App\Core\Security\WatchdogAuthenticationProvider:
+        abstract: true
+        arguments:
+            - ~ # Firewall.
+            - ~ # Authenticator.
+            - ~ # User provider.
+            - ~ # User checker.
+    # End of - Providers.
     # End of - Authentication.
 
     # Authorization.
