@@ -25,6 +25,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Http\AccessMap;
+use Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\ChannelListener;
@@ -32,7 +33,6 @@ use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Http\Firewall\LogoutListener;
 use Symfony\Component\Security\Http\FirewallMap;
-use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Logout\CookieClearingLogoutHandler;
 use Symfony\Component\Security\Http\Logout\CsrfTokenClearingLogoutHandler;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
@@ -404,7 +404,7 @@ class SecurityExtension extends ConfigurableExtension
                 $config['access_decision_manager']['allow_if_equal_granted_denied']
             );
 
-        $container->getDefinition(HttpUtils::class)
+        $container->getDefinition(RetryAuthenticationEntryPoint::class)
             ->setArgument('$httpPort', $config['http_port'])
             ->setArgument('$httpsPort', $config['https_port']);
     }
