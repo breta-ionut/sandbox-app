@@ -18,6 +18,8 @@
         "php": "^7.4",
         "doctrine/migrations": "^2.1",
         "doctrine/orm": "^2.6",
+        "phpdocumentor/reflection-docblock": "^5.1",
+        "predis/predis": "^1.1",
         "psr/event-dispatcher": "^1.0",
         "symfony/asset": "^5.0",
         "symfony/cache": "^5.0",
@@ -27,12 +29,13 @@
         "symfony/filesystem": "^5.0",
         "symfony/finder": "^5.0",
         "symfony/http-kernel": "^5.0",
+        "symfony/property-info": "^5.0",
         "symfony/routing": "^5.0",
-        "symfony/templating": "^5.0",
-        "symfony/yaml": "^5.0",
         "symfony/security-core": "^5.0",
         "symfony/security-http": "^5.0",
         "symfony/security-csrf": "^5.0",
-        "predis/predis": "^1.1"
+        "symfony/serializer": "^5.0",
+        "symfony/templating": "^5.0",
+        "symfony/yaml": "^5.0"
     }
 }
