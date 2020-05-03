@@ -194,7 +194,7 @@ class SecurityConfiguration implements ConfigurationInterface
                             ->end()
 
                             ->booleanNode('stateless')
-                                ->defaultTrue()
+                                ->defaultFalse()
                             ->end()
 
                             ->scalarNode('access_denied_url')->end()
