@@ -47,9 +47,9 @@ class WatchdogAuthenticationProvider implements AuthenticationProviderInterface
         if (!$token instanceof PreAuthenticationWatchdogToken) {
             // A re-authentication of a previously authenticated token is demanded.
 
-            // Dealing with a still-authenticated token here is very unlikely to happen and can be at most caused by a
-            // logic error. But technically, since the role of the authentication provider is to authenticate tokens and
-            // this one is already authenticated, it is safe then to return as it is.
+            // Dealing with a still-authenticated token here is unlikely to happen. Technically, since the role the
+            // authentication provider is to authenticate tokens and this one is already authenticated, it is enough to
+            // just return the token.
             if ($token->isAuthenticated()) {
                 return $token;
             }
