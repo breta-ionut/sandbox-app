@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core\DependencyInjection;
 
+use App\Core\Security\WatchdogAuthenticationHelper;
 use App\Core\Security\WatchdogAuthenticationListener;
 use App\Core\Security\WatchdogAuthenticationProvider;
 use Symfony\Component\Config\FileLocator;
@@ -15,6 +16,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
+use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
 use Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
@@ -24,6 +26,7 @@ use Symfony\Component\Security\Http\Firewall\ChannelListener;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Http\Firewall\LogoutListener;
+use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Logout\CookieClearingLogoutHandler;
 use Symfony\Component\Security\Http\Logout\CsrfTokenClearingLogoutHandler;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
@@ -302,8 +305,42 @@ class SecurityExtension extends ConfigurableExtension
         return [$requestMatcher, $listeners, $exceptionListener, $logoutListener ?? null, $providers, $stateless];
     }
 
+    /**
+     * @param ContainerBuilder $container
+     * @param array            $firewallsConfig
+     */
     private function createFirewalls(ContainerBuilder $container, array $firewallsConfig): void
     {
+        $firewallMapDefinition = $container->getDefinition(FirewallMap::class);
+        $providers = [];
+        $statelessFirewalls = [];
 
+        foreach ($firewallsConfig as $name => $firewallConfig) {
+            [
+                $requestMatcher,
+                $listeners,
+                $exceptionListener,
+                $logoutListener,
+                $firewallProviders,
+                $stateless
+            ] = $this->createFirewall($container, $name, $firewallsConfig);
+
+            $firewallMapDefinition->addMethodCall(
+                'add',
+                [$requestMatcher, $listeners, $exceptionListener, $logoutListener]
+            );
+
+            $providers = \array_merge($providers, $firewallProviders);
+
+            if ($stateless) {
+                $statelessFirewalls[] = $name;
+            }
+        }
+
+        $container->getDefinition(AuthenticationProviderManager::class)
+            ->setArgument('$providers', new IteratorArgument(\array_unique($providers)));
+
+        $container->getDefinition(WatchdogAuthenticationHelper::class)
+            ->setArgument('$statelessFirewalls', $statelessFirewalls);
     }
 }
