@@ -20,6 +20,11 @@ use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\ChannelListener;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
+use Symfony\Component\Security\Http\Firewall\LogoutListener;
+use Symfony\Component\Security\Http\Logout\CookieClearingLogoutHandler;
+use Symfony\Component\Security\Http\Logout\CsrfTokenClearingLogoutHandler;
+use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
+use Symfony\Component\Security\Http\Logout\SessionLogoutHandler;
 
 class SecurityExtension extends ConfigurableExtension
 {
@@ -157,6 +162,13 @@ class SecurityExtension extends ConfigurableExtension
         return new Reference($id);
     }
 
+    /**
+     * @param ContainerBuilder $container
+     * @param string           $firewall
+     * @param array            $logoutConfig
+     *
+     * @return Reference
+     */
     private function createLogoutListener(ContainerBuilder $container, string $firewall, array $logoutConfig): Reference
     {
         $id = 'security.logout_listener.'.$firewall;
@@ -166,6 +178,52 @@ class SecurityExtension extends ConfigurableExtension
             'csrf_parameter' => $logoutConfig['csrf_parameter'] ?? null,
             'csrf_token_id' => $logoutConfig['csrf_token_id'] ?? null,
         ], fn($value) => null !== $value);
+
+        // Determine success handler.
+        if (isset($logoutConfig['success_handler'])) {
+            $successHandler = new Reference($logoutConfig['success_handler']);
+        } else {
+            $successHandlerId = 'security.logout_success_handler.'.$firewall;
+            $successHandlerDefinition = (new ChildDefinition(DefaultLogoutSuccessHandler::class))
+                ->setArgument('$targetUrl', $logoutConfig['target']);
+
+            $container->setDefinition($successHandlerId, $successHandlerDefinition);
+
+            $successHandler = new Reference($successHandlerId);
+        }
+
+        // Determine handlers.
+        $handlers = [new Reference(CsrfTokenClearingLogoutHandler::class)];
+
+        if ($logoutConfig['invalidate_session']) {
+            $handlers[] = new Reference(SessionLogoutHandler::class);
+        }
+
+        if ($logoutConfig['clear_cookies']) {
+            $clearCookiesHandlerId = 'security.logout_clear_cookies_handler.'.$firewall;
+            $clearCookiesHandlerDefinition = (new ChildDefinition(CookieClearingLogoutHandler::class))
+                ->setArgument('$cookies', $logoutConfig['clear_cookies']);
+
+            $container->setDefinition($clearCookiesHandlerId, $clearCookiesHandlerDefinition);
+
+            $handlers[] = new Reference($clearCookiesHandlerId);
+        }
+
+        foreach ($logoutConfig['handlers'] as $handlerId) {
+            $handlers[] = new Reference($handlerId);
+        }
+
+        $definition = (new ChildDefinition(LogoutListener::class))
+            ->setArgument('$options', $options)
+            ->setArgument('$successHandler', $successHandler);
+
+        foreach ($handlers as $handler) {
+            $definition->addMethodCall('addHandler', [$handler]);
+        }
+
+        $container->setDefinition($id, $definition);
+
+        return new Reference($id);
     }
 
     private function createFirewall(ContainerBuilder $container, string $name, array $firewallConfig): array
