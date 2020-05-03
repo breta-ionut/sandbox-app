@@ -13,11 +13,14 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
 use Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Http\AccessMap;
@@ -28,10 +31,12 @@ use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Http\Firewall\LogoutListener;
 use Symfony\Component\Security\Http\FirewallMap;
+use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Logout\CookieClearingLogoutHandler;
 use Symfony\Component\Security\Http\Logout\CsrfTokenClearingLogoutHandler;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 use Symfony\Component\Security\Http\Logout\SessionLogoutHandler;
+use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
 class SecurityExtension extends ConfigurableExtension
 {
@@ -361,5 +366,38 @@ class SecurityExtension extends ConfigurableExtension
                 [$requestMatcher, $accessControlEntryConfig['roles'], $accessControlEntryConfig['channel'] ?? null]
             );
         }
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param array            $config
+     */
+    private function configureOther(ContainerBuilder $container, array $config): void
+    {
+        $container->getDefinition(AuthenticationProviderManager::class)
+            ->setArgument('$eraseCredentials', $config['erase_credentials']);
+
+        $container->getDefinition(SessionAuthenticationStrategy::class)
+            ->setArgument('$strategy', $config['session_authentication_strategy']);
+
+        $anonymousSecret = $config['anonymous_secret'] ?? new Parameter('container.build_id');
+
+        $container->getDefinition(AnonymousAuthenticationListener::class)->setArgument('$secret', $anonymousSecret);
+        $container->getDefinition(AnonymousAuthenticationProvider::class)->setArgument('$secret', $anonymousSecret);
+
+        $container->getDefinition(AuthorizationChecker::class)
+            ->setArgument('$alwaysAuthenticate', $config['always_authenticate_before_granting']);
+
+        $container->getDefinition(AccessDecisionManager::class)
+            ->setArgument('$strategy', $config['access_decision_manager']['strategy'])
+            ->setArgument('$allowIfAllAbstainDecisions', $config['access_decision_manager']['allow_if_all_abstain'])
+            ->setArgument(
+                '$allowIfEqualGrantedDeniedDecisions',
+                $config['access_decision_manager']['allow_if_equal_granted_denied']
+            );
+
+        $container->getDefinition(HttpUtils::class)
+            ->setArgument('$httpPort', $config['http_port'])
+            ->setArgument('$httpsPort', $config['https_port']);
     }
 }
