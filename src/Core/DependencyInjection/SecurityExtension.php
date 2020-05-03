@@ -337,7 +337,7 @@ class SecurityExtension extends ConfigurableExtension
                 $logoutListener,
                 $firewallProviders,
                 $stateless
-            ] = $this->createFirewall($container, $name, $firewallsConfig);
+            ] = $this->createFirewall($container, $name, $firewallConfig);
 
             $firewallMapDefinition->addMethodCall(
                 'add',
