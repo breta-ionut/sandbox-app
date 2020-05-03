@@ -154,7 +154,7 @@ services:
     # Authorization.
     Symfony\Component\Security\Core\Authorization\AccessDecisionManager:
         arguments:
-            - ~ # Voters.
+            - !tagged_iterator security.voter
             - ~ # Strategy.
             - ~ # Allow if all abstain decisions.
             - ~ # Allow if equal granted denied decisions.
@@ -172,6 +172,15 @@ services:
 
     Symfony\Component\Security\Http\AccessMap: ~
     Symfony\Component\Security\Http\AccessMapInterface: '@Symfony\Component\Security\Http\AccessMap'
+
+    # Voters.
+    Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter:
+        arguments: ['@Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface']
+        tags: [security.voter]
+
+    Symfony\Component\Security\Core\Authorization\Voter\RoleVoter:
+        tags: [security.voter]
+    # End of - Voters.
     # End of - Authorization.
 
     # CSRF.
