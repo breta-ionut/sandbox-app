@@ -20,6 +20,7 @@ use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager
 use Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
+use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\ChannelListener;
@@ -342,5 +343,23 @@ class SecurityExtension extends ConfigurableExtension
 
         $container->getDefinition(WatchdogAuthenticationHelper::class)
             ->setArgument('$statelessFirewalls', $statelessFirewalls);
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param array            $accessControlConfig
+     */
+    private function configureAccessMap(ContainerBuilder $container, array $accessControlConfig): void
+    {
+        $accessMapDefinition = $container->getDefinition(AccessMap::class);
+
+        foreach ($accessControlConfig as $accessControlEntryConfig) {
+            $requestMatcher = $this->createRequestMatcher($container, $accessControlEntryConfig);
+
+            $accessMapDefinition->addMethodCall(
+                'add',
+                [$requestMatcher, $accessControlEntryConfig['roles'], $accessControlEntryConfig['channel'] ?? null]
+            );
+        }
     }
 }
