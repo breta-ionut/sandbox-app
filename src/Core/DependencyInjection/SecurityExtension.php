@@ -21,6 +21,7 @@ use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager
 use Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Http\AccessMap;
@@ -49,6 +50,13 @@ class SecurityExtension extends ConfigurableExtension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('security.yaml');
+
+        $this->createEncoders($container, $mergedConfig['encoders']);
+        $this->createFirewalls($container, $mergedConfig['firewalls']);
+        $this->configureAccessMap($container, $mergedConfig['access_control']);
+        $this->configureOther($container, $mergedConfig);
+
+        $container->registerForAutoconfiguration(VoterInterface::class)->addTag('security.voter');
     }
 
     /**
