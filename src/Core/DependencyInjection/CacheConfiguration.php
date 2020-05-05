@@ -1,0 +1,83 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Core\DependencyInjection;
+
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+
+class CacheConfiguration implements ConfigurationInterface
+{
+    public function getConfigTreeBuilder()
+    {
+        $treeBuilder = new TreeBuilder('cache');
+        $root = $treeBuilder->getRootNode();
+
+        $root
+            ->children()
+                ->scalarNode('prefix_seed')
+                    ->info('Used to generate namespaces for the cache keys.')
+                ->end()
+
+                ->scalarNode('directory')
+                    ->info('The directory where the filesystem cache will be stored.')
+
+                    ->defaultValue('%kernel.cache_dir%/pools')
+                ->end()
+
+                ->arrayNode('default_providers')
+                    ->addDefaultsIfNotSet()
+
+                    ->children()
+                        ->scalarNode('doctrine')
+                            ->info('The id of a Doctrine cache provider.')
+
+                            ->cannotBeEmpty()
+                        ->end()
+
+                        ->scalarNode('redis')
+                            ->info('The DSN of a Redis connection or the id of a Redis client.')
+                        ->end()
+                    ->end()
+                ->end()
+
+                ->scalarNode('app_adapter')
+                    ->info('The id of the "app" cache pool adapter. If not specified, the filesystem adapter is used.')
+
+                    ->cannotBeEmpty()
+                ->end()
+
+                ->arrayNode('pools')
+                    ->useAttributeAsKey('name')
+                    ->normalizeKeys(false)
+
+                    ->arrayPrototype()
+                        ->children()
+                            ->arrayNode('adapters')
+                                ->requiresAtLeastOneElement()
+
+                                ->beforeNormalization()
+                                    ->ifString()
+                                    ->then(static fn(string $value): array => ['id' => $value])
+                                ->end()
+
+                                ->arrayPrototype()
+                                    ->children()
+                                        ->scalarNode('id')
+                                            ->isRequired()
+                                            ->cannotBeEmpty()
+                                        ->end()
+
+                                        ->scalarNode('provider')
+                                            ->info('A provider DSN or id to replace the adapter\'s default.')
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+    }
+}
