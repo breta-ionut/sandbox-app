@@ -15,6 +15,9 @@ class CacheConfiguration implements ConfigurationInterface
         $root = $treeBuilder->getRootNode();
 
         $root
+            ->fixXmlConfig('default_provider')
+            ->fixXmlConfig('pool')
+
             ->children()
                 ->scalarNode('prefix_seed')
                     ->info('Used to generate namespaces for the cache keys.')
@@ -53,16 +56,25 @@ class CacheConfiguration implements ConfigurationInterface
                     ->normalizeKeys(false)
 
                     ->arrayPrototype()
+                        ->fixXmlConfig('adapter')
+
                         ->children()
                             ->arrayNode('adapters')
+                                ->info('Multiple adapters are chained into a single one via a ChainAdapter.')
+
                                 ->requiresAtLeastOneElement()
 
                                 ->beforeNormalization()
                                     ->ifString()
-                                    ->then(static fn(string $value): array => ['id' => $value])
+                                    ->then(static fn(string $value): array => [['id' => $value]])
                                 ->end()
 
                                 ->arrayPrototype()
+                                    ->beforeNormalization()
+                                        ->ifString()
+                                        ->then(static fn(string $value): array => ['id' => $value])
+                                    ->end()
+
                                     ->children()
                                         ->scalarNode('id')
                                             ->isRequired()
@@ -74,6 +86,22 @@ class CacheConfiguration implements ConfigurationInterface
                                         ->end()
                                     ->end()
                                 ->end()
+                            ->end()
+
+                            ->scalarNode('tags')
+                                ->info('Enables tagging when true. Also accepts the tags cache pool id as a value.')
+
+                                ->cannotBeEmpty()
+                            ->end()
+
+                            ->booleanNode('public')
+                                ->defaultFalse()
+                            ->end()
+
+                            ->scalarNode('default_lifetime')->end()
+
+                            ->scalarNode('clearer')
+                                ->cannotBeEmpty()
                             ->end()
                         ->end()
                     ->end()
