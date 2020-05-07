@@ -9,6 +9,9 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class CacheConfiguration implements ConfigurationInterface
 {
+    /**
+     * {@inheritDoc}
+     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('cache');
@@ -60,7 +63,10 @@ class CacheConfiguration implements ConfigurationInterface
 
                         ->children()
                             ->arrayNode('adapters')
-                                ->info('Multiple adapters are chained into a single one via a ChainAdapter.')
+                                ->info(
+                                    'The "app" pool is used if no adapters are specified. '
+                                    .'Multiple adapters are chained into a single one via a ChainAdapter.'
+                                )
 
                                 ->requiresAtLeastOneElement()
 
@@ -104,8 +110,15 @@ class CacheConfiguration implements ConfigurationInterface
                                 ->cannotBeEmpty()
                             ->end()
                         ->end()
+
+                        ->validate()
+                            ->ifTrue(fn(array $value): bool => isset($value['app']) || isset($value['system']))
+                            ->thenInvalid('"app" and "system" are reserved pool names.')
+                        ->end()
                     ->end()
                 ->end()
             ->end();
+
+        return $treeBuilder;
     }
 }
