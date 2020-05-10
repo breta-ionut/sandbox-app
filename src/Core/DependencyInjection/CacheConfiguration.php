@@ -104,33 +104,31 @@ class CacheConfiguration implements ConfigurationInterface
      */
     private function createAdaptersNode(string $name, string $info): ArrayNodeDefinition
     {
-        return
-            (new ArrayNodeDefinition($name))
-                ->info($info.' Multiple adapters are chained into a single one via a ChainAdapter.')
+        return (new ArrayNodeDefinition($name))
+            ->info($info.' Multiple adapters are chained into a single one via a ChainAdapter.')
 
-                ->requiresAtLeastOneElement()
-                ->performNoDeepMerging()
+            ->requiresAtLeastOneElement()
+            ->performNoDeepMerging()
 
+            ->beforeNormalization()
+                ->ifString()
+                ->then(static fn(string $value): array => [['id' => $value]])
+            ->end()
+
+            ->arrayPrototype()
                 ->beforeNormalization()
                     ->ifString()
-                    ->then(static fn(string $value): array => [['id' => $value]])
+                    ->then(static fn(string $value): array => ['id' => $value])
                 ->end()
 
-                ->arrayPrototype()
-                    ->beforeNormalization()
-                        ->ifString()
-                        ->then(static fn(string $value): array => ['id' => $value])
+                ->children()
+                    ->scalarNode('id')
+                        ->isRequired()
+                        ->cannotBeEmpty()
                     ->end()
 
-                    ->children()
-                        ->scalarNode('id')
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                        ->end()
-
-                        ->scalarNode('provider')
-                            ->info('A provider DSN or id to replace the adapter\'s default.')
-                        ->end()
+                    ->scalarNode('provider')
+                        ->info('A provider DSN or id to replace the adapter\'s default.')
                     ->end()
                 ->end()
             ->end();
