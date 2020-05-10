@@ -86,6 +86,16 @@ services:
         public: true
         tags: [cache.pool]
 
+    cache.property_access:
+        class: Symfony\Component\Cache\Adapter\AdapterInterface
+        factory: [Symfony\Component\PropertyAccess\PropertyAccessor, createCache]
+        arguments:
+            - ~ # Namespace.
+            - ~ # Default lifetime.
+            - ~ # Version.
+            - '@Psr\Log\LoggerInterface'
+        tags: [{name: cache.pool, clearer: cache.clearer.system}]
+
     cache.property_info:
         parent: cache.adapter.system
         tags: [cache.pool]

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core\DependencyInjection;
 
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\ChainAdapter;
 use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 use Symfony\Component\Config\FileLocator;
@@ -26,10 +27,12 @@ class CacheExtension extends ConfigurableExtension
 
     /**
      * @param ContainerBuilder $container
-     * @param array            $poolsConfig
+     * @param array            $config
      */
-    private function createPools(ContainerBuilder $container, array $poolsConfig): void
+    private function createPools(ContainerBuilder $container, array $config): void
     {
+        $poolsConfig = ['app' => ['adapters' => $config['app_adapters'], 'public' => true]] + $config['pools'];
+
         foreach ($poolsConfig as $name => $poolConfig) {
             $adapters = $poolConfig['adapters']
                 ? \array_column($poolConfig['adapters'], 'id', 'provider')
@@ -70,6 +73,10 @@ class CacheExtension extends ConfigurableExtension
                 ->addTag('cache.pool', $poolConfig);
 
             $container->setDefinition($id, $definition);
+        }
+
+        if ($container->getParameter('kernel.debug')) {
+            $container->register('cache.property_access', ArrayAdapter::class)->setArguments([0, false]);
         }
     }
 }
