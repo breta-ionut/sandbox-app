@@ -26,7 +26,7 @@ services:
         public: true
 
     Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer:
-        arguments: !tagged_iterator kernel.cache_clearer
+        arguments: [!tagged_iterator kernel.cache_clearer]
 
     Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface: '@Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer'
 
