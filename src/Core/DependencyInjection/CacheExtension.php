@@ -71,7 +71,12 @@ class CacheExtension extends ConfigurableExtension
      */
     private function createAndConfigurePools(ContainerBuilder $container, array $config): void
     {
-        $poolsConfig = ['app' => ['adapters' => $config['app_adapters'], 'public' => true]] + $config['pools'];
+        $poolsConfig = [
+            'app' => [
+                'adapters' => $config['app_adapters'] ?: [['id' => 'cache.adapter.filesystem']],
+                'public' => true,
+            ],
+        ] + $config['pools'];
 
         foreach ($poolsConfig as $name => $poolConfig) {
             $adapters = $poolConfig['adapters']
