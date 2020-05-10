@@ -16,7 +16,7 @@ class DropDatabaseCommand extends Command
 {
     private const RETURN_CODE_SUCCESS = 0;
     private const RETURN_CODE_ERROR = 1;
-    private const RETURN_CODE_NO_FORCE = 2;
+    private const RETURN_CODE_NO_FORCE = 3;
 
     /**
      * {@inheritDoc}
