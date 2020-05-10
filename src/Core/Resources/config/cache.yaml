@@ -117,9 +117,7 @@ services:
 
     cache.clearer.global:
         parent: cache.clearer.default
-        public: true
 
     cache.clearer.system:
         parent: cache.clearer.default
-        public: true
     # End of - Clearers.
