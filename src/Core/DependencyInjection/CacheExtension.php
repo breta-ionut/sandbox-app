@@ -20,6 +20,8 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
 class CacheExtension extends ConfigurableExtension
 {
+    use ConfigurationExtensionTrait;
+
     /**
      * {@inheritDoc}
      */
