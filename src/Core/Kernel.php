@@ -17,6 +17,7 @@ use App\Core\DependencyInjection\RoutingExtension;
 use App\Core\DependencyInjection\SecurityExtension;
 use App\Core\DependencyInjection\TemplatingExtension;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Cache\DependencyInjection\CachePoolClearerPass;
 use Symfony\Component\Cache\DependencyInjection\CachePoolPass;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
@@ -139,6 +140,7 @@ abstract class Kernel extends BaseKernel
                 'cache.pool.clearer',
                 'cache.clearer.system'
             ),
+            new CachePoolClearerPass(),
         ];
     }
 }
