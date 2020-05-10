@@ -1,0 +1,119 @@
+services:
+    Symfony\Component\Cache\Marshaller\DefaultMarshaller: ~
+
+    # Adapters.
+    cache.adapter.apcu:
+        class: Symfony\Component\Cache\Adapter\ApcuAdapter
+        abstract: true
+        arguments:
+            - ~ # Namespace.
+            - ~ # Default lifetime.
+            - ~ # Version.
+        calls: [[setLogger, ['@Psr\Log\LoggerInterface']]]
+        tags: [{name: cache.pool, clearer: cache.clearer.default, reset: reset}]
+
+    cache.adapter.array:
+        class: Symfony\Component\Cache\Adapter\ArrayAdapter
+        abstract: true
+        arguments:
+            - ~ # Default lifetime.
+        calls: [[setLogger, ['@Psr\Log\LoggerInterface']]]
+        tags: [{name: cache.pool, clearer: cache.clearer.default, reset: reset}]
+
+    cache.adapter.doctrine:
+        class: Symfony\Component\Cache\Adapter\DoctrineAdapter
+        abstract: true
+        arguments:
+            - ~ # Provider.
+            - ~ # Namespace.
+            - ~ # Default lifetime.
+        calls: [[setLogger, ['@Psr\Log\LoggerInterface']]]
+        tags:
+            - name: cache.pool
+              provider: cache.default_provider.doctrine
+              clearer: cache.clearer.default
+              reset: reset
+
+    cache.adapter.filesystem:
+        class: Symfony\Component\Cache\Adapter\FilesystemAdapter
+        abstract: true
+        arguments:
+            - ~ # Namespace.
+            - ~ # Default lifetime.
+            - ~ # Directory.
+            - '@Symfony\Component\Cache\Marshaller\DefaultMarshaller'
+        calls: [[setLogger, ['@Psr\Log\LoggerInterface']]]
+        tags: [{name: cache.pool, clearer: cache.default.clearer, reset: reset}]
+
+    cache.adapter.redis:
+        class: Symfony\Component\Cache\Adapter\RedisAdapter
+        abstract: true
+        arguments:
+            - ~ # Provider.
+            - ~ # Namespace.
+            - ~ # Default lifetime.
+            - '@Symfony\Component\Cache\Marshaller\DefaultMarshaller'
+        calls: [[setLogger, ['@Psr\Log\LoggerInterface']]]
+        tags: [{name: cache.pool, provider: cache.default_provider.redis, clearer: cache.clearer.default, reset: reset}]
+
+    cache.adapter.system:
+        class: Symfony\Component\Cache\Adapter\AdapterInterface
+        abstract: true
+        factory: [Symfony\Component\Cache\Adapter\AbstractAdapter, createSystemCache]
+        arguments:
+            - ~ # Namespace.
+            - ~ # Default lifetime.
+            - ~ # Version.
+            - ~ # Directory.
+            - '@Psr\Log\LoggerInterface'
+        tags: [{name: cache.pool, clearer: cache.clearer.system, reset: reset}]
+    # End of - Adapters.
+
+    cache.app:
+        class: Symfony\Component\Cache\Adapter\AdapterInterface
+        public: true
+        tags: [{name: cache.pool, clearer: cache.clearer.default}]
+
+    Psr\Cache\CacheItemPoolInterface: '@cache.app'
+    Symfony\Contracts\Cache\CacheInterface: '@cache.app'
+
+    cache.app.taggable:
+        class: Symfony\Component\Cache\Adapter\TagAwareAdapter
+        arguments: ['@cache.app']
+        public: true
+
+    Symfony\Contracts\Cache\TagAwareCacheInterface: '@cache.app.taggable'
+
+    # System pools.
+    cache.system:
+        parent: cache.adapter.system
+        public: true
+        tags: [cache.pool]
+
+    cache.property_info:
+        parent: cache.adapter.system
+        tags: [cache.pool]
+
+    cache.serializer:
+        parent: cache.adapter.system
+        tags: [cache.pool]
+
+    cache.validator:
+        parent: cache.adapter.system
+        tags: [cache.pool]
+    # End of - System pools.
+
+    # Clearers.
+    cache.clearer.default:
+        class: Symfony\Component\HttpKernel\CacheClearer\Psr6CacheClearer
+        arguments:
+            - ~ # Pools.
+
+    cache.clearer.global:
+        parent: cache.clearer.default
+        public: true
+
+    cache.clearer.system:
+        parent: cache.clearer.default
+        public: true
+    # End of - Clearers.
