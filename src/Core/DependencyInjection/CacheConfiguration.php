@@ -109,6 +109,7 @@ class CacheConfiguration implements ConfigurationInterface
                 ->info($info.' Multiple adapters are chained into a single one via a ChainAdapter.')
 
                 ->requiresAtLeastOneElement()
+                ->performNoDeepMerging()
 
                 ->beforeNormalization()
                     ->ifString()
