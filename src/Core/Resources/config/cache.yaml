@@ -43,7 +43,7 @@ services:
             - ~ # Directory.
             - '@Symfony\Component\Cache\Marshaller\DefaultMarshaller'
         calls: [[setLogger, ['@Psr\Log\LoggerInterface']]]
-        tags: [{name: cache.pool, clearer: cache.default.clearer, reset: reset}]
+        tags: [{name: cache.pool, clearer: cache.clearer.default, reset: reset}]
 
     cache.adapter.redis:
         class: Symfony\Component\Cache\Adapter\RedisAdapter
