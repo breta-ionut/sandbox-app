@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Core;
 
 use App\Core\DependencyInjection\AssetsExtension;
+use App\Core\DependencyInjection\CacheExtension;
 use App\Core\DependencyInjection\Compiler\RegisterDoctrineListenersAndSubscribersPass;
 use App\Core\DependencyInjection\Compiler\ServiceEntityRepositoriesPass;
 use App\Core\DependencyInjection\ConsoleExtension;
@@ -16,6 +17,7 @@ use App\Core\DependencyInjection\RoutingExtension;
 use App\Core\DependencyInjection\SecurityExtension;
 use App\Core\DependencyInjection\TemplatingExtension;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Cache\DependencyInjection\CachePoolPass;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
 use Symfony\Component\Console\DependencyInjection\AddConsoleCommandPass;
@@ -109,6 +111,7 @@ abstract class Kernel extends BaseKernel
             new DoctrineExtension(),
             new DoctrineMigrationsExtension(),
             new SecurityExtension(),
+            new CacheExtension(),
             new TemplatingExtension(),
             new AssetsExtension(),
         ];
@@ -129,6 +132,13 @@ abstract class Kernel extends BaseKernel
             new RoutingResolverPass(),
             new ServiceEntityRepositoriesPass(),
             new RegisterDoctrineListenersAndSubscribersPass(),
+            new CachePoolPass(
+                'cache.pool',
+                'kernel.reset',
+                'cache.clearer.global',
+                'cache.pool.clearer',
+                'cache.clearer.system'
+            ),
         ];
     }
 }
