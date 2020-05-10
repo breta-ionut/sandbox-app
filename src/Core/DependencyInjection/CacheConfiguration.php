@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -19,6 +20,7 @@ class CacheConfiguration implements ConfigurationInterface
 
         $root
             ->fixXmlConfig('default_provider')
+            ->fixXmlConfig('app_adapter')
             ->fixXmlConfig('pool')
 
             ->children()
@@ -48,11 +50,10 @@ class CacheConfiguration implements ConfigurationInterface
                     ->end()
                 ->end()
 
-                ->scalarNode('app_adapter')
-                    ->info('The id of the "app" cache pool adapter. If not specified, the filesystem adapter is used.')
-
-                    ->cannotBeEmpty()
-                ->end()
+                ->append($this->createAdaptersNode(
+                    'app_adapters',
+                    'If not specified, the "app" cache pool will rely on the filesystem adapter.'
+                ))
 
                 ->arrayNode('pools')
                     ->useAttributeAsKey('name')
@@ -62,37 +63,10 @@ class CacheConfiguration implements ConfigurationInterface
                         ->fixXmlConfig('adapter')
 
                         ->children()
-                            ->arrayNode('adapters')
-                                ->info(
-                                    'The "app" pool is used if no adapters are specified. '
-                                    .'Multiple adapters are chained into a single one via a ChainAdapter.'
-                                )
-
-                                ->requiresAtLeastOneElement()
-
-                                ->beforeNormalization()
-                                    ->ifString()
-                                    ->then(static fn(string $value): array => [['id' => $value]])
-                                ->end()
-
-                                ->arrayPrototype()
-                                    ->beforeNormalization()
-                                        ->ifString()
-                                        ->then(static fn(string $value): array => ['id' => $value])
-                                    ->end()
-
-                                    ->children()
-                                        ->scalarNode('id')
-                                            ->isRequired()
-                                            ->cannotBeEmpty()
-                                        ->end()
-
-                                        ->scalarNode('provider')
-                                            ->info('A provider DSN or id to replace the adapter\'s default.')
-                                        ->end()
-                                    ->end()
-                                ->end()
-                            ->end()
+                            ->append($this->createAdaptersNode(
+                                'adapters',
+                                'The "app" pool is used if no adapters are specified.'
+                            ))
 
                             ->scalarNode('tags')
                                 ->info('Enables tagging when true. Also accepts the tags cache pool id as a value.')
@@ -120,5 +94,44 @@ class CacheConfiguration implements ConfigurationInterface
             ->end();
 
         return $treeBuilder;
+    }
+
+    /**
+     * @param string $name
+     * @param string $info
+     *
+     * @return ArrayNodeDefinition
+     */
+    private function createAdaptersNode(string $name, string $info): ArrayNodeDefinition
+    {
+        return
+            (new ArrayNodeDefinition($name))
+                ->info($info.' Multiple adapters are chained into a single one via a ChainAdapter.')
+
+                ->requiresAtLeastOneElement()
+
+                ->beforeNormalization()
+                    ->ifString()
+                    ->then(static fn(string $value): array => [['id' => $value]])
+                ->end()
+
+                ->arrayPrototype()
+                    ->beforeNormalization()
+                        ->ifString()
+                        ->then(static fn(string $value): array => ['id' => $value])
+                    ->end()
+
+                    ->children()
+                        ->scalarNode('id')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+
+                        ->scalarNode('provider')
+                            ->info('A provider DSN or id to replace the adapter\'s default.')
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
     }
 }

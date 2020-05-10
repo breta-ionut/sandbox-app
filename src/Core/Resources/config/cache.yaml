@@ -69,11 +69,7 @@ services:
         tags: [{name: cache.pool, clearer: cache.clearer.system, reset: reset}]
     # End of - Adapters.
 
-    cache.app:
-        class: Symfony\Component\Cache\Adapter\AdapterInterface
-        public: true
-        tags: [{name: cache.pool, clearer: cache.clearer.default}]
-
+    cache.app: ~
     Psr\Cache\CacheItemPoolInterface: '@cache.app'
     Symfony\Contracts\Cache\CacheInterface: '@cache.app'
 
