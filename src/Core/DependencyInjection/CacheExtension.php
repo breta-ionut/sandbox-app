@@ -7,29 +7,67 @@ namespace App\Core\DependencyInjection;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\ChainAdapter;
 use Symfony\Component\Cache\Adapter\TagAwareAdapter;
+use Symfony\Component\Cache\DependencyInjection\CachePoolPass;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
 class CacheExtension extends ConfigurableExtension
 {
+    /**
+     * {@inheritDoc}
+     */
     protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('cache.yaml');
 
+        if (isset($config['prefix_seed'])) {
+            $container->setParameter(
+                'cache.prefix_seed',
+                $container->resolveEnvPlaceholders($config['prefix_seed'], true)
+            );
+        }
 
+        $this->configureAdaptersAndDefaultProviders($container, $mergedConfig);
+        $this->createAndConfigurePools($container, $mergedConfig);
     }
 
     /**
      * @param ContainerBuilder $container
      * @param array            $config
      */
-    private function createPools(ContainerBuilder $container, array $config): void
+    private function configureAdaptersAndDefaultProviders(ContainerBuilder $container, array $config): void
+    {
+        $version = new Parameter('container.build.id');
+        foreach (['cache.adapter.apcu', 'cache.adapter.system'] as $id) {
+            $container->getDefinition($id)->setArgument('$version', $version);
+        }
+
+        $directory = $config['directory'];
+        foreach (['cache.adapter.filesystem', 'cache.adapter.system'] as $id) {
+            $container->getDefinition($id)->setArgument('$directory', $directory);
+        }
+
+        foreach ($config['default_providers'] as $type => $dsnOrId) {
+            $container->setAlias(
+                'cache.default_provider.'.$type,
+                new Alias(CachePoolPass::getServiceProvider($container, $dsnOrId), false)
+            );
+        }
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param array            $config
+     */
+    private function createAndConfigurePools(ContainerBuilder $container, array $config): void
     {
         $poolsConfig = ['app' => ['adapters' => $config['app_adapters'], 'public' => true]] + $config['pools'];
 
@@ -75,7 +113,10 @@ class CacheExtension extends ConfigurableExtension
             $container->setDefinition($id, $definition);
         }
 
-        if ($container->getParameter('kernel.debug')) {
+        if (!$container->getParameter('kernel.debug')) {
+            $container->getDefinition('cache.property_access')
+                ->setArgument('$version', new Parameter('container.build.id'));
+        } else {
             $container->register('cache.property_access', ArrayAdapter::class)->setArguments([0, false]);
         }
     }
