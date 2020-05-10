@@ -7,7 +7,7 @@ services:
         abstract: true
         arguments:
             - ~ # Namespace.
-            - ~ # Default lifetime.
+            - 0 # Default lifetime.
             - ~ # Version.
         calls: [[setLogger, ['@Psr\Log\LoggerInterface']]]
         tags: [{name: cache.pool, clearer: cache.clearer.default, reset: reset}]
@@ -16,7 +16,7 @@ services:
         class: Symfony\Component\Cache\Adapter\ArrayAdapter
         abstract: true
         arguments:
-            - ~ # Default lifetime.
+            - 0 # Default lifetime.
         calls: [[setLogger, ['@Psr\Log\LoggerInterface']]]
         tags: [{name: cache.pool, clearer: cache.clearer.default, reset: reset}]
 
@@ -26,7 +26,7 @@ services:
         arguments:
             - ~ # Provider.
             - ~ # Namespace.
-            - ~ # Default lifetime.
+            - 0 # Default lifetime.
         calls: [[setLogger, ['@Psr\Log\LoggerInterface']]]
         tags:
             - name: cache.pool
@@ -39,7 +39,7 @@ services:
         abstract: true
         arguments:
             - ~ # Namespace.
-            - ~ # Default lifetime.
+            - 0 # Default lifetime.
             - ~ # Directory.
             - '@Symfony\Component\Cache\Marshaller\DefaultMarshaller'
         calls: [[setLogger, ['@Psr\Log\LoggerInterface']]]
@@ -51,7 +51,7 @@ services:
         arguments:
             - ~ # Provider.
             - ~ # Namespace.
-            - ~ # Default lifetime.
+            - 0 # Default lifetime.
             - '@Symfony\Component\Cache\Marshaller\DefaultMarshaller'
         calls: [[setLogger, ['@Psr\Log\LoggerInterface']]]
         tags: [{name: cache.pool, provider: cache.default_provider.redis, clearer: cache.clearer.default, reset: reset}]
@@ -62,7 +62,7 @@ services:
         factory: [Symfony\Component\Cache\Adapter\AbstractAdapter, createSystemCache]
         arguments:
             - ~ # Namespace.
-            - ~ # Default lifetime.
+            - 0 # Default lifetime.
             - ~ # Version.
             - ~ # Directory.
             - '@Psr\Log\LoggerInterface'
@@ -91,7 +91,7 @@ services:
         factory: [Symfony\Component\PropertyAccess\PropertyAccessor, createCache]
         arguments:
             - ~ # Namespace.
-            - ~ # Default lifetime.
+            - 0 # Default lifetime.
             - ~ # Version.
             - '@Psr\Log\LoggerInterface'
         tags: [{name: cache.pool, clearer: cache.clearer.system}]
