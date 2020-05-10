@@ -47,7 +47,7 @@ class CacheExtension extends ConfigurableExtension
      */
     private function configureAdaptersAndDefaultProviders(ContainerBuilder $container, array $config): void
     {
-        $version = new Parameter('container.build.id');
+        $version = new Parameter('container.build_id');
         foreach (['cache.adapter.apcu', 'cache.adapter.system'] as $id) {
             $container->getDefinition($id)->setArgument('$version', $version);
         }
@@ -122,7 +122,7 @@ class CacheExtension extends ConfigurableExtension
 
         if (!$container->getParameter('kernel.debug')) {
             $container->getDefinition('cache.property_access')
-                ->setArgument('$version', new Parameter('container.build.id'));
+                ->setArgument('$version', new Parameter('container.build_id'));
         } else {
             $container->register('cache.property_access', ArrayAdapter::class)->setArguments([0, false]);
         }
