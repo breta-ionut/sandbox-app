@@ -30,6 +30,7 @@ use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver;
 use Symfony\Component\HttpKernel\DependencyInjection\ControllerArgumentValueResolverPass;
 use Symfony\Component\HttpKernel\DependencyInjection\RegisterControllerArgumentLocatorsPass;
+use Symfony\Component\HttpKernel\DependencyInjection\ResettableServicePass;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\DependencyInjection\RoutingResolverPass;
@@ -126,6 +127,7 @@ abstract class Kernel extends BaseKernel
     private function getCompilerPasses(): array
     {
         return [
+            new ResettableServicePass(),
             new RegisterListenersPass(EventDispatcherInterface::class),
             new ControllerArgumentValueResolverPass(ArgumentResolver::class),
             new RegisterControllerArgumentLocatorsPass(ServiceValueResolver::class),

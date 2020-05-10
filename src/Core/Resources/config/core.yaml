@@ -4,6 +4,13 @@ services:
         public: true
         synthetic: true
 
+    services_resetter:
+        class: Symfony\Component\HttpKernel\DependencyInjection\ServicesResetter
+        arguments:
+            - ~ # Resettable services.
+            - ~ # Reset methods.
+        public: true
+
     Symfony\Component\DependencyInjection\ParameterBag\ContainerBag:
         arguments: ['@service_container']
 
@@ -17,6 +24,11 @@ services:
     Psr\EventDispatcher\EventDispatcherInterface:
         alias: Symfony\Component\EventDispatcher\EventDispatcher
         public: true
+
+    Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer:
+        arguments: !tagged_iterator kernel.cache_clearer
+
+    Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface: '@Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer'
 
     Symfony\Component\HttpKernel\Log\Logger: ~
     Psr\Log\LoggerInterface: '@Symfony\Component\HttpKernel\Log\Logger'
