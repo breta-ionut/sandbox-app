@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Core\Command;
 
+use App\Core\Kernel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -47,6 +50,7 @@ class CacheClearCommand extends Command
     protected function configure()
     {
         $this->setDescription('Clears the application cache.')
+            ->addOption('no-warmup', 'n', InputOption::VALUE_NONE, 'If cache should not be warmed.')
             ->setHelp(<<<'EOT'
 The <info>%command.name%</info> clears the application cache for a given environment and debug mode:
 
@@ -78,12 +82,82 @@ EOT
             \var_export($kernel->isDebug(), true)
         ));
 
+        $oldCacheDir = $this->clearCache();
+        $warmupDir = $this->warmupCache(!$input->getOption('no-warmup'));
+        $this->activateNewCache($oldCacheDir, $warmupDir, $style);
+
+        $style->success(\sprintf(
+            'Successfully cleared cache for the "%s" environment with debug mode "%s".',
+            $kernel->getEnvironment(),
+            \var_export($kernel->isDebug(), true)
+        ));
+
+        return self::RETURN_CODE_SUCCESS;
+    }
+
+    /**
+     * @return string The old cache directory.
+     */
+    private function clearCache(): string
+    {
         $oldCacheDir = \substr($this->cacheDir, 0, -1).('~' === \substr($this->cacheDir, -1) ? '+' : '~');
         $this->filesystem->remove($oldCacheDir);
 
         $this->cacheClearer->clear($this->cacheDir);
 
+        return $oldCacheDir;
+    }
+
+    /**
+     * @param bool $rebootKernel
+     *
+     * @return string The new cache directory.
+     */
+    private function warmupCache(bool $rebootKernel): string
+    {
+        $warmupDir = \substr($this->cacheDir, 0, -1).('_' === \substr($this->cacheDir, -1) ? '-' : '_');
+        $this->filesystem->remove($warmupDir);
+
+        /** @var Kernel $kernel */
+        $kernel = $this->getApplication()->getKernel();
+
+        if ($rebootKernel) {
+            $kernel->reboot($warmupDir);
+
+            // Fix cached files references to use the real cache directory in the new cache files.
+            $search = [$warmupDir, \str_replace('\\', '\\\\', $warmupDir)];
+            $replace = \str_replace('\\', '/', $this->cacheDir);
+
+            foreach (Finder::create()->files()->in($warmupDir) as $file) {
+                $content = \str_replace($search, $replace, \file_get_contents($file), $count);
+                if ($count) {
+                    $this->filesystem->dumpFile((string) $file, $content);
+                }
+            }
+        }
+
+        // Ensure the old container exists in the new cache as it might still be used by parallel requests.
+        $containerReflection = new \ReflectionObject($kernel->getContainer());
+        $containerDir = \basename(\dirname($containerReflection->getFileName()));
+        $warmupContainerDirPath = $warmupDir.'/'.$containerDir;
+
+        if (!$this->filesystem->exists($warmupContainerDirPath)) {
+            $this->filesystem->rename($this->cacheDir.'/'.$containerDir, $warmupContainerDirPath);
+            $this->filesystem->touch($warmupContainerDirPath.'.legacy');
+        }
+
+        return $warmupDir;
+    }
+
+    /**
+     * @param string       $oldCacheDir
+     * @param string       $warmupDir
+     * @param SymfonyStyle $style
+     */
+    private function activateNewCache(string $oldCacheDir, string $warmupDir, SymfonyStyle $style): void
+    {
         $this->filesystem->rename($this->cacheDir, $oldCacheDir);
+        $this->filesystem->rename($warmupDir, $this->cacheDir);
 
         try {
             $this->filesystem->remove($oldCacheDir);
@@ -94,13 +168,5 @@ EOT
                 $exception->getMessage()
             ));
         }
-
-        $style->success(\sprintf(
-            'Successfully cleared cache for the "%s" environment with debug mode "%s".',
-            $kernel->getEnvironment(),
-            \var_export($kernel->isDebug(), true)
-        ));
-
-        return self::RETURN_CODE_SUCCESS;
     }
 }
