@@ -18,7 +18,9 @@ RUN docker-php-ext-install opcache pdo_mysql \
 COPY scripts/install_composer.sh /tmp/install_composer.sh
 RUN sh /tmp/install_composer.sh && rm /tmp/install_composer.sh
 
-COPY scripts/exd scripts/dxd /usr/local/bin/
+# Add shortcuts for enabling/disabling Xdebug when running CLI scripts.
+RUN echo "\nfunction exd {\n    export XDEBUG_CONFIG=\n}\n\nfunction dxd {\n    unset XDEBUG_CONFIG\n}\n" \
+        >> /home/php/.bashrc
 
 USER php
 
