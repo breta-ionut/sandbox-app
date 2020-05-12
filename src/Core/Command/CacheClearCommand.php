@@ -50,7 +50,7 @@ class CacheClearCommand extends Command
     protected function configure()
     {
         $this->setDescription('Clears the application cache.')
-            ->addOption('no-warmup', 'n', InputOption::VALUE_NONE, 'If cache should not be warmed.')
+            ->addOption('no-warmup', 'N', InputOption::VALUE_NONE, 'If cache should not be warmed.')
             ->setHelp(<<<'EOT'
 The <info>%command.name%</info> clears the application cache for a given environment and debug mode:
 
@@ -121,6 +121,9 @@ EOT
         /** @var Kernel $kernel */
         $kernel = $this->getApplication()->getKernel();
 
+        $oldContainerReflection = new \ReflectionObject($kernel->getContainer());
+        $oldContainerDir = \basename(\dirname($oldContainerReflection->getFileName()));
+
         if ($rebootKernel) {
             $kernel->reboot($warmupDir);
 
@@ -129,21 +132,20 @@ EOT
             $replace = \str_replace('\\', '/', $this->cacheDir);
 
             foreach (Finder::create()->files()->in($warmupDir) as $file) {
-                $content = \str_replace($search, $replace, \file_get_contents($file), $count);
+                $filepath = $file->getRealPath();
+
+                $content = \str_replace($search, $replace, \file_get_contents($filepath), $count);
                 if ($count) {
-                    $this->filesystem->dumpFile((string) $file, $content);
+                    $this->filesystem->dumpFile($filepath, $content);
                 }
             }
         }
 
         // Ensure the old container exists in the new cache as it might still be used by parallel requests.
-        $containerReflection = new \ReflectionObject($kernel->getContainer());
-        $containerDir = \basename(\dirname($containerReflection->getFileName()));
-        $warmupContainerDirPath = $warmupDir.'/'.$containerDir;
-
-        if (!$this->filesystem->exists($warmupContainerDirPath)) {
-            $this->filesystem->rename($this->cacheDir.'/'.$containerDir, $warmupContainerDirPath);
-            $this->filesystem->touch($warmupContainerDirPath.'.legacy');
+        $oldContainerInWarmupDirPath = $warmupDir.'/'.$oldContainerDir;
+        if (!$this->filesystem->exists($oldContainerInWarmupDirPath)) {
+            $this->filesystem->rename($this->cacheDir.'/'.$oldContainerDir, $oldContainerInWarmupDirPath);
+            $this->filesystem->touch($oldContainerInWarmupDirPath.'.legacy');
         }
 
         return $warmupDir;
