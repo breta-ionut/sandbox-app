@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core;
 
+use App\Core\Command\Cache\CachePoolPruneCommand;
 use App\Core\DependencyInjection\AssetsExtension;
 use App\Core\DependencyInjection\CacheExtension;
 use App\Core\DependencyInjection\Compiler\RegisterDoctrineListenersAndSubscribersPass;
@@ -19,6 +20,7 @@ use App\Core\DependencyInjection\TemplatingExtension;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Cache\DependencyInjection\CachePoolClearerPass;
 use Symfony\Component\Cache\DependencyInjection\CachePoolPass;
+use Symfony\Component\Cache\DependencyInjection\CachePoolPrunerPass;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
 use Symfony\Component\Console\DependencyInjection\AddConsoleCommandPass;
@@ -143,6 +145,7 @@ abstract class Kernel extends BaseKernel
                 'cache.clearer.system'
             ),
             new CachePoolClearerPass(),
+            new CachePoolPrunerPass(CachePoolPruneCommand::class),
         ];
     }
 }
