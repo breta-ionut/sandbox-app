@@ -28,7 +28,7 @@ class CachePoolClearCommand extends Command
      */
     public function __construct(Psr6CacheClearer $cacheClearer)
     {
-        parent::__construct(null);
+        parent::__construct();
 
         $this->cacheClearer = $cacheClearer;
     }
@@ -57,7 +57,7 @@ EOT
 
         foreach ($input->getArgument('pools') as $pool) {
             if (!$this->cacheClearer->hasPool($pool)) {
-                $style->error(\sprintf('No "%s" cache pool found.', $pool));
+                $style->error(\sprintf('No cache pool "%s" found.', $pool));
 
                 return self::RETURN_CODE_ERROR;
             }
