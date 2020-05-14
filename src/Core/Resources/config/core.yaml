@@ -30,13 +30,6 @@ services:
 
     Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface: '@Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer'
 
-    App\Core\Command\CacheClearCommand:
-        arguments:
-            - '%kernel.cache_dir%'
-            - '@Symfony\Component\Filesystem\Filesystem'
-            - '@Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer'
-        tags: [console.command]
-
     Symfony\Component\HttpKernel\Log\Logger: ~
     Psr\Log\LoggerInterface: '@Symfony\Component\HttpKernel\Log\Logger'
 

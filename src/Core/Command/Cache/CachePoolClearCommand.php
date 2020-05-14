@@ -13,9 +13,6 @@ use Symfony\Component\HttpKernel\CacheClearer\Psr6CacheClearer;
 
 class CachePoolClearCommand extends Command
 {
-    private const RETURN_CODE_SUCCESS = 0;
-    private const RETURN_CODE_ERROR = 1;
-
     /**
      * {@inheritDoc}
      */
@@ -59,16 +56,20 @@ EOT
             if (!$this->cacheClearer->hasPool($pool)) {
                 $style->error(\sprintf('No cache pool "%s" found.', $pool));
 
-                return self::RETURN_CODE_ERROR;
+                return 1;
             }
 
             $style->comment(\sprintf('Clearing cache pool <info>%s</info>.', $pool));
 
-            $this->cacheClearer->clearPool($pool);
+            if (!$this->cacheClearer->clearPool($pool)) {
+                $style->error(\sprintf('Failed to clear cache pool "%s".', $pool));
+
+                return 1;
+            }
         }
 
         $style->success('Successfully cleared cache pool(s).');
 
-        return self::RETURN_CODE_SUCCESS;
+        return 0;
     }
 }

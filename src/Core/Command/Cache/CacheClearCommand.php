@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Command;
+namespace App\Core\Command\Cache;
 
 use App\Core\Kernel;
 use Symfony\Component\Console\Command\Command;
@@ -18,9 +18,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class CacheClearCommand extends Command
 {
-    private const RETURN_CODE_SUCCESS = 0;
-    private const RETURN_CODE_ERROR = 1;
-
     /**
      * {@inheritDoc}
      */
@@ -70,7 +67,7 @@ EOT
         if (!\is_writable($this->cacheDir)) {
             $style->error(\sprintf('Cache directory "%s" is not writable.', $this->cacheDir));
 
-            return self::RETURN_CODE_ERROR;
+            return 1;
         }
 
         /** @var KernelInterface $kernel */
@@ -92,7 +89,7 @@ EOT
             \var_export($kernel->isDebug(), true)
         ));
 
-        return self::RETURN_CODE_SUCCESS;
+        return 0;
     }
 
     /**

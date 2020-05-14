@@ -14,8 +14,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DropDatabaseCommand extends Command
 {
-    private const RETURN_CODE_SUCCESS = 0;
-    private const RETURN_CODE_ERROR = 1;
     private const RETURN_CODE_NO_FORCE = 3;
 
     /**
@@ -79,7 +77,7 @@ EOT
         if (null === $name) {
             $style->error('A "path" or "dbname" connection parameter is required to determine the database to drop.');
 
-            return self::RETURN_CODE_ERROR;
+            return 1;
         }
 
         if (!$input->getOption('force')) {
@@ -111,11 +109,11 @@ EOT
                 $style->success(\sprintf('Database "%s" doesn\'t exist.', $name));
             }
 
-            return self::RETURN_CODE_SUCCESS;
+            return 0;
         } catch (\Throwable $exception) {
             $style->error([\sprintf('Error occurred while dropping database "%s":', $name), $exception->getMessage()]);
 
-            return self::RETURN_CODE_ERROR;
+            return 1;
         } finally {
             $connection->close();
         }

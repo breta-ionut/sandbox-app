@@ -121,3 +121,25 @@ services:
     cache.clearer.system:
         parent: cache.clearer.default
     # End of - Clearers.
+
+    # Commands.
+    App\Core\Command\Cache\CacheClearCommand:
+        arguments:
+            - '%kernel.cache_dir%'
+            - '@Symfony\Component\Filesystem\Filesystem'
+            - '@Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer'
+        tags: [console.command]
+
+    App\Core\Command\Cache\CachePoolClearCommand:
+        arguments: ['@cache.clearer.global']
+        tags: [console.command]
+
+    App\Core\Command\Cache\CachePoolDeleteCommand:
+        arguments: ['@cache.clearer.global']
+        tags: [console.command]
+
+    App\Core\Command\Cache\CachePoolPruneCommand:
+        arguments:
+            - ~ # Pools.
+        tags: [console.command]
+    # End of - Commands.

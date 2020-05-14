@@ -14,9 +14,6 @@ use Symfony\Component\HttpKernel\CacheClearer\Psr6CacheClearer;
 
 class CachePoolDeleteCommand extends Command
 {
-    private const RETURN_CODE_SUCCESS = 0;
-    private const RETURN_CODE_ERROR = 1;
-
     /**
      * {@inheritDoc}
      */
@@ -61,7 +58,7 @@ EOT
         if (!$this->cacheClearer->hasPool($poolName)) {
             $style->error(\sprintf('No cache pool "%s" found.', $poolName));
 
-            return self::RETURN_CODE_ERROR;
+            return 1;
         }
 
         /** @var CacheItemPoolInterface $pool */
@@ -71,17 +68,17 @@ EOT
         if (!$pool->hasItem($key)) {
             $style->note(\sprintf('No item "%s" found in cache pool "%s".', $key, $poolName));
 
-            return self::RETURN_CODE_SUCCESS;
+            return 0;
         }
 
         if (!$pool->deleteItem($key)) {
             $style->error(\sprintf('Item "%s" from cache pool "%s" could not be deleted.', $key, $poolName));
 
-            return self::RETURN_CODE_ERROR;
+            return 1;
         }
 
         $style->success(\sprintf('Successfully deleted item "%s" from cache pool "%s".', $key, $poolName));
 
-        return self::RETURN_CODE_SUCCESS;
+        return 0;
     }
 }
