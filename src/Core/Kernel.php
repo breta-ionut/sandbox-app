@@ -155,8 +155,8 @@ abstract class Kernel extends BaseKernel
                 'cache.pool.clearer',
                 'cache.clearer.system'
             ),
-            new CachePoolClearerPass(),
-            new CachePoolPrunerPass(CachePoolPruneCommand::class),
+            [new CachePoolClearerPass(), PassConfig::TYPE_AFTER_REMOVING],
+            [new CachePoolPrunerPass(CachePoolPruneCommand::class), PassConfig::TYPE_AFTER_REMOVING],
         ];
     }
 }
