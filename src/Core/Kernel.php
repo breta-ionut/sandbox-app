@@ -25,6 +25,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
 use Symfony\Component\Console\DependencyInjection\AddConsoleCommandPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
@@ -77,8 +78,18 @@ abstract class Kernel extends BaseKernel
         }
 
         // Register the core compiler passes.
-        foreach ($this->getCompilerPasses() as $compilerPass) {
-            $container->addCompilerPass($compilerPass);
+        foreach ($this->getCompilerPasses() as $compilerPassDefinition) {
+            if ($compilerPassDefinition instanceof CompilerPassInterface) {
+                $compilerPass = $compilerPassDefinition;
+                $type = PassConfig::TYPE_BEFORE_OPTIMIZATION;
+                $priority = 0;
+            } else {
+                $compilerPass = $compilerPassDefinition[0];
+                $type = $compilerPassDefinition[1] ?? PassConfig::TYPE_BEFORE_OPTIMIZATION;
+                $priority = $compilerPassDefinition[2] ?? 0;
+            }
+
+            $container->addCompilerPass($compilerPass, $type, $priority);
         }
     }
 
@@ -122,9 +133,9 @@ abstract class Kernel extends BaseKernel
     }
 
     /**
-     * Returns the core compiler passes.
+     * Returns the core compiler passes. For each pass the type and priority can be also specified.
      *
-     * @return CompilerPassInterface[]
+     * @return array
      */
     private function getCompilerPasses(): array
     {
