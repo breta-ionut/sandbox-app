@@ -98,7 +98,7 @@ abstract class Kernel extends BaseKernel
      */
     protected function getKernelParameters()
     {
-        return \array_merge(parent::getKernelParameters(), ['kernel.config_dir' => $this->getProjectDir().'/config']);
+        return \array_merge(parent::getKernelParameters(), ['kernel.config_dir' => $this->getConfigDir()]);
     }
 
     /**
