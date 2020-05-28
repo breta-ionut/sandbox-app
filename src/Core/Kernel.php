@@ -14,6 +14,7 @@ use App\Core\DependencyInjection\CoreExtension;
 use App\Core\DependencyInjection\DoctrineExtension;
 use App\Core\DependencyInjection\DoctrineMigrationsExtension;
 use App\Core\DependencyInjection\HttpExtension;
+use App\Core\DependencyInjection\PropertyInfoExtension;
 use App\Core\DependencyInjection\RoutingExtension;
 use App\Core\DependencyInjection\SecurityExtension;
 use App\Core\DependencyInjection\TemplatingExtension;
@@ -127,6 +128,7 @@ abstract class Kernel extends BaseKernel
             new DoctrineMigrationsExtension(),
             new SecurityExtension(),
             new CacheExtension(),
+            new PropertyInfoExtension(),
             new TemplatingExtension(),
             new AssetsExtension(),
         ];
