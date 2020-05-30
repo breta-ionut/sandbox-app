@@ -29,6 +29,7 @@
         "symfony/filesystem": "^5.0",
         "symfony/finder": "^5.0",
         "symfony/http-kernel": "^5.0",
+        "symfony/property-access": "^5.0",
         "symfony/property-info": "^5.0",
         "symfony/routing": "^5.0",
         "symfony/security-core": "^5.0",
@@ -37,5 +38,11 @@
         "symfony/serializer": "^5.0",
         "symfony/templating": "^5.0",
         "symfony/yaml": "^5.0"
+    },
+    "minimum-stability": "RC",
+    "scripts": {
+        "cache-clear": "bin/console cache:clear",
+        "post-install-cmd": "@cache-clear",
+        "post-update-cmd": "@cache-clear"
     }
 }
