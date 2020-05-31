@@ -189,12 +189,12 @@ class SecurityConfiguration implements ConfigurationInterface
                                 ->defaultTrue()
                             ->end()
 
-                            ->booleanNode('anonymous')
+                            ->booleanNode('stateless')
                                 ->defaultFalse()
                             ->end()
 
-                            ->booleanNode('stateless')
-                                ->defaultFalse()
+                            ->scalarNode('entry_point')
+                                ->cannotBeEmpty()
                             ->end()
 
                             ->scalarNode('access_denied_url')->end()
@@ -275,17 +275,15 @@ class SecurityConfiguration implements ConfigurationInterface
                                             ->end()
                                         ->end()
                                     ->end()
-
-                                    ->arrayNode('handlers')
-                                        ->scalarPrototype()
-                                            ->cannotBeEmpty()
-                                        ->end()
-                                    ->end()
                                 ->end()
                             ->end()
 
-                            ->scalarNode('watchdog')
-                                ->cannotBeEmpty()
+                            ->arrayNode('authenticators')
+                                ->requiresAtLeastOneElement()
+
+                                ->scalarPrototype()
+                                    ->cannotBeEmpty()
+                                ->end()
                             ->end()
 
                             ->scalarNode('user_provider')
@@ -295,15 +293,6 @@ class SecurityConfiguration implements ConfigurationInterface
                             ->scalarNode('user_checker')
                                 ->cannotBeEmpty()
                             ->end()
-                        ->end()
-
-                        ->validate()
-                            ->ifTrue(static function (array $value): bool {
-                                return isset($value['watchdog']) && !isset($value['user_provider']);
-                            })
-                            ->thenInvalid(
-                                'In order to use watchdog authentication, a user provider must also be declared.'
-                            )
                         ->end()
                     ->end()
                 ->end()
