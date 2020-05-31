@@ -39,7 +39,6 @@
         "symfony/templating": "^5.0",
         "symfony/yaml": "^5.0"
     },
-    "minimum-stability": "RC",
     "scripts": {
         "cache-clear": "bin/console cache:clear",
         "post-install-cmd": "@cache-clear",
