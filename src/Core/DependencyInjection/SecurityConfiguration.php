@@ -403,12 +403,6 @@ class SecurityConfiguration implements ConfigurationInterface
                     ->defaultValue(SessionAuthenticationStrategy::MIGRATE)
                 ->end()
 
-                ->scalarNode('anonymous_secret')->end()
-
-                ->booleanNode('always_authenticate_before_granting')
-                    ->defaultFalse()
-                ->end()
-
                 ->arrayNode('access_decision_manager')
                     ->addDefaultsIfNotSet()
 
