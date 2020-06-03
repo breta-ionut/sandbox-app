@@ -42,6 +42,40 @@ services:
     Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface: '@Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy'
 
     # Listeners.
+    Symfony\Component\Security\Http\EventListener\CheckCredentialsListener:
+        arguments: ['@Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface']
+        tags: [kernel.event_subscriber]
+
+    Symfony\Component\Security\Http\EventListener\CookieClearingLogoutListener:
+        abstract: true
+        arguments: [!abstract cookies]
+
+    Symfony\Component\Security\Http\EventListener\CsrfProtectionListener:
+        arguments: ['@Symfony\Component\Security\Csrf\CsrfTokenManagerInterface']
+        tags: [kernel.event_subscriber]
+
+    Symfony\Component\Security\Http\EventListener\CsrfTokenClearingLogoutListener:
+        arguments: ['@Symfony\Component\Security\Csrf\TokenStorage\ClearableTokenStorageInterface']
+
+    Symfony\Component\Security\Http\EventListener\DefaultLogoutListener:
+        abstract: true
+        arguments: ['@Symfony\Component\Security\Http\HttpUtils', !abstract target URL]
+
+    Symfony\Component\Security\Http\EventListener\PasswordMigratingListener:
+        arguments: ['@Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface']
+        tags: [kernel.event_subscriber]
+
+    Symfony\Component\Security\Http\EventListener\SessionLogoutListener: ~
+
+    Symfony\Component\Security\Http\EventListener\SessionStrategyListener:
+        arguments: ['@Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface']
+
+    Symfony\Component\Security\Http\EventListener\UserCheckerListener:
+        abstract: true
+        arguments: [!abstract user checker]
+    # End of - Listeners.
+
+    # Firewalls.
     Symfony\Component\Security\Http\Firewall\AccessListener:
         arguments:
             - '@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
@@ -86,7 +120,7 @@ services:
             - !abstract event dispatcher
             - !abstract options
             - '@Symfony\Component\Security\Csrf\CsrfTokenManagerInterface'
-    # End of - Listeners.
+    # End of - Firewalls.
     # End of - Authentication.
 
     # Authorization.
