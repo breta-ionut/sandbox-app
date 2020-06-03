@@ -21,7 +21,7 @@ services:
     Symfony\Component\Security\Core\User\UserChecker: ~
     Symfony\Component\Security\Core\User\UserCheckerInterface: '@Symfony\Component\Security\Core\User\UserChecker'
 
-    Symfony\Component\Security\Http\Authentication\NoopAuthenticationManager:
+    Symfony\Component\Security\Http\Authentication\NoopAuthenticationManager: ~
     Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface: '@Symfony\Component\Security\Http\Authentication\NoopAuthenticationManager'
 
     Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint:
