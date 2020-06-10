@@ -4,30 +4,22 @@ declare(strict_types=1);
 
 namespace App\Core\DependencyInjection;
 
-use App\Core\Security\WatchdogAuthenticationHelper;
-use App\Core\Security\WatchdogAuthenticationListener;
-use App\Core\Security\WatchdogAuthenticationProvider;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
-use Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
-use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\ChannelListener;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
@@ -120,29 +112,6 @@ class SecurityExtension extends ConfigurableExtension
         $definition = (new ChildDefinition(ContextListener::class))
             ->setArgument('$userProviders', new IteratorArgument($userProviders))
             ->setArgument('$contextKey', $firewall);
-
-        $container->setDefinition($id, $definition);
-
-        return new Reference($id);
-    }
-
-    /**
-     * @param ContainerBuilder $container
-     * @param string           $firewall
-     * @param array            $firewallConfig
-     *
-     * @return Reference
-     */
-    private function createWatchdogListener(
-        ContainerBuilder $container,
-        string $firewall,
-        array $firewallConfig
-    ): Reference {
-        $id = 'security.watchdog_listener.'.$firewall;
-
-        $definition = (new ChildDefinition(WatchdogAuthenticationListener::class))
-            ->setArgument('$firewall', $firewall)
-            ->setArgument('$authenticator', new Reference($firewallConfig['watchdog']));
 
         $container->setDefinition($id, $definition);
 
@@ -248,34 +217,6 @@ class SecurityExtension extends ConfigurableExtension
 
     /**
      * @param ContainerBuilder $container
-     * @param string           $firewall
-     * @param array            $firewallConfig
-     *
-     * @return Reference
-     */
-    private function createWatchdogProvider(
-        ContainerBuilder $container,
-        string $firewall,
-        array $firewallConfig
-    ): Reference {
-        $id = 'security.watchdog_provider'.$firewall;
-
-        $definition = (new ChildDefinition(WatchdogAuthenticationProvider::class))
-            ->setArgument('$firewall', $firewall)
-            ->setArgument('$authenticator', new Reference($firewallConfig['watchdog']))
-            ->setArgument('$userProvider', new Reference($firewallConfig['user_provider']))
-            ->setArgument(
-                '$userChecker',
-                new Reference($firewallConfig['user_checker'] ?? UserCheckerInterface::class)
-            );
-
-        $container->setDefinition($id, $definition);
-
-        return new Reference($id);
-    }
-
-    /**
-     * @param ContainerBuilder $container
      * @param string           $name
      * @param array            $firewallConfig
      *
@@ -290,22 +231,9 @@ class SecurityExtension extends ConfigurableExtension
         }
 
         $listeners = [new Reference(ChannelListener::class)];
-        $providers = [];
 
-        $stateless = $firewallConfig['stateless'];
-        if (!$stateless) {
+        if (!$firewallConfig['stateless']) {
             $listeners[] = $this->createContextListener($container, $name, $firewallConfig);
-        }
-
-        if (isset($firewallConfig['watchdog'])) {
-            $listeners[] = $this->createWatchdogListener($container, $name, $firewallConfig);
-            $providers[] = $this->createWatchdogProvider($container, $name, $firewallConfig);
-            $entryPoint = new Reference($firewallConfig['watchdog']);
-        }
-
-        if ($firewallConfig['anonymous']) {
-            $listeners[] = new Reference(AnonymousAuthenticationListener::class);
-            $providers[] = new Reference(AnonymousAuthenticationProvider::class);
         }
 
         $listeners[] = new Reference(AccessListener::class);
@@ -316,7 +244,7 @@ class SecurityExtension extends ConfigurableExtension
             $logoutListener = $this->createLogoutListener($container, $name, $firewallConfig['logout']);
         }
 
-        return [$requestMatcher, $listeners, $exceptionListener, $logoutListener ?? null, $providers, $stateless];
+        return [$requestMatcher, $listeners, $exceptionListener, $logoutListener ?? null];
     }
 
     /**
@@ -326,36 +254,20 @@ class SecurityExtension extends ConfigurableExtension
     private function createFirewalls(ContainerBuilder $container, array $firewallsConfig): void
     {
         $firewallMapDefinition = $container->getDefinition(FirewallMap::class);
-        $providers = [];
-        $statelessFirewalls = [];
 
         foreach ($firewallsConfig as $name => $firewallConfig) {
             [
                 $requestMatcher,
                 $listeners,
                 $exceptionListener,
-                $logoutListener,
-                $firewallProviders,
-                $stateless
+                $logoutListener
             ] = $this->createFirewall($container, $name, $firewallConfig);
 
             $firewallMapDefinition->addMethodCall(
                 'add',
                 [$requestMatcher, $listeners, $exceptionListener, $logoutListener]
             );
-
-            $providers = \array_merge($providers, $firewallProviders);
-
-            if ($stateless) {
-                $statelessFirewalls[] = $name;
-            }
         }
-
-        $container->getDefinition(AuthenticationProviderManager::class)
-            ->setArgument('$providers', new IteratorArgument(\array_unique($providers)));
-
-        $container->getDefinition(WatchdogAuthenticationHelper::class)
-            ->setArgument('$statelessFirewalls', $statelessFirewalls);
     }
 
     /**
@@ -387,14 +299,6 @@ class SecurityExtension extends ConfigurableExtension
 
         $container->getDefinition(SessionAuthenticationStrategy::class)
             ->setArgument('$strategy', $config['session_authentication_strategy']);
-
-        $anonymousSecret = $config['anonymous_secret'] ?? new Parameter('container.build_id');
-
-        $container->getDefinition(AnonymousAuthenticationListener::class)->setArgument('$secret', $anonymousSecret);
-        $container->getDefinition(AnonymousAuthenticationProvider::class)->setArgument('$secret', $anonymousSecret);
-
-        $container->getDefinition(AuthorizationChecker::class)
-            ->setArgument('$alwaysAuthenticate', $config['always_authenticate_before_granting']);
 
         $container->getDefinition(AccessDecisionManager::class)
             ->setArgument('$strategy', $config['access_decision_manager']['strategy'])
