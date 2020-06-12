@@ -66,6 +66,7 @@ services:
 
     Symfony\Component\Security\Http\EventListener\CsrfTokenClearingLogoutListener:
         arguments: ['@Symfony\Component\Security\Csrf\TokenStorage\ClearableTokenStorageInterface']
+        tags: [kernel.event_subscriber]
 
     Symfony\Component\Security\Http\EventListener\DefaultLogoutListener:
         abstract: true

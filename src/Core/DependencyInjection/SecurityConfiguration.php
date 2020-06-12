@@ -139,6 +139,7 @@ class SecurityConfiguration implements ConfigurationInterface
                         ->fixXmlConfig('method')
                         ->fixXmlConfig('ip')
                         ->fixXmlConfig('attribute')
+                        ->fixXmlConfig('authenticator')
 
                         ->children()
                             ->scalarNode('path')
@@ -205,7 +206,6 @@ class SecurityConfiguration implements ConfigurationInterface
 
                             ->arrayNode('logout')
                                 ->fixXmlConfig('clear_cookie')
-                                ->fixXmlConfig('handler')
                                 ->canBeEnabled()
 
                                 ->children()
@@ -223,10 +223,6 @@ class SecurityConfiguration implements ConfigurationInterface
 
                                     ->scalarNode('target')
                                         ->defaultValue('/')
-                                    ->end()
-
-                                    ->scalarNode('success_handler')
-                                        ->cannotBeEmpty()
                                     ->end()
 
                                     ->booleanNode('invalidate_session')

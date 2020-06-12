@@ -20,6 +20,9 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint;
+use Symfony\Component\Security\Http\EventListener\CookieClearingLogoutListener;
+use Symfony\Component\Security\Http\EventListener\DefaultLogoutListener;
+use Symfony\Component\Security\Http\EventListener\SessionLogoutListener;
 use Symfony\Component\Security\Http\EventListener\SessionStrategyListener;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
 use Symfony\Component\Security\Http\Firewall\ChannelListener;
@@ -27,10 +30,6 @@ use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Http\Firewall\LogoutListener;
 use Symfony\Component\Security\Http\FirewallMap;
-use Symfony\Component\Security\Http\Logout\CookieClearingLogoutHandler;
-use Symfony\Component\Security\Http\Logout\CsrfTokenClearingLogoutHandler;
-use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
-use Symfony\Component\Security\Http\Logout\SessionLogoutHandler;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -173,11 +172,16 @@ class SecurityExtension extends ConfigurableExtension
      * @param ContainerBuilder $container
      * @param string           $firewall
      * @param array            $logoutConfig
+     * @param string           $eventDispatcherId
      *
      * @return Reference
      */
-    private function createLogoutListener(ContainerBuilder $container, string $firewall, array $logoutConfig): Reference
-    {
+    private function createLogoutListener(
+        ContainerBuilder $container,
+        string $firewall,
+        array $logoutConfig,
+        string $eventDispatcherId
+    ): Reference {
         $id = 'security.logout_listener.'.$firewall;
 
         $options = \array_filter([
@@ -186,49 +190,34 @@ class SecurityExtension extends ConfigurableExtension
             'csrf_token_id' => $logoutConfig['csrf_token_id'] ?? null,
         ], fn($value) => null !== $value);
 
-        // Determine success handler.
-        if (isset($logoutConfig['success_handler'])) {
-            $successHandler = new Reference($logoutConfig['success_handler']);
-        } else {
-            $successHandlerId = 'security.logout_success_handler.'.$firewall;
-            $successHandlerDefinition = (new ChildDefinition(DefaultLogoutSuccessHandler::class))
-                ->setArgument('$targetUrl', $logoutConfig['target']);
+        $definition = (new ChildDefinition(LogoutListener::class))
+            ->setArgument('$eventDispatcher', new Reference($eventDispatcherId))
+            ->setArgument('$options', $options);
 
-            $container->setDefinition($successHandlerId, $successHandlerDefinition);
+        $container->setDefinition($id, $definition);
 
-            $successHandler = new Reference($successHandlerId);
-        }
+        // Configure logout listeners.
+        $defaultListenerDefinition = (new ChildDefinition(DefaultLogoutListener::class))
+            ->setArgument('$targetUrl', $logoutConfig['target'])
+            ->addTag('kernel.event_subscriber', ['dispatcher' => $eventDispatcherId]);
 
-        // Determine handlers.
-        $handlers = [new Reference(CsrfTokenClearingLogoutHandler::class)];
+        $container->setDefinition('security.logout_default_listener.'.$firewall, $defaultListenerDefinition);
 
         if ($logoutConfig['invalidate_session']) {
-            $handlers[] = new Reference(SessionLogoutHandler::class);
+            $container->getDefinition(SessionLogoutListener::class)
+                ->addTag('kernel.event_subscriber', ['dispatcher' => $eventDispatcherId]);
         }
 
         if ($logoutConfig['clear_cookies']) {
-            $clearCookiesHandlerId = 'security.logout_clear_cookies_handler.'.$firewall;
-            $clearCookiesHandlerDefinition = (new ChildDefinition(CookieClearingLogoutHandler::class))
-                ->setArgument('$cookies', $logoutConfig['clear_cookies']);
+            $cookiesClearingListenerDefinition = (new ChildDefinition(CookieClearingLogoutListener::class))
+                ->setArgument('$cookies', $logoutConfig['clear_cookies'])
+                ->addTag('kernel.event_subscriber', ['dispatcher' => $eventDispatcherId]);
 
-            $container->setDefinition($clearCookiesHandlerId, $clearCookiesHandlerDefinition);
-
-            $handlers[] = new Reference($clearCookiesHandlerId);
+            $container->setDefinition(
+                'security.logout_cookie_clearing_listener.'.$firewall,
+                $cookiesClearingListenerDefinition
+            );
         }
-
-        foreach ($logoutConfig['handlers'] as $handlerId) {
-            $handlers[] = new Reference($handlerId);
-        }
-
-        $definition = (new ChildDefinition(LogoutListener::class))
-            ->setArgument('$options', $options)
-            ->setArgument('$successHandler', $successHandler);
-
-        foreach ($handlers as $handler) {
-            $definition->addMethodCall('addHandler', [$handler]);
-        }
-
-        $container->setDefinition($id, $definition);
 
         return new Reference($id);
     }
@@ -265,7 +254,12 @@ class SecurityExtension extends ConfigurableExtension
         $exceptionListener = $this->createExceptionListener($container, $name, $firewallConfig, $entryPoint);
 
         if ($firewallConfig['logout']['enabled']) {
-            $logoutListener = $this->createLogoutListener($container, $name, $firewallConfig['logout']);
+            $logoutListener = $this->createLogoutListener(
+                $container,
+                $name,
+                $firewallConfig['logout'],
+                $eventDispatcherId
+            );
         }
 
         return [$requestMatcher, $listeners, $exceptionListener, $logoutListener ?? null];
