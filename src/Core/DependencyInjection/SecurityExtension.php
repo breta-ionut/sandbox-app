@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core\DependencyInjection;
 
+use App\Core\EventDispatcher\BubblingEventDispatcher;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -19,6 +20,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint;
+use Symfony\Component\Security\Http\EventListener\SessionStrategyListener;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
 use Symfony\Component\Security\Http\Firewall\ChannelListener;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
@@ -30,6 +32,7 @@ use Symfony\Component\Security\Http\Logout\CsrfTokenClearingLogoutHandler;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 use Symfony\Component\Security\Http\Logout\SessionLogoutHandler;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class SecurityExtension extends ConfigurableExtension
 {
@@ -88,6 +91,21 @@ class SecurityExtension extends ConfigurableExtension
         $container->setDefinition($id, new Definition(RequestMatcher::class, $arguments));
 
         return new Reference($id);
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param string           $firewall
+     *
+     * @return string
+     */
+    private function createEventDispatcher(ContainerBuilder $container, string $firewall): string
+    {
+        $eventDispatcherId = 'security.event_dispatcher.'.$firewall;
+        $container->register($eventDispatcherId, BubblingEventDispatcher::class)
+            ->setArguments([new Reference(EventDispatcherInterface::class)]);
+
+        return $eventDispatcherId;
     }
 
     /**
@@ -230,15 +248,21 @@ class SecurityExtension extends ConfigurableExtension
             return [$requestMatcher, [], null, null, [], null];
         }
 
+        $eventDispatcherId = $this->createEventDispatcher($container, $name);
+
         $listeners = [new Reference(ChannelListener::class)];
 
         if (!$firewallConfig['stateless']) {
             $listeners[] = $this->createContextListener($container, $name, $firewallConfig);
+
+            $container->getDefinition(SessionStrategyListener::class)
+                ->addTag('kernel.event_subscriber', ['dispatcher' => $eventDispatcherId]);
         }
 
         $listeners[] = new Reference(AccessListener::class);
 
-        $exceptionListener = $this->createExceptionListener($container, $name, $firewallConfig, $entryPoint ?? null);
+        $entryPoint = isset($firewallConfig['entry_point']) ? new Reference($firewallConfig['entry_point']) : null;
+        $exceptionListener = $this->createExceptionListener($container, $name, $firewallConfig, $entryPoint);
 
         if ($firewallConfig['logout']['enabled']) {
             $logoutListener = $this->createLogoutListener($container, $name, $firewallConfig['logout']);
