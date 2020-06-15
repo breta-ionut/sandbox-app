@@ -14,17 +14,19 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
-use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Http\AccessMap;
+use Symfony\Component\Security\Http\Authentication\AuthenticatorManager;
 use Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint;
 use Symfony\Component\Security\Http\EventListener\CookieClearingLogoutListener;
 use Symfony\Component\Security\Http\EventListener\DefaultLogoutListener;
 use Symfony\Component\Security\Http\EventListener\SessionLogoutListener;
 use Symfony\Component\Security\Http\EventListener\SessionStrategyListener;
+use Symfony\Component\Security\Http\EventListener\UserCheckerListener;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
+use Symfony\Component\Security\Http\Firewall\AuthenticatorManagerListener;
 use Symfony\Component\Security\Http\Firewall\ChannelListener;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
@@ -139,6 +141,51 @@ class SecurityExtension extends ConfigurableExtension
      * @param ContainerBuilder $container
      * @param string           $firewall
      * @param array            $firewallConfig
+     * @param string           $eventDispatcherId
+     *
+     * @return Reference
+     */
+    private function createAuthenticatorManagerListener(
+        ContainerBuilder $container,
+        string $firewall,
+        array $firewallConfig,
+        string $eventDispatcherId
+    ): Reference {
+        $authenticatorManagerId = 'security.authenticator_manager.'.$firewall;
+
+        $authenticators = \array_map(
+            fn(string $authenticatorId): Reference => new Reference($authenticatorId),
+            $firewallConfig['authenticators']
+        );
+        $authenticatorManagerDefinition = (new ChildDefinition(AuthenticatorManager::class))
+            ->setArgument('$authenticators', new IteratorArgument($authenticators))
+            ->setArgument('$eventDispatcher', new Reference($eventDispatcherId))
+            ->setArgument('$firewallName', $firewall);
+
+        $container->setDefinition($authenticatorManagerId, $authenticatorManagerDefinition);
+
+        $id = 'security.authenticator_manager_listener'.$firewall;
+
+        $definition = (new ChildDefinition(AuthenticatorManagerListener::class))
+            ->setArgument('$authenticationManager', new Reference($authenticatorManagerId));
+
+        $container->setDefinition($id, $definition);
+
+        if (isset($firewallConfig['user_checker'])) {
+            $userCheckerListenerDefinition = (new ChildDefinition(UserCheckerListener::class))
+                ->setArgument('$userChecker', new Reference($firewallConfig['user_checker']))
+                ->addTag('kernel.event_subscriber', ['dispatcher' => $eventDispatcherId]);
+
+            $container->setDefinition('security.user_checker_listener.'.$firewall, $userCheckerListenerDefinition);
+        }
+
+        return new Reference($id);
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param string           $firewall
+     * @param array            $firewallConfig
      *
      * @return Reference
      */
@@ -188,7 +235,6 @@ class SecurityExtension extends ConfigurableExtension
             'csrf_parameter' => $logoutConfig['csrf_parameter'] ?? null,
             'csrf_token_id' => $logoutConfig['csrf_token_id'] ?? null,
         ], fn($value) => null !== $value);
-
         $definition = (new ChildDefinition(LogoutListener::class))
             ->setArgument('$eventDispatcher', new Reference($eventDispatcherId))
             ->setArgument('$options', $options);
@@ -245,6 +291,15 @@ class SecurityExtension extends ConfigurableExtension
 
             $container->getDefinition(SessionStrategyListener::class)
                 ->addTag('kernel.event_subscriber', ['dispatcher' => $eventDispatcherId]);
+        }
+
+        if ($firewallConfig['authenticators']) {
+            $listeners[] = $this->createAuthenticatorManagerListener(
+                $container,
+                $name,
+                $firewallConfig,
+                $eventDispatcherId
+            );
         }
 
         $listeners[] = new Reference(AccessListener::class);
@@ -310,7 +365,7 @@ class SecurityExtension extends ConfigurableExtension
      */
     private function configureOther(ContainerBuilder $container, array $config): void
     {
-        $container->getDefinition(AuthenticationProviderManager::class)
+        $container->getDefinition(AuthenticatorManager::class)
             ->setArgument('$eraseCredentials', $config['erase_credentials']);
 
         $container->getDefinition(SessionAuthenticationStrategy::class)
