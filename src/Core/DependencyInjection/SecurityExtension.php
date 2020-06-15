@@ -139,18 +139,17 @@ class SecurityExtension extends ConfigurableExtension
      * @param ContainerBuilder $container
      * @param string           $firewall
      * @param array            $firewallConfig
-     * @param Reference|null   $entryPoint
      *
      * @return Reference
      */
     private function createExceptionListener(
         ContainerBuilder $container,
         string $firewall,
-        array $firewallConfig,
-        ?Reference $entryPoint
+        array $firewallConfig
     ): Reference {
         $id = 'security.exception_listener.'.$firewall;
 
+        $entryPoint = isset($firewallConfig['entry_point']) ? new Reference($firewallConfig['entry_point']) : null;
         $definition = (new ChildDefinition(ExceptionListener::class))
             ->setArgument('$providerKey', $firewall)
             ->setArgument('$authenticationEntryPoint', $entryPoint)
@@ -250,8 +249,7 @@ class SecurityExtension extends ConfigurableExtension
 
         $listeners[] = new Reference(AccessListener::class);
 
-        $entryPoint = isset($firewallConfig['entry_point']) ? new Reference($firewallConfig['entry_point']) : null;
-        $exceptionListener = $this->createExceptionListener($container, $name, $firewallConfig, $entryPoint);
+        $exceptionListener = $this->createExceptionListener($container, $name, $firewallConfig);
 
         if ($firewallConfig['logout']['enabled']) {
             $logoutListener = $this->createLogoutListener(
