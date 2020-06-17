@@ -93,6 +93,7 @@ services:
             - '@Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface'
             - '@Symfony\Component\Security\Http\AccessMapInterface'
             - '@Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface'
+            - false
 
     Symfony\Component\Security\Http\Firewall\AuthenticatorManagerListener:
         abstract: true
