@@ -4,37 +4,40 @@ declare(strict_types=1);
 
 namespace App\Core\Routing;
 
-use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\Component\Routing\Loader\PhpFileLoader;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\RouteCollectionBuilder;
 
 class Loader
 {
+    private PhpFileLoader $phpFileLoader;
     private string $configDir;
     private string $environment;
 
     /**
-     * @param string $configDir
-     * @param string $environment
+     * @param PhpFileLoader $phpFileLoader
+     * @param string        $configDir
+     * @param string        $environment
      */
-    public function __construct(string $configDir, string $environment)
+    public function __construct(PhpFileLoader $phpFileLoader, string $configDir, string $environment)
     {
+        $this->phpFileLoader = $phpFileLoader;
         $this->configDir = $configDir;
         $this->environment = $environment;
     }
 
     /**
-     * @param LoaderInterface $loader
-     *
      * @return RouteCollection
      */
-    public function load(LoaderInterface $loader): RouteCollection
+    public function load(): RouteCollection
     {
-        $routes = new RouteCollectionBuilder($loader);
+        $routes = new RouteCollection();
+        $file = (new \ReflectionObject($this))->getFileName();
+        $configurator = new RoutingConfigurator($routes, $this->phpFileLoader, $file, $file);
 
-        $routes->import($this->configDir.'/{routes}/*.yaml', '/', 'glob');
-        $routes->import($this->configDir.'/{routes}/'.$this->environment.'/**/*.yaml', '/', 'glob');
+        $configurator->import($this->configDir.'/{routes}/*.yaml', 'glob');
+        $configurator->import($this->configDir.'/{routes}/'.$this->environment.'/**/*.yaml', 'glob');
 
-        return $routes->build();
+        return $routes;
     }
 }

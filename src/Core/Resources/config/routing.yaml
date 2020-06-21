@@ -1,6 +1,6 @@
 services:
     App\Core\Routing\Loader:
-        arguments: ['%kernel.config_dir%', '%kernel.environment%']
+        arguments: ['@Symfony\Component\Routing\Loader\PhpFileLoader', '%kernel.config_dir%', '%kernel.environment%']
         public: true
 
     routing.file_locator:
@@ -14,6 +14,10 @@ services:
         tags: [routing.loader]
 
     Symfony\Component\Routing\Loader\GlobFileLoader:
+        arguments: ['@routing.file_locator']
+        tags: [routing.loader]
+
+    Symfony\Component\Routing\Loader\PhpFileLoader:
         arguments: ['@routing.file_locator']
         tags: [routing.loader]
 
@@ -47,7 +51,7 @@ services:
             - '@Symfony\Component\Routing\Matcher\RequestMatcherInterface'
             - '@Symfony\Component\HttpFoundation\RequestStack'
             - '@Symfony\Component\Routing\RequestContext'
-            - ~
+            - '@Psr\Log\LoggerInterface'
             - '%kernel.project_dir%'
             - '%kernel.debug%'
         tags: [kernel.event_subscriber]
