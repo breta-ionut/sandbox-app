@@ -18,6 +18,7 @@ use App\Core\DependencyInjection\PropertyAccessExtension;
 use App\Core\DependencyInjection\PropertyInfoExtension;
 use App\Core\DependencyInjection\RoutingExtension;
 use App\Core\DependencyInjection\SecurityExtension;
+use App\Core\DependencyInjection\SerializerExtension;
 use App\Core\DependencyInjection\TemplatingExtension;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Cache\DependencyInjection\CachePoolClearerPass;
@@ -39,6 +40,8 @@ use Symfony\Component\HttpKernel\DependencyInjection\ResettableServicePass;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\DependencyInjection\RoutingResolverPass;
+use Symfony\Component\Serializer\DependencyInjection\SerializerPass;
+use Symfony\Component\Serializer\Serializer;
 
 abstract class Kernel extends BaseKernel
 {
@@ -131,6 +134,7 @@ abstract class Kernel extends BaseKernel
             new CacheExtension(),
             new PropertyInfoExtension(),
             new PropertyAccessExtension(),
+            new SerializerExtension(),
             new TemplatingExtension(),
             new AssetsExtension(),
         ];
@@ -161,6 +165,7 @@ abstract class Kernel extends BaseKernel
             ),
             [new CachePoolClearerPass(), PassConfig::TYPE_AFTER_REMOVING],
             [new CachePoolPrunerPass(CachePoolPruneCommand::class), PassConfig::TYPE_AFTER_REMOVING],
+            new SerializerPass(Serializer::class),
         ];
     }
 }
