@@ -20,6 +20,7 @@ use App\Core\DependencyInjection\RoutingExtension;
 use App\Core\DependencyInjection\SecurityExtension;
 use App\Core\DependencyInjection\SerializerExtension;
 use App\Core\DependencyInjection\TemplatingExtension;
+use App\Core\DependencyInjection\ValidatorExtension;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Cache\DependencyInjection\CachePoolClearerPass;
 use Symfony\Component\Cache\DependencyInjection\CachePoolPass;
@@ -42,6 +43,10 @@ use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\DependencyInjection\RoutingResolverPass;
 use Symfony\Component\Serializer\DependencyInjection\SerializerPass;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Validator\ContainerConstraintValidatorFactory;
+use Symfony\Component\Validator\DependencyInjection\AddConstraintValidatorsPass;
+use Symfony\Component\Validator\DependencyInjection\AddValidatorInitializersPass;
+use Symfony\Component\Validator\ValidatorBuilder;
 
 abstract class Kernel extends BaseKernel
 {
@@ -135,6 +140,7 @@ abstract class Kernel extends BaseKernel
             new PropertyInfoExtension(),
             new PropertyAccessExtension(),
             new SerializerExtension(),
+            new ValidatorExtension(),
             new TemplatingExtension(),
             new AssetsExtension(),
         ];
@@ -166,6 +172,8 @@ abstract class Kernel extends BaseKernel
             [new CachePoolClearerPass(), PassConfig::TYPE_AFTER_REMOVING],
             [new CachePoolPrunerPass(CachePoolPruneCommand::class), PassConfig::TYPE_AFTER_REMOVING],
             new SerializerPass(Serializer::class),
+            new AddConstraintValidatorsPass(ContainerConstraintValidatorFactory::class),
+            new AddValidatorInitializersPass(ValidatorBuilder::class),
         ];
     }
 }

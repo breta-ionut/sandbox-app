@@ -56,7 +56,7 @@ class SerializerExtension extends ConfigurableExtension
         $loaders = [];
 
         foreach ($mappingFiles as $mappingFile) {
-            $loaders[] = new Definition(SerializerYamlFileLoader::class, [$mappingFile]);
+            $loaders[] = new Definition(SerializerYamlFileLoader::class, [$mappingFile->getRealPath()]);
         }
 
         $container->getDefinition(LoaderChain::class)->setArgument('$loaders', $loaders);
