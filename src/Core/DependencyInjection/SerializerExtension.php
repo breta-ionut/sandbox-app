@@ -11,9 +11,14 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
+use Symfony\Component\Serializer\Encoder\EncoderInterface;
+use Symfony\Component\Serializer\Mapping\Factory\CacheClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\LoaderChain;
 use Symfony\Component\Serializer\Mapping\Loader\YamlFileLoader as SerializerYamlFileLoader;
 use Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class SerializerExtension extends ConfigurableExtension
@@ -36,6 +41,15 @@ class SerializerExtension extends ConfigurableExtension
         }
 
         $this->configureObjectNormalizer($container->getDefinition(ObjectNormalizer::class), $mergedConfig);
+
+        if ($container->getParameter('kernel.debug')) {
+            $container->removeDefinition(CacheClassMetadataFactory::class);
+        }
+
+        $container->registerForAutoconfiguration(NormalizerInterface::class)->addTag('serializer.normalizer');
+        $container->registerForAutoconfiguration(DenormalizerInterface::class)->addTag('serializer.normalizer');
+        $container->registerForAutoconfiguration(EncoderInterface::class)->addTag('serializer.encoder');
+        $container->registerForAutoconfiguration(DecoderInterface::class)->addTag('serializer.encoder');
     }
 
     /**
