@@ -27,15 +27,7 @@ class ValidatorExtension extends ConfigurableExtension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('validator.yaml');
 
-        $validatorBuilder = $container->getDefinition(ValidatorBuilder::class);
-
-        $validatorBuilder->addMethodCall(
-            'addYamlMapping',
-            [$this->getMappingFiles($container, $mergedConfig['mapping_dir'])]
-        );
-        if (!$container->getParameter('kernel.debug')) {
-            $validatorBuilder->addMethodCall('setMappingCache', [new Reference('validator.mapping.cache')]);
-        }
+        $this->configureValidatorBuilder($container, $mergedConfig['mapping_dir']);
 
         $container->getDefinition(EmailValidator::class)
             ->setArgument('$defaultMode', $mergedConfig['email_validation_mode']);
@@ -48,24 +40,29 @@ class ValidatorExtension extends ConfigurableExtension
     /**
      * @param ContainerBuilder $container
      * @param string           $mappingDir
-     *
-     * @return string[]
      */
-    private function getMappingFiles(ContainerBuilder $container, string $mappingDir): array
+    private function configureValidatorBuilder(ContainerBuilder $container, string $mappingDir): void
     {
-        if (!$container->fileExists($mappingDir, '/^$/')) {
-            return [];
+        $validatorBuilder = $container->getDefinition(ValidatorBuilder::class);
+
+        if (!$container->getParameter('kernel.debug')) {
+            $validatorBuilder->addMethodCall('setMappingCache', [new Reference('validator.mapping.cache')]);
         }
 
-        $mappingFiles = Finder::create()
+        if (!$container->fileExists($mappingDir, '/^$/')) {
+            return;
+        }
+
+        $mappingFilesFinder = Finder::create()
             ->files()
             ->in($mappingDir)
             ->name('/\.yaml$/')
             ->sortByName();
-
-        return \array_map(
+        $mappingFiles = \array_map(
             fn(\SplFileInfo $mappingFile): string => $mappingFile->getRealPath(),
-            \iterator_to_array($mappingFiles)
+            \iterator_to_array($mappingFilesFinder)
         );
+
+        $validatorBuilder->addMethodCall('addYamlMapping', [$mappingFiles]);
     }
 }
