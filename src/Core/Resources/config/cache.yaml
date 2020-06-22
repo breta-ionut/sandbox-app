@@ -5,42 +5,23 @@ services:
     cache.adapter.apcu:
         class: Symfony\Component\Cache\Adapter\ApcuAdapter
         abstract: true
-        arguments:
-            - ~ # Namespace.
-            - 0 # Default lifetime.
-            - ~ # Version.
+        arguments: [!abstract namespace, 0, !abstract version]
         calls: [[setLogger, ['@Psr\Log\LoggerInterface']]]
         tags: [{name: cache.pool, clearer: cache.clearer.default, reset: reset}]
 
     cache.adapter.array:
         class: Symfony\Component\Cache\Adapter\ArrayAdapter
         abstract: true
-        arguments:
-            - 0 # Default lifetime.
         calls: [[setLogger, ['@Psr\Log\LoggerInterface']]]
         tags: [{name: cache.pool, clearer: cache.clearer.default, reset: reset}]
-
-    cache.adapter.doctrine:
-        class: Symfony\Component\Cache\Adapter\DoctrineAdapter
-        abstract: true
-        arguments:
-            - ~ # Provider.
-            - ~ # Namespace.
-            - 0 # Default lifetime.
-        calls: [[setLogger, ['@Psr\Log\LoggerInterface']]]
-        tags:
-            - name: cache.pool
-              provider: cache.default_provider.doctrine
-              clearer: cache.clearer.default
-              reset: reset
 
     cache.adapter.filesystem:
         class: Symfony\Component\Cache\Adapter\FilesystemAdapter
         abstract: true
         arguments:
-            - ~ # Namespace.
-            - 0 # Default lifetime.
-            - ~ # Directory.
+            - !abstract namespace
+            - 0
+            - !abstract directory
             - '@Symfony\Component\Cache\Marshaller\DefaultMarshaller'
         calls: [[setLogger, ['@Psr\Log\LoggerInterface']]]
         tags: [{name: cache.pool, clearer: cache.clearer.default, reset: reset}]
@@ -48,11 +29,7 @@ services:
     cache.adapter.redis:
         class: Symfony\Component\Cache\Adapter\RedisAdapter
         abstract: true
-        arguments:
-            - ~ # Provider.
-            - ~ # Namespace.
-            - 0 # Default lifetime.
-            - '@Symfony\Component\Cache\Marshaller\DefaultMarshaller'
+        arguments: [!abstract provider, !abstract namespace, 0, '@Symfony\Component\Cache\Marshaller\DefaultMarshaller']
         calls: [[setLogger, ['@Psr\Log\LoggerInterface']]]
         tags: [{name: cache.pool, provider: cache.default_provider.redis, clearer: cache.clearer.default, reset: reset}]
 
@@ -60,12 +37,7 @@ services:
         class: Symfony\Component\Cache\Adapter\AdapterInterface
         abstract: true
         factory: [Symfony\Component\Cache\Adapter\AbstractAdapter, createSystemCache]
-        arguments:
-            - ~ # Namespace.
-            - 0 # Default lifetime.
-            - ~ # Version.
-            - ~ # Directory.
-            - '@Psr\Log\LoggerInterface'
+        arguments: [!abstract namespace, 0, !abstract version, !abstract directory, '@Psr\Log\LoggerInterface']
         tags: [{name: cache.pool, clearer: cache.clearer.system, reset: reset}]
     # End of - Adapters.
 
@@ -89,11 +61,7 @@ services:
     cache.property_access:
         class: Symfony\Component\Cache\Adapter\AdapterInterface
         factory: [Symfony\Component\PropertyAccess\PropertyAccessor, createCache]
-        arguments:
-            - ~ # Namespace.
-            - 0 # Default lifetime.
-            - ~ # Version.
-            - '@Psr\Log\LoggerInterface'
+        arguments: [!abstract namespace, 0, !abstract version, '@Psr\Log\LoggerInterface']
         tags: [{name: cache.pool, clearer: cache.clearer.system}]
 
     cache.property_info:
@@ -112,8 +80,7 @@ services:
     # Clearers.
     cache.clearer.default:
         class: Symfony\Component\HttpKernel\CacheClearer\Psr6CacheClearer
-        arguments:
-            - ~ # Pools.
+        arguments: [!abstract pools]
 
     cache.clearer.global:
         parent: cache.clearer.default
@@ -139,7 +106,6 @@ services:
         tags: [console.command]
 
     App\Core\Command\Cache\CachePoolPruneCommand:
-        arguments:
-            - ~ # Pools.
+        arguments: [!abstract pools]
         tags: [console.command]
     # End of - Commands.

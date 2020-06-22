@@ -34,20 +34,8 @@ class CacheConfiguration implements ConfigurationInterface
                     ->defaultValue('%kernel.cache_dir%/pools')
                 ->end()
 
-                ->arrayNode('default_providers')
-                    ->addDefaultsIfNotSet()
-
-                    ->children()
-                        ->scalarNode('doctrine')
-                            ->info('The id of a Doctrine cache provider.')
-
-                            ->cannotBeEmpty()
-                        ->end()
-
-                        ->scalarNode('redis')
-                            ->info('The DSN of a Redis connection or the id of a Redis client.')
-                        ->end()
-                    ->end()
+                ->scalarNode('default_redis_provider')
+                    ->info('The DSN of a Redis connection or the id of a Redis client.')
                 ->end()
 
                 ->append($this->createAdaptersNode(

@@ -57,10 +57,10 @@ class CacheExtension extends ConfigurableExtension
             $container->getDefinition($id)->setArgument('$directory', $directory);
         }
 
-        foreach ($config['default_providers'] as $type => $dsnOrId) {
+        if (isset($config['default_redis_provider'])) {
             $container->setAlias(
-                'cache.default_provider.'.$type,
-                new Alias(CachePoolPass::getServiceProvider($container, $dsnOrId), false)
+                'cache.default_provider.redis',
+                new Alias(CachePoolPass::getServiceProvider($container, $container['default_redis_provider']), true)
             );
         }
     }
