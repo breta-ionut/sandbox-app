@@ -1,21 +1,16 @@
-services:
-    App\Core\Doctrine\RepositoryFactory: ~
+parameters:
+    doctrine.orm.proxy_dir: '%kernel.cache_dir%/doctrine/Proxies'
 
+services:
     App\Core\Doctrine\EventManager: ~
 
-    App\Core\Doctrine\EntityManagerFactory:
-        arguments:
-            - ~
-            - '%kernel.config_dir%'
-            - '@App\Core\Doctrine\RepositoryFactory'
-            - '@App\Core\Doctrine\EventManager'
-            - '%kernel.cache_dir%'
-            - '%kernel.environment%'
+    App\Core\Doctrine\RepositoryFactory: ~
 
     Doctrine\ORM\EntityManager:
-        factory: ['@App\Core\Doctrine\EntityManagerFactory', factory]
+        factory: [Doctrine\ORM\EntityManager, create]
+        arguments: [!abstract connection, !abstract config, '@App\Core\Doctrine\EventManager']
 
-    Doctrine\Common\Persistence\ObjectManager:
+    Doctrine\Persistence\ObjectManager:
         alias: Doctrine\ORM\EntityManager
         public: true
 
