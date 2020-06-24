@@ -12,6 +12,7 @@ use Doctrine\Common\EventSubscriber;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
 class DoctrineExtension extends ConfigurableExtension
@@ -43,5 +44,56 @@ class DoctrineExtension extends ConfigurableExtension
             ->addTag(ServiceEntityRepositoriesPass::SERVICE_ENTITY_REPOSITORY_TAG);
         $container->registerForAutoconfiguration(EventSubscriber::class)
             ->addTag(RegisterDoctrineListenersAndSubscribersPass::SUBSCRIBER_TAG);
+    }
+
+    /**
+     * @param array $databaseConfig
+     *
+     * @return array
+     */
+    private function getConnectionParams(array $databaseConfig): array
+    {
+        $connectionParams = [
+            'driver' => $databaseConfig['driver'],
+            'url' => $databaseConfig['url'],
+        ];
+
+        foreach (['server_version', 'charset', 'default_table_options'] as $configKey) {
+            if (isset($databaseConfig[$configKey])) {
+                $connectionParams[ContainerBuilder::camelize($configKey)] = $databaseConfig[$configKey];
+            }
+        }
+
+        return $connectionParams;
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param string           $mappingDir
+     * @param string           $namespacePrefixPattern
+     *
+     * @return string[]
+     */
+    private function getMappingPrefixes(
+        ContainerBuilder $container,
+        string $mappingDir,
+        string $namespacePrefixPattern
+    ): array {
+        if (!$container->fileExists($mappingDir, '/^$/')) {
+            return [];
+        }
+
+        $prefixes = [];
+        $directories = Finder::create()
+            ->directories()
+            ->in($mappingDir)
+            ->depth(0)
+            ->sortByName();
+
+        foreach ($directories as $directory) {
+            $prefixes[$directory->getRealPath()] = \sprintf($namespacePrefixPattern, $directory);
+        }
+
+        return $prefixes;
     }
 }
