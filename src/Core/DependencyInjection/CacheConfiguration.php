@@ -19,7 +19,6 @@ class CacheConfiguration implements ConfigurationInterface
         $root = $treeBuilder->getRootNode();
 
         $root
-            ->fixXmlConfig('default_provider')
             ->fixXmlConfig('app_adapter')
             ->fixXmlConfig('pool')
 
