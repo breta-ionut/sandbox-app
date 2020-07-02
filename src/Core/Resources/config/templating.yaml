@@ -1,13 +1,21 @@
 services:
+    Symfony\Component\Templating\TemplateNameParser: ~
+
+    Symfony\Component\Templating\Loader\FilesystemLoader:
+        arguments: !abstract template path patterns
+
+    # Helpers.
     App\Core\Templating\Helper\AssetsHelper:
         arguments: ['@Symfony\Component\Asset\Packages']
         tags: [templating.helper]
 
     Symfony\Component\Templating\Helper\SlotsHelper:
         tags: [templating.helper]
-
-    App\Core\Templating\EngineFactory:
-        arguments: ['%kernel.project_dir%', !tagged_iterator templating.helper]
+    # End of - Helpers.
 
     Symfony\Component\Templating\EngineInterface:
-        factory: ['@App\Core\Templating\EngineFactory', factory]
+        factory: [App\Core\Templating\EngineFactory, factory]
+        arguments:
+            - '@Symfony\Component\Templating\TemplateNameParser'
+            - '@Symfony\Component\Templating\Loader\FilesystemLoader'
+            - !tagged_iterator templating.helper
