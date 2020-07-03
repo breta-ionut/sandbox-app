@@ -24,7 +24,7 @@ class TemplatingExtension extends ConfigurableExtension
         $loader->load('templating.yaml');
 
         $container->getDefinition(FilesystemLoader::class)
-            ->setArgument('$templatePathPatterns', $mergedConfig['templates_dir'].'/%name%');
+            ->setArgument('$templatePathPatterns', $mergedConfig['templates_dir'].'/%%name%%');
 
         $container->registerForAutoconfiguration(HelperInterface::class)->addTag('templating.helper');
     }
