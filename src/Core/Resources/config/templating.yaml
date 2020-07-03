@@ -14,7 +14,7 @@ services:
     # End of - Helpers.
 
     Symfony\Component\Templating\EngineInterface:
-        factory: [App\Core\Templating\EngineFactory, factory]
+        factory: [App\Core\Templating\EngineFactory, create]
         arguments:
             - '@Symfony\Component\Templating\TemplateNameParser'
             - '@Symfony\Component\Templating\Loader\FilesystemLoader'
