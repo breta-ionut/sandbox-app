@@ -62,14 +62,11 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $style = new SymfonyStyle($input, $output);
-
         if (!\is_writable($this->cacheDir)) {
-            $style->error(\sprintf('Cache directory "%s" is not writable.', $this->cacheDir));
-
-            return 1;
+            throw new \RuntimeException(\sprintf('Cache directory "%s" is not writable.', $this->cacheDir));
         }
 
+        $style = new SymfonyStyle($input, $output);
         /** @var KernelInterface $kernel */
         $kernel = $this->getApplication()->getKernel();
 

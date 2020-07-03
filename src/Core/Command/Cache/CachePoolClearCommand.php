@@ -54,17 +54,13 @@ EOT
 
         foreach ($input->getArgument('pools') as $pool) {
             if (!$this->cacheClearer->hasPool($pool)) {
-                $style->error(\sprintf('No cache pool "%s" found.', $pool));
-
-                return 1;
+                throw new \InvalidArgumentException(\sprintf('No cache pool "%s" found.', $pool));
             }
 
             $style->comment(\sprintf('Clearing cache pool <info>%s</info>.', $pool));
 
             if (!$this->cacheClearer->clearPool($pool)) {
-                $style->error(\sprintf('Failed to clear cache pool "%s".', $pool));
-
-                return 1;
+                throw new \RuntimeException(\sprintf('Failed to clear cache pool "%s".', $pool));
             }
         }
 

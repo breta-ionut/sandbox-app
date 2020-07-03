@@ -52,19 +52,16 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $style = new SymfonyStyle($input, $output);
-
         $poolName = $input->getArgument('pool');
         if (!$this->cacheClearer->hasPool($poolName)) {
-            $style->error(\sprintf('No cache pool "%s" found.', $poolName));
-
-            return 1;
+            throw new \InvalidArgumentException(\sprintf('No cache pool "%s" found.', $poolName));
         }
 
         /** @var CacheItemPoolInterface $pool */
         $pool = $this->cacheClearer->getPool($poolName);
-
         $key = $input->getArgument('key');
+        $style = new SymfonyStyle($input, $output);
+
         if (!$pool->hasItem($key)) {
             $style->note(\sprintf('No item "%s" found in cache pool "%s".', $key, $poolName));
 
@@ -72,9 +69,11 @@ EOT
         }
 
         if (!$pool->deleteItem($key)) {
-            $style->error(\sprintf('Item "%s" from cache pool "%s" could not be deleted.', $key, $poolName));
-
-            return 1;
+            throw new \RuntimeException(\sprintf(
+                'Item "%s" from cache pool "%s" could not be deleted.',
+                $key,
+                $poolName
+            ));
         }
 
         $style->success(\sprintf('Successfully deleted item "%s" from cache pool "%s".', $key, $poolName));
