@@ -2,7 +2,7 @@ services:
     Symfony\Component\Templating\TemplateNameParser: ~
 
     Symfony\Component\Templating\Loader\FilesystemLoader:
-        arguments: !abstract template path patterns
+        arguments: [!abstract template path patterns]
 
     # Helpers.
     App\Core\Templating\Helper\AssetsHelper:
