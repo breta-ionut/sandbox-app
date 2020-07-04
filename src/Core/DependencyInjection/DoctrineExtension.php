@@ -76,6 +76,8 @@ class DoctrineExtension extends ConfigurableExtension
         string $mappingDir,
         string $namespacePrefixPattern
     ): array {
+        $mappingDir = $container->getParameterBag()->resolveString($mappingDir);
+
         if (!$container->fileExists($mappingDir, '/^$/')) {
             return [];
         }
