@@ -90,7 +90,7 @@ class DoctrineExtension extends ConfigurableExtension
             ->sortByName();
 
         foreach ($directories as $directory) {
-            $prefixes[$directory->getRealPath()] = \sprintf($namespacePrefixPattern, $directory);
+            $prefixes[$directory->getRealPath()] = \sprintf($namespacePrefixPattern, $directory->getFilename());
         }
 
         return $prefixes;
