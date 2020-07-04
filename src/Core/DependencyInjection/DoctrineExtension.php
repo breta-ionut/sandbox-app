@@ -12,6 +12,7 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\Persistence\Mapping\Driver\SymfonyFileLocator;
 use Symfony\Component\Config\FileLocator;
@@ -119,6 +120,7 @@ class DoctrineExtension extends ConfigurableExtension
             ))
             ->setFactory([Setup::class, 'createConfiguration'])
             ->addMethodCall('setMetadataDriverImpl', [$metadataDriver])
+            ->addMethodCall('setNamingStrategy', [new Definition(UnderscoreNamingStrategy::class)])
             ->addMethodCall('setRepositoryFactory', [new Reference(RepositoryFactory::class)]);
 
         $cacheConfigurators = [
