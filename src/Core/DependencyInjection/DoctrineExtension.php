@@ -108,6 +108,7 @@ class DoctrineExtension extends ConfigurableExtension
                 $config['orm']['mapping_dir'],
                 $config['orm']['namespace_prefix_pattern']
             ),
+            '.xml',
         ]);
         $metadataDriver = new Definition(XmlDriver::class, [$fileLocator]);
 
