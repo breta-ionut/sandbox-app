@@ -120,7 +120,7 @@ class DoctrineExtension extends ConfigurableExtension
             ))
             ->setFactory([Setup::class, 'createConfiguration'])
             ->addMethodCall('setMetadataDriverImpl', [$metadataDriver])
-            ->addMethodCall('setNamingStrategy', [new Definition(UnderscoreNamingStrategy::class)])
+            ->addMethodCall('setNamingStrategy', [new Definition(UnderscoreNamingStrategy::class, [\CASE_LOWER, true])])
             ->addMethodCall('setRepositoryFactory', [new Reference(RepositoryFactory::class)]);
 
         $cacheConfigurators = [
