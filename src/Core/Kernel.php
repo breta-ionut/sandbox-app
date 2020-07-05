@@ -14,6 +14,7 @@ use App\Core\DependencyInjection\CoreExtension;
 use App\Core\DependencyInjection\DoctrineExtension;
 use App\Core\DependencyInjection\DoctrineMigrationsExtension;
 use App\Core\DependencyInjection\HttpExtension;
+use App\Core\DependencyInjection\PhpErrorsExtension;
 use App\Core\DependencyInjection\PropertyAccessExtension;
 use App\Core\DependencyInjection\PropertyInfoExtension;
 use App\Core\DependencyInjection\RoutingExtension;
@@ -32,6 +33,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+use Symfony\Component\ErrorHandler\ErrorHandler;
 use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver;
@@ -72,6 +74,16 @@ abstract class Kernel extends BaseKernel
     /**
      * {@inheritDoc}
      */
+    public function boot()
+    {
+        parent::boot();
+
+        ErrorHandler::register(null, false)->throwAt($this->container->getParameter('php_errors.throw_at'), true);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     protected function getHttpKernel()
     {
         return $this->container->get(HttpKernelInterface::class);
@@ -82,12 +94,10 @@ abstract class Kernel extends BaseKernel
      */
     protected function build(ContainerBuilder $container)
     {
-        // Register the core extensions.
         foreach ($this->getExtensions() as $extension) {
             $container->registerExtension($extension);
         }
 
-        // Register the core compiler passes.
         foreach ($this->getCompilerPasses() as $compilerPassDefinition) {
             if ($compilerPassDefinition instanceof CompilerPassInterface) {
                 $compilerPass = $compilerPassDefinition;
@@ -112,8 +122,6 @@ abstract class Kernel extends BaseKernel
     }
 
     /**
-     * Returns the path to the directory where the app configuration is kept.
-     *
      * @return string
      */
     private function getConfigDir(): string
@@ -122,8 +130,6 @@ abstract class Kernel extends BaseKernel
     }
 
     /**
-     * Returns the core container extensions.
-     *
      * @return ExtensionInterface[]
      */
     private function getExtensions(): array
@@ -137,6 +143,7 @@ abstract class Kernel extends BaseKernel
             new DoctrineMigrationsExtension(),
             new SecurityExtension(),
             new CacheExtension(),
+            new PhpErrorsExtension(),
             new PropertyInfoExtension(),
             new PropertyAccessExtension(),
             new SerializerExtension(),
@@ -147,8 +154,6 @@ abstract class Kernel extends BaseKernel
     }
 
     /**
-     * Returns the core compiler passes. For each pass the type and priority can be also specified.
-     *
      * @return array
      */
     private function getCompilerPasses(): array
