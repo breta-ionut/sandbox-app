@@ -1,0 +1,17 @@
+parameters:
+    php_errors.throw_at: -1
+
+services:
+    Symfony\Component\HttpKernel\Debug\FileLinkFormatter: ~
+
+    Symfony\Component\HttpKernel\EventListener\DebugHandlersListener:
+        arguments:
+            - ~
+            - '@Psr\Log\LoggerInterface'
+            - ~
+            - '%php_errors.throw_at%'
+            - '%kernel.debug%'
+            - '@Symfony\Component\HttpKernel\Debug\FileLinkFormatter'
+            - '%kernel.debug%'
+            - '@Psr\Log\LoggerInterface'
+        tags: [kernel.event_subscriber]
