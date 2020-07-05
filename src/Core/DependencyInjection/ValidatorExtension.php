@@ -49,6 +49,8 @@ class ValidatorExtension extends ConfigurableExtension
             $validatorBuilder->addMethodCall('setMappingCache', [new Reference('validator.mapping.cache')]);
         }
 
+        $mappingDir = $container->getParameterBag()->resolveString($mappingDir);
+
         if (!$container->fileExists($mappingDir, '/^$/')) {
             return;
         }

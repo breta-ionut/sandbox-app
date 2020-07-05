@@ -58,6 +58,8 @@ class SerializerExtension extends ConfigurableExtension
      */
     private function configureMappingLoader(ContainerBuilder $container, string $mappingDir): void
     {
+        $mappingDir = $container->getParameterBag()->resolveString($mappingDir);
+
         if (!$container->fileExists($mappingDir, '/^$/')) {
             return;
         }
