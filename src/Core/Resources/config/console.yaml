@@ -1,0 +1,4 @@
+services:
+    Symfony\Component\Console\EventListener\ErrorListener:
+        arguments: ['@Psr\Log\LoggerInterface']
+        tags: [kernel.event_subscriber]
