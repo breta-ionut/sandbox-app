@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\User\Security;
 
+use App\Api\Errors;
+use App\Api\Http\ResponseTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -20,6 +22,8 @@ use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 class Authenticator extends AbstractAuthenticator
 {
+    use ResponseTrait;
+
     private string $loginPath;
     private DecoderInterface $decoder;
     private UserProviderInterface $userProvider;
@@ -61,6 +65,7 @@ class Authenticator extends AbstractAuthenticator
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        return null;
     }
 
     /**
@@ -68,6 +73,7 @@ class Authenticator extends AbstractAuthenticator
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
+        return $this->createErrorResponse(Response::HTTP_FORBIDDEN, Errors::LOGIN_FAILURE, 'Login failed.');
     }
 
     /**
@@ -79,16 +85,7 @@ class Authenticator extends AbstractAuthenticator
      */
     private function getCredentials(Request $request): array
     {
-        try {
-            $data = $this->decoder->decode($request->getContent(), 'json');
-
-            if (!\is_array($data)) {
-                throw new BadRequestHttpException('Invalid JSON.');
-            }
-        } catch (ExceptionInterface $exception) {
-            throw new BadRequestHttpException('Invalid JSON.', $exception);
-        }
-
+        $data = $this->getDataFromRequest($request);
         $credentials = [];
 
         foreach (['username', 'password'] as $key) {
@@ -108,5 +105,27 @@ class Authenticator extends AbstractAuthenticator
         }
 
         return $credentials;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     *
+     * @throws BadRequestHttpException
+     */
+    private function getDataFromRequest(Request $request): array
+    {
+        try {
+            $data = $this->decoder->decode($request->getContent(), 'json');
+
+            if (!\is_array($data)) {
+                throw new BadRequestHttpException('Invalid JSON.');
+            }
+        } catch (ExceptionInterface $exception) {
+            throw new BadRequestHttpException('Invalid JSON.', $exception);
+        }
+
+        return $data;
     }
 }
