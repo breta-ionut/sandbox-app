@@ -30,6 +30,10 @@ services:
 
     Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver:
         tags: [{name: controller.argument_value_resolver, priority: -64}]
+
+    Symfony\Component\Security\Http\Controller\UserValueResolver:
+        arguments: ['@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface']
+        tags: [{name: controller.argument_value_resolver, priority: 16}]
     # End of - Argument value resolvers.
 
     Symfony\Component\HttpKernel\HttpKernel:

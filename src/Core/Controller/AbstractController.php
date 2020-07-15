@@ -7,9 +7,11 @@ namespace App\Core\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Templating\EngineInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
@@ -26,6 +28,7 @@ abstract class AbstractController implements ServiceSubscriberInterface
             ContainerBagInterface::class,
             EngineInterface::class,
             EntityManagerInterface::class,
+            Serializer::class,
             UrlGeneratorInterface::class,
         ];
     }
@@ -95,6 +98,31 @@ abstract class AbstractController implements ServiceSubscriberInterface
         }
 
         return $response->setContent($content);
+    }
+
+    /**
+     * @param mixed $data
+     * @param int   $status
+     * @param array $headers
+     * @param array $context
+     *
+     * @return JsonResponse
+     */
+    protected function json(
+        $data,
+        int $status = Response::HTTP_OK,
+        array $headers = [],
+        array $context = []
+    ): JsonResponse {
+        $json = $this->container
+            ->get(Serializer::class)
+            ->serialize(
+                $data,
+                'json',
+                \array_merge(['json_encode_options' => JsonResponse::DEFAULT_ENCODING_OPTIONS], $context)
+            );
+
+        return new JsonResponse($json, $status, $headers, true);
     }
 
     /**

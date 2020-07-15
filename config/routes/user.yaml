@@ -1,0 +1,4 @@
+app_user_user_login:
+    path: /login
+    methods: POST
+    controller: 'App\User\Controller\UserController::login'

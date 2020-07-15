@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\User\:
+        resource: '../../src/User/*'
+
+    App\User\Controller\:
+        resource: '../../src/User/Controller'
+        tags: [controller.service_arguments]
