@@ -1,0 +1,13 @@
+security:
+    encoders:
+        App\User\Model\User: auto
+
+    firewalls:
+        frontend:
+            path: ^/(?!api/)
+            security: false
+
+        api:
+            path: ^/api/
+            authenticators: [App\User\Security\Authenticator]
+            user_provider: App\User\Security\UserProvider
