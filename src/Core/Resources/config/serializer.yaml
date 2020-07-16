@@ -4,7 +4,8 @@ parameters:
 services:
     # Mapping.
     Symfony\Component\Serializer\Mapping\Loader\LoaderChain:
-        arguments: [!abstract loaders]
+        arguments:
+            - [] # Loaders.
 
     Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory:
         arguments: ['@Symfony\Component\Serializer\Mapping\Loader\LoaderChain']
@@ -33,7 +34,7 @@ services:
     Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter:
         arguments:
             - '@Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface'
-            - !abstract fallback name converter
+            - ~ # Fallback name converter.
 
     Symfony\Component\Serializer\NameConverter\NameConverterInterface: '@Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter'
     Symfony\Component\Serializer\NameConverter\AdvancedNameConverterInterface: '@Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter'

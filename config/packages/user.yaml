@@ -11,4 +11,4 @@ services:
         tags: [controller.service_arguments]
 
     App\User\Security\Authenticator:
-        arguments: {$loginPath: /login}
+        arguments: {$loginPath: /login, $userProvider: '@App\User\Security\UserProvider'}
