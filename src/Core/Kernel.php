@@ -160,7 +160,7 @@ abstract class Kernel extends BaseKernel
     {
         return [
             new ResettableServicePass(),
-            new RegisterListenersPass(EventDispatcherInterface::class),
+            [new RegisterListenersPass(EventDispatcherInterface::class), PassConfig::TYPE_BEFORE_REMOVING],
             new ControllerArgumentValueResolverPass(ArgumentResolver::class),
             new RegisterControllerArgumentLocatorsPass(ServiceValueResolver::class),
             new AddConsoleCommandPass(CommandLoaderInterface::class),
