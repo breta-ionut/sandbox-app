@@ -7,9 +7,11 @@ namespace App\Core\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Templating\EngineInterface;
@@ -123,6 +125,27 @@ abstract class AbstractController implements ServiceSubscriberInterface
             );
 
         return new JsonResponse($json, $status, $headers, true);
+    }
+
+    /**
+     * @param \SplFileInfo|string $file
+     * @param string|null         $filename
+     * @param string              $disposition
+     *
+     * @return BinaryFileResponse
+     */
+    protected function file(
+        $file,
+        string $filename = null,
+        string $disposition = ResponseHeaderBag::DISPOSITION_ATTACHMENT
+    ): BinaryFileResponse {
+        $response = new BinaryFileResponse($file);
+        $response->setContentDisposition(
+            null !== $filename ? $filename : $response->getFile()->getFilename(),
+            $disposition
+        );
+
+        return $response;
     }
 
     /**
