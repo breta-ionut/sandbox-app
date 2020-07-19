@@ -11,15 +11,15 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, '../public/build'),
-        filename: (chunkData) => {
-            const filename = '[name].js'
-
-            switch (chunkData.contentHashType) {
+        filename: (pathData) => {
+            switch (pathData.contentHashType) {
                 case 'javascript':
-                    return 'js/' + filename
+                    return 'js/[name].js'
 
                 default:
-                    return filename
+                    throw new Error(
+                        `Entry "${pathData.chunk.name}" contains unknown content type "${pathData.contentHashType}".`
+                    )
             }
         }
     },
@@ -32,6 +32,10 @@ module.exports = {
             {
                 test: /\.js$/,
                 use: 'babel-loader'
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
             },
             {
                 test: /\.sass$/,
