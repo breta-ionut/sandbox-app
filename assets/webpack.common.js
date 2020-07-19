@@ -30,10 +30,6 @@ module.exports = {
                 use: 'vue-loader'
             },
             {
-                test: /\.js$/,
-                use: 'babel-loader'
-            },
-            {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader']
             },
@@ -50,6 +46,10 @@ module.exports = {
                         }
                     }
                 ]
+            },
+            {
+                test: /\.js$/,
+                use: 'babel-loader'
             }
         ]
     },
