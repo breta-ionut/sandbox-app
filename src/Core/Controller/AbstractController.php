@@ -141,8 +141,8 @@ abstract class AbstractController implements ServiceSubscriberInterface
     ): BinaryFileResponse {
         $response = new BinaryFileResponse($file);
         $response->setContentDisposition(
-            null !== $filename ? $filename : $response->getFile()->getFilename(),
-            $disposition
+            $disposition,
+            null !== $filename ? $filename : $response->getFile()->getFilename()
         );
 
         return $response;

@@ -38,7 +38,8 @@
         "symfony/serializer": "^5.1",
         "symfony/templating": "^5.1",
         "symfony/validator": "^5.1",
-        "symfony/yaml": "^5.1"
+        "symfony/yaml": "^5.1",
+        "symfony/mime": "^5.1"
     },
     "scripts": {
         "cache-clear": "bin/console cache:clear",

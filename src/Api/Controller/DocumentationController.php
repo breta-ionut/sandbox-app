@@ -7,6 +7,7 @@ namespace App\Api\Controller;
 use App\Core\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class DocumentationController extends AbstractController
 {
@@ -23,6 +24,6 @@ class DocumentationController extends AbstractController
      */
     public function configuration(): BinaryFileResponse
     {
-        return $this->file($this->getParameter('app.api.doc_config_file'));
+        return $this->file($this->getParameter('app.api.doc_config_file'), null, ResponseHeaderBag::DISPOSITION_INLINE);
     }
 }
