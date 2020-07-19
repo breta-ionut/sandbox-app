@@ -1,0 +1,4 @@
+app_api_documentation_index:
+    path: /api/doc
+    methods: GET
+    controller: 'App\Api\Controller\DocumentationController::index'

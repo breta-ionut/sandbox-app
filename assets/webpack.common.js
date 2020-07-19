@@ -6,7 +6,8 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 
 module.exports = {
     entry: {
-        index: path.resolve(__dirname, './js/index.js')
+        index: path.resolve(__dirname, './js/index.js'),
+        swagger: path.resolve(__dirname, './js/swagger.js')
     },
     output: {
         path: path.resolve(__dirname, '../public/build'),

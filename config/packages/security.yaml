@@ -7,6 +7,10 @@ security:
             path: ^/(?!api/)
             security: false
 
+        api_documentation:
+            path: ^/api/doc/$
+            security: false
+
         api:
             path: ^/api/
             authenticators: [App\User\Security\Authenticator]
