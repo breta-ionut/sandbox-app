@@ -55,16 +55,14 @@ class ValidatorExtension extends ConfigurableExtension
             return;
         }
 
-        $mappingFilesFinder = Finder::create()
+        $mappingFiles = Finder::create()
             ->files()
             ->in($mappingDir)
             ->name('/\.yaml$/')
             ->sortByName();
-        $mappingFiles = \array_map(
-            fn(\SplFileInfo $mappingFile): string => $mappingFile->getRealPath(),
-            \iterator_to_array($mappingFilesFinder)
-        );
 
-        $validatorBuilder->addMethodCall('addYamlMapping', [$mappingFiles]);
+        foreach ($mappingFiles as $mappingFile) {
+            $validatorBuilder->addMethodCall('addYamlMapping', [$mappingFile->getRealPath()]);
+        }
     }
 }
