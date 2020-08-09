@@ -1,0 +1,6 @@
+App\User\Model\Login:
+    properties:
+        username:
+            - NotBlank: ~
+            - Length: {max: !php/const Symfony\Component\Security\Core\Security::MAX_USERNAME_LENGTH}
+            - Email: ~
