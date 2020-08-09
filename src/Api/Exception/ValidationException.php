@@ -65,6 +65,6 @@ class ValidationException extends \RuntimeException implements HttpExceptionInte
      */
     public function getUserCode(): int
     {
-        return 100;
+        return 101;
     }
 }

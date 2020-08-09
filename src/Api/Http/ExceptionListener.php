@@ -30,7 +30,9 @@ class ExceptionListener implements EventSubscriberInterface
     {
         $data = $this->serializer->serialize($event->getThrowable(), 'json', ['api_response' => true]);
 
-        $event->setResponse(new JsonResponse($data, Response::HTTP_OK, [], true));
+        $event->setResponse(
+            new JsonResponse($data, Response::HTTP_OK, ['Content-Type' => 'application/problem+json'], true)
+        );
     }
 
     /**
