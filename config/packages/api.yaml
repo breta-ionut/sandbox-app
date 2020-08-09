@@ -12,3 +12,6 @@ services:
     App\Api\Controller\:
         resource: '../../src/Api/Controller'
         tags: [controller.service_arguments]
+
+    App\Api\Serializer\Response\ExceptionNormalizer:
+        $debug: '%kernel.debug%'
