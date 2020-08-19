@@ -8,6 +8,7 @@ use App\Core\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Routing\RouterInterface;
 
 class DocumentationController extends AbstractController
 {
@@ -16,7 +17,9 @@ class DocumentationController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->render('api/documentation.html.php');
+        $configUrl = $this->generateUrl('app_api_documentation_configuration', [], RouterInterface::ABSOLUTE_URL);
+
+        return $this->render('api/documentation.html.php', ['api_doc_config_url' => $configUrl]);
     }
 
     /**
