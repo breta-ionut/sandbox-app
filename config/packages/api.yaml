@@ -5,6 +5,8 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+        bind:
+            bool $debug: '%kernel.debug%'
 
     App\Api\:
         resource: '../../src/Api/*'
@@ -14,4 +16,4 @@ services:
         tags: [controller.service_arguments]
 
     App\Api\Serializer\Response\ExceptionNormalizer:
-        $debug: '%kernel.debug%'
+        tags: [{name: serializer.normalizer, priority: -100}]

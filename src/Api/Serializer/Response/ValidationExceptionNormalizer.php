@@ -10,6 +10,8 @@ use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 
 class ValidationExceptionNormalizer implements ContextAwareNormalizerInterface
 {
+    use ExceptionNormalizerTrait;
+
     private ConstraintViolationListNormalizer $violationsNormalizer;
 
     /**
@@ -32,12 +34,7 @@ class ValidationExceptionNormalizer implements ContextAwareNormalizerInterface
             $context
         )['violations'];
 
-        return [
-            'title' => $object->getUserMessage(),
-            'code' => $object->getUserCode(),
-            'status' => $object->getStatusCode(),
-            'violations' => $violationsData,
-        ];
+        return $this->normalizeException($object) + ['violations' => $violationsData];
     }
 
     /**
@@ -45,6 +42,6 @@ class ValidationExceptionNormalizer implements ContextAwareNormalizerInterface
      */
     public function supportsNormalization($data, string $format = null, array $context = [])
     {
-        return $data instanceof ValidationException && !empty($context['api_response']);
+        return $data instanceof ValidationException && $this->isNormalizationForApiResponseRequired($context);
     }
 }
