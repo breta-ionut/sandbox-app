@@ -30,4 +30,7 @@ start-front:
 
 build-front:
 		docker-compose exec node npm run build
+
+build-front-api-doc:
+		docker-compose exec node npm run build-api-doc
 # End of - Frontend commands.

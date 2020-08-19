@@ -3,3 +3,4 @@ assets:
 
     packages:
         static:
+        api_doc: {base_path: '%kernel.project_dir%/public/build/api_doc'}

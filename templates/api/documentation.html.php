@@ -9,5 +9,5 @@
 <?php $view['slots']->stop(); ?>
 
 <?php $view['slots']->start('javascripts'); ?>
-    <script src="<?= $view['assets']->getUrl('swagger.js'); ?>"></script>
+    <script src="<?= $view['assets']->getUrl('api_doc.js', 'api_doc'); ?>"></script>
 <?php $view['slots']->stop(); ?>

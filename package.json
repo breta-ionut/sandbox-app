@@ -32,6 +32,7 @@
     },
     "scripts": {
         "start": "webpack-dev-server --config assets/webpack.dev.js",
-        "build": "webpack --config assets/webpack.prod.js"
+        "build": "webpack --config assets/webpack.prod.js",
+        "build-api-doc": "webpack --config assets/webpack.api_doc.js"
     }
 }

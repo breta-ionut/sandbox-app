@@ -8,6 +8,6 @@ module.exports = merge(commonConfig, {
     mode: 'production',
     devtool: 'source-map',
     plugins: [
-        new ManifestPlugin({publicPath: '/build/'})
+        new ManifestPlugin({publicPath: '/build/app/'})
     ],
 })

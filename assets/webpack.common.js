@@ -6,11 +6,10 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 
 module.exports = {
     entry: {
-        index: path.resolve(__dirname, './js/index.js'),
-        swagger: path.resolve(__dirname, './js/swagger.js')
+        index: path.resolve(__dirname, './js/index.js')
     },
     output: {
-        path: path.resolve(__dirname, '../public/build'),
+        path: path.resolve(__dirname, '../public/build/app'),
         filename: (pathData) => {
             switch (pathData.contentHashType) {
                 case 'javascript':
@@ -26,14 +25,6 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.vue$/,
-                use: 'vue-loader'
-            },
-            {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader']
-            },
-            {
                 test: /\.sass$/,
                 use: [
                     'vue-style-loader',
@@ -46,6 +37,14 @@ module.exports = {
                         }
                     }
                 ]
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
+            },
+            {
+                test: /\.vue$/,
+                use: 'vue-loader'
             },
             {
                 test: /\.js$/,
