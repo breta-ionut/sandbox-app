@@ -86,7 +86,7 @@ class Authenticator extends AbstractAuthenticator
     /**
      * @param Request $request
      *
-     * @return Login
+     * @return Login|object
      *
      * @throws MalformedInputException
      */
