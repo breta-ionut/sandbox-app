@@ -9,6 +9,8 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class MalformedInputException extends \RuntimeException implements HttpExceptionInterface, UserMessageExceptionInterface
 {
+    use NoCustomHeadersHttpExceptionTrait;
+
     /**
      * @param int             $code
      * @param \Throwable|null $previous
@@ -26,14 +28,6 @@ class MalformedInputException extends \RuntimeException implements HttpException
     public function getStatusCode()
     {
         return Response::HTTP_BAD_REQUEST;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getHeaders()
-    {
-        return [];
     }
 
     /**

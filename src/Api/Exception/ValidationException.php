@@ -10,6 +10,8 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class ValidationException extends \RuntimeException implements HttpExceptionInterface, UserMessageExceptionInterface
 {
+    use NoCustomHeadersHttpExceptionTrait;
+
     private ConstraintViolationListInterface $violations;
 
     /**
@@ -42,14 +44,6 @@ class ValidationException extends \RuntimeException implements HttpExceptionInte
     public function getStatusCode()
     {
         return Response::HTTP_BAD_REQUEST;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getHeaders()
-    {
-        return [];
     }
 
     /**
