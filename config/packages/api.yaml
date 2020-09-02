@@ -1,12 +1,11 @@
 parameters:
     app.api.doc_config_file: '%kernel.config_dir%/api_doc.yaml'
+    app.api.path_prefix: '/api/'
 
 services:
     _defaults:
         autowire: true
         autoconfigure: true
-        bind:
-            bool $debug: '%kernel.debug%'
 
     App\Api\:
         resource: '../../src/Api/*'
@@ -15,5 +14,9 @@ services:
         resource: '../../src/Api/Controller'
         tags: [controller.service_arguments]
 
+    App\Api\Http\Listener\ApiEndpointMarkerListener:
+        $apiPathPrefix: '%app.api.path_prefix%'
+
     App\Api\Serializer\ExceptionNormalizer:
+        arguments: {$debug: '%kernel.debug%'}
         tags: [{name: serializer.normalizer, priority: -100}]
