@@ -15,5 +15,5 @@ services:
         resource: '../../src/Api/Controller'
         tags: [controller.service_arguments]
 
-    App\Api\Serializer\Response\ExceptionNormalizer:
+    App\Api\Serializer\ExceptionNormalizer:
         tags: [{name: serializer.normalizer, priority: -100}]
