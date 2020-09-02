@@ -32,10 +32,12 @@ class ValidationExceptionNormalizer implements NormalizerInterface, CacheableSup
     public function normalize($object, string $format = null, array $context = [])
     {
         $violationsData = $this->violationsNormalizer->normalize($object->getViolations(), $format, $context);
-        $context += ['detail' => $violationsData['detail']];
 
-        return $this->exceptionNormalizer->normalize($object, $format, $context)
-            + ['violations' => $violationsData['violations']];
+        return $this->exceptionNormalizer->normalize(
+            $object,
+            $format,
+            $context + ['detail' => $violationsData['detail']]
+        ) + ['violations' => $violationsData['violations']];
     }
 
     /**
