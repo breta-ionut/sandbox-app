@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
+use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 
 class HttpExtension extends ConfigurableExtension
 {
@@ -27,6 +28,8 @@ class HttpExtension extends ConfigurableExtension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('http.yaml');
+
+        $container->getDefinition(ErrorListener::class)->setArgument('$controller', $mergedConfig['error_controller']);
 
         $this->configureSession($container, $mergedConfig['session']);
 

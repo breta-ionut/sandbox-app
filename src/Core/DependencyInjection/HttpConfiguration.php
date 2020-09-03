@@ -20,6 +20,10 @@ class HttpConfiguration implements ConfigurationInterface
 
         $root
             ->children()
+                ->scalarNode('error_controller')
+                    ->defaultNull()
+                ->end()
+
                 ->arrayNode('session')
                     ->addDefaultsIfNotSet()
 
