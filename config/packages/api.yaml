@@ -15,8 +15,14 @@ services:
         tags: [controller.service_arguments]
 
     App\Api\Http\Listener\ApiEndpointMarkerListener:
-        $apiPathPrefix: '%app.api.path_prefix%'
+        arguments: ['%app.api.path_prefix%']
+
+    app.api.http.listener.symfony_exception_listener:
+        arguments: {$controller: 'App\Api\Controller\ErrorController::error', $debug: '%kernel.debug%'}
+
+    App\Api\Http\Listener\ExceptionListener:
+        arguments: ['@app.api.http.listener.symfony_exception_listener']
 
     App\Api\Serializer\ExceptionNormalizer:
-        arguments: {$debug: '%kernel.debug%'}
+        arguments: ['%kernel.debug%']
         tags: [{name: serializer.normalizer, priority: -100}]
