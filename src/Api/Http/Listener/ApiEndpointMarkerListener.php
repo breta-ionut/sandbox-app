@@ -8,6 +8,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+/**
+ * Marks API endpoints requests by setting the "_api_endpoint" request attribute.
+ *
+ * API endpoints are usually identified by a specific path prefix (e.g. /api/). One might manually set a value for the
+ * "_api_endpoint" request attribute (via the route's "defaults" configuration) for endpoints not following this rule.
+ */
 class ApiEndpointMarkerListener implements EventSubscriberInterface
 {
     private string $apiPathPrefix;

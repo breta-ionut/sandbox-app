@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Delegates handling of exceptions caught on API endpoints to a Symfony {@see ErrorListener} implementation which is
- * configured to use a custom API controller in order to have it transformed to a response.
+ * configured to use a custom API error controller.
  */
 class ExceptionListener implements EventSubscriberInterface
 {
