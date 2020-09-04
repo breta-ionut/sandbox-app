@@ -30,7 +30,7 @@ class ExceptionListener implements EventSubscriberInterface
      */
     public function onKernelException(ExceptionEvent $event): void
     {
-        if ($event->getRequest()->attributes->get('_api_endpoint')) {
+        if ($event->getRequest()->attributes->getBoolean('_api_endpoint')) {
             $this->wrappedExceptionListener->onKernelException($event);
         }
     }

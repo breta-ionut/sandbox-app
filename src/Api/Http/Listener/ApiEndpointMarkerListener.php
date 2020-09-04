@@ -34,7 +34,7 @@ class ApiEndpointMarkerListener implements EventSubscriberInterface
         $request = $event->getRequest();
 
         if (0 === \strpos($request->getPathInfo(), $this->apiPathPrefix)
-            && false !== $request->attributes->get('_api_endpoint')
+            && !$request->attributes->getBoolean('_api_endpoint', true)
         ) {
             $request->attributes->set('_api_endpoint', true);
         }
