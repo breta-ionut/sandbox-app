@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * API endpoints are usually identified by a specific path prefix (e.g. /api/). One might manually set a value for the
  * "_api_endpoint" request attribute (via the route's "defaults" configuration) for endpoints not following this rule.
  */
-class ApiEndpointMarkerListener implements EventSubscriberInterface
+class MarkApiEndpointsListener implements EventSubscriberInterface
 {
     private string $apiPathPrefix;
 

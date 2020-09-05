@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * Converts data returned by API controllers to responses using serialization. The serialization can be disabled by
  * setting the "_api_respond" request attribute to false for an endpoint (via the route's "defaults" configuration).
  */
-class SerializerListener implements EventSubscriberInterface
+class SerializeListener implements EventSubscriberInterface
 {
     private ResponseFactory $responseFactory;
 
