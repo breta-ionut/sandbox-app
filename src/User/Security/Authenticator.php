@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\User\Security;
 
-use App\Api\Exception\MalformedInputException;
 use App\Api\Exception\ValidationException;
-use App\User\Exception\LoginException;
+use App\Api\Http\RequestReader;
 use App\User\Model\Login;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,31 +16,29 @@ use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class Authenticator extends AbstractAuthenticator
 {
     private string $loginPath;
-    private SerializerInterface $serializer;
+    private RequestReader $requestReader;
     private ValidatorInterface $validator;
     private UserProviderInterface $userProvider;
 
     /**
      * @param string                $loginPath
-     * @param SerializerInterface   $serializer
+     * @param RequestReader         $requestReader
      * @param ValidatorInterface    $validator
      * @param UserProviderInterface $userProvider
      */
     public function __construct(
         string $loginPath,
-        SerializerInterface $serializer,
+        RequestReader $requestReader,
         ValidatorInterface $validator,
         UserProviderInterface $userProvider
     ) {
         $this->loginPath = $loginPath;
-        $this->serializer = $serializer;
+        $this->requestReader = $requestReader;
         $this->validator = $validator;
         $this->userProvider = $userProvider;
     }
@@ -59,7 +56,8 @@ class Authenticator extends AbstractAuthenticator
      */
     public function authenticate(Request $request): PassportInterface
     {
-        $credentials = $this->getCredentials($request);
+        /** @var Login $credentials */
+        $credentials = $this->requestReader->read($request, Login::class);
         $this->validateCredentials($credentials);
 
         $user = $this->userProvider->loadUserByUsername($credentials->getUsername());
@@ -80,34 +78,18 @@ class Authenticator extends AbstractAuthenticator
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        throw new LoginException(0, $exception);
+        throw $exception;
     }
 
     /**
-     * @param Request $request
-     *
-     * @return Login|object
-     *
-     * @throws MalformedInputException
-     */
-    private function getCredentials(Request $request): Login
-    {
-        try {
-            return $this->serializer->deserialize($request->getContent(), Login::class, 'json');
-        } catch (ExceptionInterface $exception) {
-            throw new MalformedInputException(0, $exception);
-        }
-    }
-
-    /**
-     * @param Login $login
+     * @param Login $credentials
      *
      * @throws ValidationException
      */
-    private function validateCredentials(Login $login): void
+    private function validateCredentials(Login $credentials): void
     {
-        $violations = $this->validator->validate($login);
-        if (0 !== \count($violations)) {
+        $violations = $this->validator->validate($credentials);
+        if (\count($violations)) {
             throw new ValidationException($violations);
         }
     }
