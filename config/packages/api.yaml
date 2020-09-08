@@ -14,10 +14,11 @@ services:
         resource: '../../src/Api/Controller'
         tags: [controller.service_arguments]
 
-    App\Api\Http\Listener\ApiEndpointMarkerListener:
+    App\Api\Http\Listener\MarkApiEndpointsListener:
         arguments: ['%app.api.path_prefix%']
 
     app.api.http.listener.symfony_exception_listener:
+        class: Symfony\Component\HttpKernel\EventListener\ErrorListener
         arguments: {$controller: 'App\Api\Controller\ErrorController::error', $debug: '%kernel.debug%'}
 
     App\Api\Http\Listener\ExceptionListener:
