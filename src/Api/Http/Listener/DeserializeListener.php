@@ -53,6 +53,7 @@ class DeserializeListener implements EventSubscriberInterface
                     [AbstractNormalizer::OBJECT_TO_POPULATE => $argument]
                 );
 
+                // The request content can be used to populate a single entity, therefore we stop at the first one.
                 return;
             }
         }
