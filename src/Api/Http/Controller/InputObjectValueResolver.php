@@ -43,7 +43,7 @@ class InputObjectValueResolver implements ArgumentValueResolverInterface
         $requestAttributes = $request->attributes;
 
         return $requestAttributes->getBoolean('_api_endpoint')
-            && $requestAttributes->getBoolean('_api_receive', true)
+            && $requestAttributes->getBoolean('_api_receive')
             && null !== $this->getInputClass($requestAttributes, $argument)
             // A request's content is deserialized into a single input object.
             && !isset($this->resolvedRequests[$request]);
