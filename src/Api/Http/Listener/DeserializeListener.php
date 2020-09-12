@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Api\Http\Listener;
 
+use App\Api\Http\ApiEndpointsConfigurationTrait;
 use App\Api\Http\RequestReader;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,11 +16,13 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 /**
  * Populates Doctrine entities passed to controllers with data from API requests content.
  *
- * The deserialization can be disabled by setting the "_api_receive" request attribute to false for an endpoint (via the
+ * The deserialization can be disabled by setting the "_api_update" request attribute to false for an endpoint (via the
  * route's "defaults" configuration).
  */
 class DeserializeListener implements EventSubscriberInterface
 {
+    use ApiEndpointsConfigurationTrait;
+
     private EntityManagerInterface $entityManager;
     private RequestReader $requestReader;
 
@@ -39,9 +42,8 @@ class DeserializeListener implements EventSubscriberInterface
     public function onKernelControllerArguments(ControllerArgumentsEvent $event): void
     {
         $request = $event->getRequest();
-        $requestAttributes = $request->attributes;
 
-        if (!$requestAttributes->getBoolean('_api_endpoint') || !$requestAttributes->getBoolean('_api_receive')) {
+        if (!$this->isApiUpdateEnabled($request)) {
             return;
         }
 
