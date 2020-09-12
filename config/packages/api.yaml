@@ -20,7 +20,7 @@ services:
     App\Api\Http\Controller\InputObjectValueResolver:
         tags: [{name: controller.argument_value_resolver, priority: -128}]
 
-    App\Api\Http\Listener\MarkApiEndpointsListener:
+    App\Api\Http\Listener\ConfigureApiEndpointsListener:
         arguments: ['%app.api.path_prefix%']
 
     app.api.http.listener.symfony_exception_listener:
