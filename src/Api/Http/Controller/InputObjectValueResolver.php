@@ -58,7 +58,7 @@ class InputObjectValueResolver implements ArgumentValueResolverInterface
 
         $this->resolvedRequests[$request] = true;
 
-        return $inputObject;
+        yield $inputObject;
     }
 
     /**
