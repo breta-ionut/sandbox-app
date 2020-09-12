@@ -16,10 +16,10 @@ services:
         tags: [controller.service_arguments]
 
     App\Api\Http\Controller\EntityValueResolver:
-        tags: [{name: controller.argument_value_resolver, priority: -96}]
+        tags: [{name: controller.argument_value_resolver, priority: -4}]
 
     App\Api\Http\Controller\InputObjectValueResolver:
-        tags: [{name: controller.argument_value_resolver, priority: -128}]
+        tags: [{name: controller.argument_value_resolver, priority: -8}]
 
     App\Api\Http\Listener\ConfigureApiEndpointsListener:
         arguments: ['%app.api.path_prefix%']
