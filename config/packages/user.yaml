@@ -5,6 +5,7 @@ services:
 
     App\User\:
         resource: '../../src/User/*'
+        exclude: '../../src/User/{Error,Model}'
 
     App\User\Controller\:
         resource: '../../src/User/Controller'
