@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Api\Http\Listener;
 
+use App\Api\Http\ApiEndpointsConfigurationTrait;
 use App\Api\Http\ResponseFactory;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
@@ -15,6 +16,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class SerializeListener implements EventSubscriberInterface
 {
+    use ApiEndpointsConfigurationTrait;
+
     private ResponseFactory $responseFactory;
 
     /**
@@ -30,9 +33,7 @@ class SerializeListener implements EventSubscriberInterface
      */
     public function onKernelView(ViewEvent $event): void
     {
-        $requestAttributes = $event->getRequest()->attributes;
-
-        if ($requestAttributes->getBoolean('_api_endpoint') && $requestAttributes->getBoolean('_api_respond', true)) {
+        if ($this->isApiRespondEnabled($event->getRequest())) {
             $response = $this->responseFactory->createFromData($event->getControllerResult());
 
             $event->setResponse($response);
