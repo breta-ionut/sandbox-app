@@ -52,6 +52,17 @@ trait ApiEndpointsConfigurationTrait
      * @param Request $request
      * @param string  $key
      *
+     * @return bool
+     */
+    public function hasApiSetting(Request $request, string $key): bool
+    {
+        return $request->attributes->has('_api_'.$key);
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $key
+     *
      * @return mixed
      */
     public function getApiSetting(Request $request, string $key)
