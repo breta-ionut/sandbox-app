@@ -36,7 +36,7 @@ class EntityValueResolver implements ArgumentValueResolverInterface
     {
         $entityClass = $argument->getType();
         $supports = \class_exists($entityClass)
-            && $this->entityManager->getMetadataFactory()->isTransient($entityClass)
+            && !$this->entityManager->getMetadataFactory()->isTransient($entityClass)
             && null !== ($id = $this->extractIdFromRequest($request, $entityClass));
 
         if (!$supports) {
