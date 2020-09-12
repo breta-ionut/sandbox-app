@@ -62,7 +62,7 @@ class ExceptionNormalizer implements NormalizerInterface, CacheableSupportsMetho
      */
     private function setPropertiesProvidedByContext(array &$data, array $context): void
     {
-        foreach (['title', 'code', 'status', 'details'] as $property) {
+        foreach (['title', 'code', 'status', 'detail'] as $property) {
             if (isset($context[$property])) {
                 $data[$property] = $context[$property];
             }
@@ -98,13 +98,14 @@ class ExceptionNormalizer implements NormalizerInterface, CacheableSupportsMetho
 
         $flattenException = FlattenException::createFromThrowable($exception);
 
-        $data += [
-            'status' => $flattenException->getStatusCode(),
-            'detail' => $this->debug ? $flattenException->getMessage() : $flattenException->getStatusText(),
-        ];
+        $data += ['status' => $flattenException->getStatusCode(), 'detail' => $flattenException->getStatusText()];
 
         if ($this->debug) {
-            $data += ['class' => $flattenException->getClass(), 'trace' => $flattenException->getTrace()];
+            $data = \array_merge($data, [
+                'detail' => $flattenException->getMessage(),
+                'class' => $flattenException->getClass(),
+                'trace' => $flattenException->getTrace(),
+            ]);
         }
     }
 }
