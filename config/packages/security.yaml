@@ -14,5 +14,6 @@ security:
         api:
             path: ^/api/
             entry_point: App\User\Security\AuthenticationEntryPoint
+            access_denied_handler: App\User\Security\AccessDeniedHandler
             authenticators: [App\User\Security\Authenticator]
             user_provider: App\User\Security\UserProvider
