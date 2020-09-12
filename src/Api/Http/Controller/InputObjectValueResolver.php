@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Api\Http\Controller;
 
+use App\Api\Http\ApiEndpointsConfigurationTrait;
 use App\Api\Http\RequestReader;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -23,6 +23,8 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
  */
 class InputObjectValueResolver implements ArgumentValueResolverInterface
 {
+    use ApiEndpointsConfigurationTrait;
+
     private RequestReader $requestReader;
     private \SplObjectStorage $resolvedRequests;
 
@@ -40,11 +42,8 @@ class InputObjectValueResolver implements ArgumentValueResolverInterface
      */
     public function supports(Request $request, ArgumentMetadata $argument)
     {
-        $requestAttributes = $request->attributes;
-
-        return $requestAttributes->getBoolean('_api_endpoint')
-            && $requestAttributes->getBoolean('_api_receive')
-            && null !== $this->getInputClass($requestAttributes, $argument)
+        return $this->isApiReceiveEnabled($request)
+            && null !== $this->getInputClass($request, $argument)
             // A request's content is deserialized into a single input object.
             && !isset($this->resolvedRequests[$request]);
     }
@@ -54,7 +53,7 @@ class InputObjectValueResolver implements ArgumentValueResolverInterface
      */
     public function resolve(Request $request, ArgumentMetadata $argument)
     {
-        $inputClass = $this->getInputClass($request->attributes, $argument);
+        $inputClass = $this->getInputClass($request, $argument);
         $inputObject = $this->requestReader->read($request, $inputClass);
 
         $this->resolvedRequests[$request] = true;
@@ -63,15 +62,15 @@ class InputObjectValueResolver implements ArgumentValueResolverInterface
     }
 
     /**
-     * @param ParameterBag     $requestAttributes
+     * @param Request          $request
      * @param ArgumentMetadata $argumentMetadata
      *
      * @return string|null
      */
-    private function getInputClass(ParameterBag $requestAttributes, ArgumentMetadata $argumentMetadata): ?string
+    private function getInputClass(Request $request, ArgumentMetadata $argumentMetadata): ?string
     {
-        if ($requestAttributes->has('_api_receive_class')) {
-            return $requestAttributes->get('_api_receive_class');
+        if ($this->hasApiSetting($request, 'receive_class')) {
+            return $this->getApiSetting($request, 'receive_class');
         }
 
         $inputClass = $argumentMetadata->getType();
