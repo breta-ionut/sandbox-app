@@ -13,5 +13,6 @@ security:
 
         api:
             path: ^/api/
+            entry_point: App\User\Security\AuthenticationEntryPoint
             authenticators: [App\User\Security\Authenticator]
             user_provider: App\User\Security\UserProvider
