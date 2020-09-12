@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Api\Http\Listener;
 
+use App\Api\Http\ApiEndpointsConfigurationTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
@@ -15,6 +16,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class ExceptionListener implements EventSubscriberInterface
 {
+    use ApiEndpointsConfigurationTrait;
+
     private ErrorListener $wrappedExceptionListener;
 
     /**
@@ -30,7 +33,7 @@ class ExceptionListener implements EventSubscriberInterface
      */
     public function onKernelException(ExceptionEvent $event): void
     {
-        if ($event->getRequest()->attributes->getBoolean('_api_endpoint')) {
+        if ($this->isApiRequest($event->getRequest())) {
             $this->wrappedExceptionListener->onKernelException($event);
         }
     }
