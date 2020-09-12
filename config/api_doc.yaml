@@ -74,7 +74,7 @@ paths:
                     description: 'If the data sent for register is malformed (e.g. bad JSON) or invalid (e.g. email is already in use).'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/schema/ValidationErrorResponse'}
+                            schema: {$ref: '#/components/schemas/ValidationErrorResponse'}
                 '403':
                     description: 'If the request was made by an already authenticated user.'
                     content:
