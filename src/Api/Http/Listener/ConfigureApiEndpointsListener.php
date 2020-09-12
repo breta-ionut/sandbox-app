@@ -50,6 +50,13 @@ class ConfigureApiEndpointsListener implements EventSubscriberInterface
                 \in_array($request->getMethod(), [Request::METHOD_POST, Request::METHOD_PUT, Request::METHOD_PATCH])
             );
         }
+
+        if (!$requestAttributes->has('_api_update')) {
+            $requestAttributes->set(
+                '_api_update',
+                \in_array($request->getMethod(), [Request::METHOD_PUT, Request::METHOD_PATCH])
+            );
+        }
     }
 
     /**
