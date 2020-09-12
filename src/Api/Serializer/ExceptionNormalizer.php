@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Api\Serializer;
 
+use App\Api\Error\UserCodes;
 use App\Api\Exception\UserMessageExceptionInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
@@ -11,10 +12,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ExceptionNormalizer implements NormalizerInterface, CacheableSupportsMethodInterface
 {
-    private const UNKNOWN_ERROR_DATA = [
-        'title' => 'An error occurred.',
-        'code' => 999,
-    ];
+    private const UNKNOWN_ERROR_TITLE = 'An error occurred.';
 
     private bool $debug;
 
@@ -82,7 +80,7 @@ class ExceptionNormalizer implements NormalizerInterface, CacheableSupportsMetho
         if ($exception instanceof UserMessageExceptionInterface) {
             $data += ['title' => $exception->getUserMessage(), 'code' => $exception->getUserCode()];
         } else {
-            $data += self::UNKNOWN_ERROR_DATA;
+            $data += ['title' => self::UNKNOWN_ERROR_TITLE, 'code' => UserCodes::UNKNOWN_ERROR];
         }
     }
 

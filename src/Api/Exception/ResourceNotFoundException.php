@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Api\Exception;
 
+use App\Api\Error\UserCodes;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
@@ -45,6 +46,6 @@ class ResourceNotFoundException extends \RangeException implements HttpException
      */
     public function getUserCode(): int
     {
-        return 102;
+        return UserCodes::RESOURCE_NOT_FOUND;
     }
 }

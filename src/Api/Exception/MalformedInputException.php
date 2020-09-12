@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Api\Exception;
 
+use App\Api\Error\UserCodes;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
@@ -43,6 +44,6 @@ class MalformedInputException extends \RuntimeException implements HttpException
      */
     public function getUserCode(): int
     {
-        return 100;
+        return UserCodes::MALFORMED_INPUT;
     }
 }

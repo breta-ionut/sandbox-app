@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Api\Exception;
 
+use App\Api\Error\UserCodes;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -59,6 +60,6 @@ class ValidationException extends \RuntimeException implements HttpExceptionInte
      */
     public function getUserCode(): int
     {
-        return 101;
+        return UserCodes::VALIDATION;
     }
 }
