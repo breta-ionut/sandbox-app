@@ -62,11 +62,12 @@ trait ApiEndpointsConfigurationTrait
     /**
      * @param Request $request
      * @param string  $key
+     * @param mixed   $default
      *
      * @return mixed
      */
-    public function getApiSetting(Request $request, string $key)
+    public function getApiSetting(Request $request, string $key, $default = null)
     {
-        return $request->attributes->get('_api_'.$key);
+        return $request->attributes->get('_api_'.$key, $default);
     }
 }
