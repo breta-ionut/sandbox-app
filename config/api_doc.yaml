@@ -65,7 +65,7 @@ paths:
                                     type: string
                                     format: password
             responses:
-                '200':
+                '201':
                     description: 'If the user was successfully registered.'
                     content:
                         application/json:
