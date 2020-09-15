@@ -12,7 +12,7 @@ services:
         tags: [controller.service_arguments]
 
     App\User\Security\Authenticator:
-        $loginPath: /api/login
+        $loginPath: /api/user/login
         $userProvider: '@App\User\Security\UserProvider'
 
     App\User\User\UserManager:
