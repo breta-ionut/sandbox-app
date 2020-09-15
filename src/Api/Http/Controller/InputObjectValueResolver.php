@@ -9,6 +9,7 @@ use App\Api\Http\RequestReader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 /**
  * Deserializes API requests content into input objects used as controller arguments.
@@ -22,10 +23,14 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
  *      - "_api_receive_class": explicitly specifies the input object class. Useful for example when the input is an
  *        array of objects belonging to some class (e.g. App\SomeClass[]) and the serializer must know this class to
  *        perform a proper deserialization
+ *      - "_api_receive_deserialization_groups": additional groups to use when deserializing requests. The default
+ *        deserialization group is "api_receive"
  */
 class InputObjectValueResolver implements ArgumentValueResolverInterface
 {
     use ApiEndpointsConfigurationTrait;
+
+    private const DEFAULT_DESERIALIZATION_GROUPS = ['api_receive'];
 
     private RequestReader $requestReader;
     private \SplObjectStorage $resolvedRequests;
@@ -57,7 +62,11 @@ class InputObjectValueResolver implements ArgumentValueResolverInterface
     public function resolve(Request $request, ArgumentMetadata $argument)
     {
         $inputClass = $this->getInputClass($request, $argument);
-        $inputObject = $this->requestReader->read($request, $inputClass);
+        $inputObject = $this->requestReader->read(
+            $request,
+            $inputClass,
+            [AbstractNormalizer::GROUPS => $this->getDeserializationGroups($request)]
+        );
 
         $this->resolvedRequests[$request] = true;
 
@@ -106,5 +115,18 @@ class InputObjectValueResolver implements ArgumentValueResolverInterface
         }
 
         return $inputClass;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return string[]
+     */
+    private function getDeserializationGroups(Request $request): array
+    {
+        return \array_merge(
+            $this->getApiSetting($request, 'receive_deserialization_groups', []),
+            self::DEFAULT_DESERIALIZATION_GROUPS
+        );
     }
 }
