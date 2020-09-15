@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * setting the "_api_respond" request attribute to false for an endpoint (via the route's "defaults" configuration).
  *
  * One might return from an API controller a {@see View} object which wraps the data and can provide additional
- * properties of the response to be built: status, headers and serialization groups.
+ * properties for the response (status, headers) or serialization settings (groups).
  *
  * For serialization, "api_respond" group is used by default.
  */

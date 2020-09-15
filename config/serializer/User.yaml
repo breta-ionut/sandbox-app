@@ -1,0 +1,4 @@
+App\User\Model\User:
+    attributes:
+        firstName:
+            groups: [api_receive, api_resp]
