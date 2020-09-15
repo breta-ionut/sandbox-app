@@ -6,6 +6,7 @@ namespace App\Api\Http\Listener;
 
 use App\Api\Http\ApiEndpointsConfigurationTrait;
 use App\Api\Http\ResponseFactory;
+use App\Api\Http\View;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -13,10 +14,17 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * Converts data returned by API controllers to responses using serialization. The serialization can be disabled by
  * setting the "_api_respond" request attribute to false for an endpoint (via the route's "defaults" configuration).
+ *
+ * One might return from an API controller a {@see View} object which wraps the data and can provide additional
+ * properties of the response to be built: status, headers and serialization groups.
+ *
+ * For serialization, "api_respond" group is used by default.
  */
 class SerializeListener implements EventSubscriberInterface
 {
     use ApiEndpointsConfigurationTrait;
+
+    private const DEFAULT_SERIALIZATION_GROUPS = ['api_respond'];
 
     private ResponseFactory $responseFactory;
 
@@ -33,11 +41,24 @@ class SerializeListener implements EventSubscriberInterface
      */
     public function onKernelView(ViewEvent $event): void
     {
-        if ($this->isApiRespondEnabled($event->getRequest())) {
-            $response = $this->responseFactory->createFromData($event->getControllerResult());
-
-            $event->setResponse($response);
+        if (!$this->isApiRespondEnabled($event->getRequest())) {
+            return;
         }
+
+        $controllerResult = $event->getControllerResult();
+
+        if ($controllerResult instanceof View) {
+            $response = $this->responseFactory->createFromData(
+                $controllerResult->getData(),
+                $controllerResult->getStatus(),
+                $controllerResult->getHeaders(),
+                $this->getSerializationGroups($controllerResult)
+            );
+        } else {
+            $response = $this->responseFactory->createFromData($controllerResult);
+        }
+
+        $event->setResponse($response);
     }
 
     /**
@@ -46,5 +67,15 @@ class SerializeListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [KernelEvents::VIEW => 'onKernelView'];
+    }
+
+    /**
+     * @param View $view
+     *
+     * @return string[]
+     */
+    private function getSerializationGroups(View $view): array
+    {
+        return \array_merge($view->getSerializationGroups(), self::DEFAULT_SERIALIZATION_GROUPS);
     }
 }
