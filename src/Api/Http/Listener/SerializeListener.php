@@ -8,8 +8,10 @@ use App\Api\Http\ApiEndpointsConfigurationTrait;
 use App\Api\Http\ResponseFactory;
 use App\Api\Http\View;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 /**
  * Converts data returned by API controllers to responses using serialization. The serialization can be disabled by
@@ -52,10 +54,15 @@ class SerializeListener implements EventSubscriberInterface
                 $controllerResult->getData(),
                 $controllerResult->getStatus(),
                 $controllerResult->getHeaders(),
-                $this->getSerializationGroups($controllerResult)
+                [AbstractNormalizer::GROUPS => $this->getSerializationGroups($controllerResult)]
             );
         } else {
-            $response = $this->responseFactory->createFromData($controllerResult);
+            $response = $this->responseFactory->createFromData(
+                $controllerResult,
+                Response::HTTP_OK,
+                [],
+                [AbstractNormalizer::GROUPS => self::DEFAULT_SERIALIZATION_GROUPS]
+            );
         }
 
         $event->setResponse($response);
