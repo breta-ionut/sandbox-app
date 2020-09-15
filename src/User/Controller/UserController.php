@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\User\Controller;
 
 use App\Api\Exception\ValidationException;
+use App\Api\Http\View;
 use App\Core\Controller\AbstractController;
 use App\User\Model\User;
 use App\User\User\UserManager;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -28,11 +30,11 @@ class UserController extends AbstractController
      * @param ValidatorInterface $validator
      * @param UserManager        $userManager
      *
-     * @return User
+     * @return View
      *
      * @throws ValidationException
      */
-    public function register(User $user, ValidatorInterface $validator, UserManager $userManager): User
+    public function register(User $user, ValidatorInterface $validator, UserManager $userManager): View
     {
         $violations = $validator->validate($user);
         if (0 !== \count($violations)) {
@@ -42,6 +44,6 @@ class UserController extends AbstractController
         $userManager->create($user);
         $userManager->authenticate($user);
 
-        return $user;
+        return new View($user, Response::HTTP_CREATED);
     }
 }
