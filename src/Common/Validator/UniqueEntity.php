@@ -14,6 +14,7 @@ class UniqueEntity extends Constraint
     public string $message = 'This value is already used.';
     public array $fields;
     public string $repositoryMethod = 'count';
+    public ?string $errorPath = null;
 
     /**
      * {@inheritDoc}

@@ -52,10 +52,8 @@ class UniqueEntityValidator extends ConstraintValidator
 
         $this->context
             ->buildViolation($constraint->message)
-            ->setParameter(
-                '{{ value }}',
-                $this->formatValues($criteria, self::PRETTY_DATE | self::OBJECT_TO_STRING | self::ENTITY_ID)
-            )
+            ->atPath($this->getErrorPath($constraint))
+            ->setParameter('{{ value }}', $this->formatCriteria($criteria))
             ->setInvalidValue($value)
             ->setPlural(\count($criteria))
             ->setCode(UniqueEntity::NOT_UNIQUE_ERROR)
@@ -177,5 +175,33 @@ class UniqueEntityValidator extends ConstraintValidator
         }
 
         return $count;
+    }
+
+    /**
+     * @param UniqueEntity $constraint
+     *
+     * @return string
+     */
+    private function getErrorPath(UniqueEntity $constraint): string
+    {
+        if (null !== $constraint->errorPath) {
+            return $constraint->errorPath;
+        }
+
+        return 1 === \count($constraint->fields) ? \reset($constraint->fields) : '';
+    }
+
+    /**
+     * @param array $criteria
+     *
+     * @return string
+     */
+    private function formatCriteria(array $criteria): string
+    {
+        $format = self::PRETTY_DATE | self::OBJECT_TO_STRING | self::ENTITY_ID;
+
+        return 1 === \count($criteria)
+            ? $this->formatValue($criteria, $format)
+            : $this->formatValues($criteria, $format);
     }
 }
