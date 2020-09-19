@@ -20,9 +20,27 @@ class UserController extends AbstractController
      *
      * @return UserInterface
      */
+    public function getUser(UserInterface $user): UserInterface
+    {
+        return $user;
+    }
+
+    /**
+     * @param UserInterface $user
+     *
+     * @return UserInterface
+     */
     public function login(UserInterface $user): UserInterface
     {
         return $user;
+    }
+
+    /**
+     * @return View
+     */
+    public function logout(): View
+    {
+        return new View(null, Response::HTTP_NO_CONTENT);
     }
 
     /**

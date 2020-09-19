@@ -6,6 +6,68 @@ info:
     license: {name: MIT}
 
 paths:
+    /api/user:
+        get:
+            summary: Get current user
+            description: 'Gets the data of the currently logged in user.'
+            tags: [User]
+            responses:
+                '200':
+                    description: 'If the data of the current user is successfully returned.'
+                    content:
+                        application/json:
+                            schema: {$ref: '#/components/schemas/UserResponse'}
+                '403':
+                    description: 'If the request is anonymous.'
+                    content:
+                        application/json:
+                            schema: {$ref: '#/components/schemas/ErrorResponse'}
+                '500':
+                    description: 'If an internal error occurred.'
+                    content:
+                        application/json:
+                            schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+        post:
+            summary: Register
+            description: 'Registers a user given its data.'
+            tags: [User]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            properties:
+                                firstName: {type: string}
+                                lastName: {type: string}
+                                email:
+                                    type: string
+                                    format: email
+                                plainPassword:
+                                    type: string
+                                    format: password
+            responses:
+                '201':
+                    description: 'If the user was successfully registered.'
+                    content:
+                        application/json:
+                            schema: {$ref: '#/components/schemas/UserResponse'}
+                '400':
+                    description: 'If the data sent for register is malformed (e.g. bad JSON) or invalid (e.g. email is already in use).'
+                    content:
+                        application/json:
+                            schema: {$ref: '#/components/schemas/ValidationErrorResponse'}
+                '403':
+                    description: 'If the request was made by an already authenticated user.'
+                    content:
+                        application/json:
+                            schema: {$ref: '#/components/schemas/ErrorResponse'}
+                '500':
+                    description: 'If an internal error occurred.'
+                    content:
+                        application/json:
+                            schema: {$ref: '#/components/schemas/ErrorResponse'}
+
     /api/user/login:
         post:
             summary: Login
@@ -45,38 +107,16 @@ paths:
                         application/json:
                             schema: {$ref: '#/components/schemas/ErrorResponse'}
 
-    /api/user:
-        post:
-            summary: Register
-            description: 'Registers a user given its data.'
+    /api/user/logout:
+        delete:
+            summary: Logout
+            description: 'Logs out the current user.'
             tags: [User]
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            properties:
-                                firstName: {type: string}
-                                lastName: {type: string}
-                                email:
-                                    type: string
-                                    format: email
-                                plainPassword:
-                                    type: string
-                                    format: password
             responses:
-                '201':
-                    description: 'If the user was successfully registered.'
-                    content:
-                        application/json:
-                            schema: {$ref: '#/components/schemas/UserResponse'}
-                '400':
-                    description: 'If the data sent for register is malformed (e.g. bad JSON) or invalid (e.g. email is already in use).'
-                    content:
-                        application/json:
-                            schema: {$ref: '#/components/schemas/ValidationErrorResponse'}
+                '204':
+                    description: 'If the current user was successfully logged out.'
                 '403':
-                    description: 'If the request was made by an already authenticated user.'
+                    description: 'If the request is anonymous.'
                     content:
                         application/json:
                             schema: {$ref: '#/components/schemas/ErrorResponse'}
