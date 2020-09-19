@@ -7,7 +7,7 @@ services:
     Symfony\Component\HttpFoundation\RequestStack: ~
 
     Symfony\Component\HttpKernel\Controller\ArgumentResolver:
-        arguments: [~, ~]
+        arguments: [~, !abstract argument value resolvers]
 
     Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface: '@Symfony\Component\HttpKernel\Controller\ArgumentResolver'
 
@@ -79,7 +79,10 @@ services:
         arguments: [_app_meta]
 
     Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage:
-        arguments: [[], ~, '@Symfony\Component\HttpFoundation\Session\Storage\MetadataBag']
+        arguments:
+            - !abstract options
+            - !abstract handler
+            - '@Symfony\Component\HttpFoundation\Session\Storage\MetadataBag'
 
     Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage:
         arguments: [~, MOCKSESSID, '@Symfony\Component\HttpFoundation\Session\Storage\MetadataBag']

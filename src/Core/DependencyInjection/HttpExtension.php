@@ -40,6 +40,28 @@ class HttpExtension extends ConfigurableExtension
     /**
      * @param ContainerBuilder $container
      * @param array            $config
+     */
+    private function configureSession(ContainerBuilder $container, array $config): void
+    {
+        if ($config['test']) {
+            $storageId = MockFileSessionStorage::class;
+        } else {
+            $storageId = NativeSessionStorage::class;
+
+            $storageHandler = $this->createSessionStorageHandler($container, $config['handler']);
+            unset($config['test'], $config['handler']);
+
+            $container->getDefinition($storageId)
+                ->setArgument('$options', $config)
+                ->setArgument('$handler', $storageHandler);
+        }
+
+        $container->setAlias(SessionStorageInterface::class, $storageId);
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param array            $config
      *
      * @return Reference
      */
@@ -56,28 +78,5 @@ class HttpExtension extends ConfigurableExtension
         $container->setDefinition($id, $handler);
 
         return new Reference($id);
-    }
-
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $config
-     */
-    private function configureSession(ContainerBuilder $container, array $config): void
-    {
-        // Determine and configure the session storage.
-        if ($config['test']) {
-            $storageId = MockFileSessionStorage::class;
-        } else {
-            $storageId = NativeSessionStorage::class;
-
-            $storageHandler = $this->createSessionStorageHandler($container, $config['handler']);
-            unset($config['test'], $config['handler']);
-
-            $container->getDefinition($storageId)
-                ->setArgument('$options', $config)
-                ->setArgument('$handler', $storageHandler);
-        }
-
-        $container->setAlias(SessionStorageInterface::class, $storageId);
     }
 }

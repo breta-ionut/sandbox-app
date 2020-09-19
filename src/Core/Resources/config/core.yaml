@@ -6,9 +6,7 @@ services:
 
     services_resetter:
         class: Symfony\Component\HttpKernel\DependencyInjection\ServicesResetter
-        arguments:
-            - ~ # Resettable services.
-            - ~ # Reset methods.
+        arguments: [!abstract resettable services, !abstract reset methods]
         public: true
 
     Symfony\Component\DependencyInjection\ParameterBag\ContainerBag:
