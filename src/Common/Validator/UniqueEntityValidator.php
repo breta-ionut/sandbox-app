@@ -50,7 +50,7 @@ class UniqueEntityValidator extends ConstraintValidator
             return;
         }
 
-        return $this->context
+        $this->context
             ->buildViolation($constraint->message)
             ->setParameter(
                 '{{ value }}',
