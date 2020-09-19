@@ -1,0 +1,21 @@
+App\User\Model\User:
+    constraints:
+        - App\Common\Validator\UniqueEntity: [email]
+
+    properties:
+        firstName:
+            - NotBlank: ~
+            - Length: {max: 50}
+
+        lastName:
+            - NotBlank: ~
+            - Length: {max: 50}
+
+        email:
+            - NotBlank:
+            - Length: {max: 255}
+            - Email: ~
+
+        plainPassword:
+            - NotBlank:
+            - Length: {min: 8, max: !php/const Symfony\Component\Security\Core\Encoder\BasePasswordEncoder::MAX_PASSWORD_LENGTH}
