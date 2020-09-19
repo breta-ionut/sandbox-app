@@ -94,7 +94,7 @@ class UniqueEntityValidator extends ConstraintValidator
     protected function formatValues(array $values, int $format = 0)
     {
         foreach ($values as $key => $value) {
-            $values[$key] = \sprintf('%s: %s', $key, $this->formatValue($values, $format));
+            $values[$key] = \sprintf('%s: %s', $key, $this->formatValue($value, $format));
         }
 
         return \implode(', ', $values);
