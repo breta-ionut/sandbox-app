@@ -54,7 +54,7 @@ class UniqueEntityValidator extends ConstraintValidator
             ->buildViolation($constraint->message)
             ->setParameter(
                 '{{ value }}',
-                $this->formatValue($value, self::PRETTY_DATE | self::OBJECT_TO_STRING | self::ENTITY_ID)
+                $this->formatValues($value, self::PRETTY_DATE | self::OBJECT_TO_STRING | self::ENTITY_ID)
             )
             ->setInvalidValue($value)
             ->setPlural(\count($criteria))
