@@ -201,7 +201,7 @@ class UniqueEntityValidator extends ConstraintValidator
         $format = self::PRETTY_DATE | self::OBJECT_TO_STRING | self::ENTITY_ID;
 
         return 1 === \count($criteria)
-            ? $this->formatValue($criteria, $format)
+            ? $this->formatValue(\reset($criteria), $format)
             : $this->formatValues($criteria, $format);
     }
 }
