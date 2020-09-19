@@ -40,7 +40,7 @@ class ResponseFactory
             $json = null;
         }
 
-        return new JsonResponse($json, $status, $headers, true);
+        return new JsonResponse($json, $status, $headers, \is_string($json));
     }
 
     /**
