@@ -21,3 +21,4 @@ security:
     access_control:
         - {path: ^/api/user/login$, roles: PUBLIC_ACCESS}
         - {path: ^/api/user$, methods: POST, roles: PUBLIC_ACCESS}
+        - {path: ^/api, roles: IS_FULLY_AUTHENTICATED}
