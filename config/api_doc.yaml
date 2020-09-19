@@ -17,7 +17,7 @@ paths:
                     content:
                         application/json:
                             schema: {$ref: '#/components/schemas/UserResponse'}
-                '403':
+                '401':
                     description: 'If the request is anonymous.'
                     content:
                         application/json:
@@ -115,7 +115,7 @@ paths:
             responses:
                 '204':
                     description: 'If the current user was successfully logged out.'
-                '403':
+                '401':
                     description: 'If the request is anonymous.'
                     content:
                         application/json:
