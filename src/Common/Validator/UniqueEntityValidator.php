@@ -132,7 +132,7 @@ class UniqueEntityValidator extends ConstraintValidator
         $criteria = [];
 
         foreach ($fields as $field) {
-            if (!$metadata->hasField($field) || !$metadata->hasAssociation($field)) {
+            if (!$metadata->hasField($field) && !$metadata->hasAssociation($field)) {
                 throw new ConstraintDefinitionException(\sprintf(
                     'No mapped field or association "%s" exists on entity "%s".',
                     $field,
