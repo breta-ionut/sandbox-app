@@ -39,7 +39,7 @@ class RepositoryFactory implements RepositoryFactoryInterface
      */
     public function getRepository(EntityManagerInterface $entityManager, $entityName)
     {
-        $metadata = $entityManager->getClassMetadata($entityManager);
+        $metadata = $entityManager->getClassMetadata($entityName);
 
         $customRepositoryClass = $metadata->customRepositoryClassName;
         if (null !== $customRepositoryClass) {
