@@ -17,3 +17,7 @@ security:
             access_denied_handler: App\User\Security\AccessDeniedHandler
             authenticators: [App\User\Security\Authenticator]
             user_provider: App\User\Security\UserProvider
+
+    access_control:
+        - {path: ^/api/user/login$, roles: PUBLIC_ACCESS}
+        - {path: ^/api/user$, methods: POST, roles: PUBLIC_ACCESS}
