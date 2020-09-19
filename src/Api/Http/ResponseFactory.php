@@ -34,7 +34,11 @@ class ResponseFactory
         array $headers = [],
         array $context = []
     ): JsonResponse {
-        $json = $this->serializer->serialize($data, 'json', $this->setContextDefaults($context));
+        if (null !== $data) {
+            $json = $this->serializer->serialize($data, 'json', $this->setContextDefaults($context));
+        } else {
+            $json = null;
+        }
 
         return new JsonResponse($json, $status, $headers, true);
     }
