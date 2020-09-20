@@ -28,6 +28,7 @@ use Symfony\Component\Security\Http\EventListener\SessionLogoutListener;
 use Symfony\Component\Security\Http\EventListener\SessionStrategyListener;
 use Symfony\Component\Security\Http\EventListener\UserCheckerListener;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
+use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\AuthenticatorManagerListener;
 use Symfony\Component\Security\Http\Firewall\ChannelListener;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
@@ -319,17 +320,16 @@ class SecurityExtension extends ConfigurableExtension
             );
         }
 
+        if ($firewallConfig['anonymous']) {
+            $listeners[] = new Reference(AnonymousAuthenticationListener::class);
+        }
+
         $listeners[] = new Reference(AccessListener::class);
 
         $exceptionListener = $this->createExceptionListener($container, $name, $firewallConfig);
 
         if ($firewallConfig['logout']['enabled']) {
-            $logoutListener = $this->createLogoutListener(
-                $container,
-                $name,
-                $firewallConfig['logout'],
-                $eventDispatcherId
-            );
+            $logoutListener = $this->createLogoutListener($container, $name, $firewallConfig, $eventDispatcherId);
         }
 
         return [$requestMatcher, $listeners, $exceptionListener, $logoutListener ?? null];
