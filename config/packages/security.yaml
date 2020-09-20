@@ -20,6 +20,7 @@ security:
             user_provider: App\User\Security\UserProvider
 
     access_control:
+        - {path: ^/api/doc$, roles: PUBLIC_ACCESS}
         - {path: ^/api/user/login$, roles: IS_ANONYMOUS}
         - {path: ^/api/user$, methods: POST, roles: IS_ANONYMOUS}
         - {path: ^/api, roles: IS_AUTHENTICATED_FULLY}
