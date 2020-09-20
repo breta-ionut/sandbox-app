@@ -215,6 +215,7 @@ class SecurityConfiguration implements ConfigurationInterface
                                 ->children()
                                     ->scalarNode('path')
                                         ->cannotBeEmpty()
+                                        ->defaultValue('/logout')
                                     ->end()
 
                                     ->arrayNode('csrf')

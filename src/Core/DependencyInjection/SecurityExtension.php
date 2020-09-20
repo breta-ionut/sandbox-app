@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\Authentication\AuthenticatorManager;
 use Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint;
@@ -217,7 +218,7 @@ class SecurityExtension extends ConfigurableExtension
     /**
      * @param ContainerBuilder $container
      * @param string           $firewall
-     * @param array            $logoutConfig
+     * @param array            $firewallConfig
      * @param string           $eventDispatcherId
      *
      * @return Reference
@@ -225,19 +226,25 @@ class SecurityExtension extends ConfigurableExtension
     private function createLogoutListener(
         ContainerBuilder $container,
         string $firewall,
-        array $logoutConfig,
+        array $firewallConfig,
         string $eventDispatcherId
     ): Reference {
         $id = 'security.logout_listener.'.$firewall;
 
-        $options = \array_filter([
-            'logout_path' => $logoutConfig['path'] ?? null,
-            'csrf_parameter' => $logoutConfig['csrf_parameter'] ?? null,
-            'csrf_token_id' => $logoutConfig['csrf_token_id'] ?? null,
-        ], fn($value) => null !== $value);
+        $logoutConfig = $firewallConfig['logout'];
+
+        $options = [
+            'logout_path' => $logoutConfig['path'],
+            'csrf_parameter' => $logoutConfig['csrf']['parameter'],
+            'csrf_token_id' => $logoutConfig['csrf']['token_id'],
+        ];
         $definition = (new ChildDefinition(LogoutListener::class))
             ->setArgument('$eventDispatcher', new Reference($eventDispatcherId))
-            ->setArgument('$options', $options);
+            ->setArgument('$options', $options)
+            ->setArgument(
+                '$csrfTokenManager',
+                $logoutConfig['csrf']['enabled'] ? new Reference(CsrfTokenManagerInterface::class) : null
+            );
 
         $container->setDefinition($id, $definition);
 
@@ -248,7 +255,7 @@ class SecurityExtension extends ConfigurableExtension
 
         $container->setDefinition('security.logout_default_listener.'.$firewall, $defaultListenerDefinition);
 
-        if ($logoutConfig['invalidate_session']) {
+        if (!$firewallConfig['stateless'] && $logoutConfig['invalidate_session']) {
             $container->getDefinition(SessionLogoutListener::class)
                 ->addTag('kernel.event_subscriber', ['dispatcher' => $eventDispatcherId]);
         }
