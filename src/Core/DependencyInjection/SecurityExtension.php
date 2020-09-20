@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
@@ -399,5 +400,8 @@ class SecurityExtension extends ConfigurableExtension
         $container->getDefinition(RetryAuthenticationEntryPoint::class)
             ->setArgument('$httpPort', $config['http_port'])
             ->setArgument('$httpsPort', $config['https_port']);
+
+        $container->getDefinition(AnonymousAuthenticationListener::class)
+            ->setArgument('$secret', new Parameter('container.build_hash'));
     }
 }
