@@ -34,6 +34,7 @@ use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Http\Firewall\LogoutListener;
 use Symfony\Component\Security\Http\FirewallMap;
+use Symfony\Component\Security\Http\Logout\LogoutUrlGenerator;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -238,13 +239,12 @@ class SecurityExtension extends ConfigurableExtension
             'csrf_parameter' => $logoutConfig['csrf']['parameter'],
             'csrf_token_id' => $logoutConfig['csrf']['token_id'],
         ];
+        $csrfTokenManager = $logoutConfig['csrf']['enabled'] ? new Reference(CsrfTokenManagerInterface::class) : null;
+
         $definition = (new ChildDefinition(LogoutListener::class))
             ->setArgument('$eventDispatcher', new Reference($eventDispatcherId))
             ->setArgument('$options', $options)
-            ->setArgument(
-                '$csrfTokenManager',
-                $logoutConfig['csrf']['enabled'] ? new Reference(CsrfTokenManagerInterface::class) : null
-            );
+            ->setArgument('$csrfTokenManager', $csrfTokenManager);
 
         $container->setDefinition($id, $definition);
 
@@ -270,6 +270,16 @@ class SecurityExtension extends ConfigurableExtension
                 $cookiesClearingListenerDefinition
             );
         }
+
+        // Register listener to LogoutUrlGenerator.
+        $container->getDefinition(LogoutUrlGenerator::class)
+            ->addMethodCall('registerListener', [
+                $firewall,
+                $options['logout_path'],
+                $options['csrf_token_id'],
+                $options['csrf_parameter'],
+                $csrfTokenManager
+            ]);
 
         return new Reference($id);
     }
