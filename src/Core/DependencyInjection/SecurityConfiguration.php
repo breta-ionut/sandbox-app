@@ -193,7 +193,7 @@ class SecurityConfiguration implements ConfigurationInterface
                             ->booleanNode('anonymous')
                                 ->defaultFalse()
                             ->end()
-            
+
                             ->booleanNode('stateless')
                                 ->defaultFalse()
                             ->end()
@@ -218,7 +218,6 @@ class SecurityConfiguration implements ConfigurationInterface
                                     ->end()
 
                                     ->arrayNode('csrf')
-                                        ->addDefaultsIfNotSet()
                                         ->canBeEnabled()
 
                                         ->children()
