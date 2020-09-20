@@ -190,6 +190,10 @@ class SecurityConfiguration implements ConfigurationInterface
                                 ->defaultTrue()
                             ->end()
 
+                            ->booleanNode('anonymous')
+                                ->defaultFalse()
+                            ->end()
+            
                             ->booleanNode('stateless')
                                 ->defaultFalse()
                             ->end()
@@ -213,12 +217,21 @@ class SecurityConfiguration implements ConfigurationInterface
                                         ->cannotBeEmpty()
                                     ->end()
 
-                                    ->scalarNode('csrf_parameter')
-                                        ->cannotBeEmpty()
-                                    ->end()
+                                    ->arrayNode('csrf')
+                                        ->addDefaultsIfNotSet()
+                                        ->canBeEnabled()
 
-                                    ->scalarNode('csrf_token_id')
-                                        ->cannotBeEmpty()
+                                        ->children()
+                                            ->scalarNode('parameter')
+                                                ->cannotBeEmpty()
+                                                ->defaultValue('_csrf_token')
+                                            ->end()
+
+                                            ->scalarNode('token_id')
+                                                ->cannotBeEmpty()
+                                                ->defaultValue('logout')
+                                            ->end()
+                                        ->end()
                                     ->end()
 
                                     ->scalarNode('target')
