@@ -77,6 +77,79 @@ class SecurityExtension extends ConfigurableExtension
 
     /**
      * @param ContainerBuilder $container
+     * @param array            $firewallsConfig
+     */
+    private function createFirewalls(ContainerBuilder $container, array $firewallsConfig): void
+    {
+        $firewallMapDefinition = $container->getDefinition(FirewallMap::class);
+
+        foreach ($firewallsConfig as $name => $firewallConfig) {
+            [
+                $requestMatcher,
+                $listeners,
+                $exceptionListener,
+                $logoutListener
+            ] = $this->createFirewall($container, $name, $firewallConfig);
+
+            $firewallMapDefinition->addMethodCall(
+                'add',
+                [$requestMatcher, $listeners, $exceptionListener, $logoutListener]
+            );
+        }
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param string           $name
+     * @param array            $firewallConfig
+     *
+     * @return array
+     */
+    private function createFirewall(ContainerBuilder $container, string $name, array $firewallConfig): array
+    {
+        $requestMatcher = $this->createRequestMatcher($container, $firewallConfig);
+
+        if (!$firewallConfig['security']) {
+            return [$requestMatcher, [], null, null, [], null];
+        }
+
+        $eventDispatcherId = $this->createEventDispatcher($container, $name);
+
+        $listeners = [new Reference(ChannelListener::class)];
+
+        if (!$firewallConfig['stateless']) {
+            $listeners[] = $this->createContextListener($container, $name, $firewallConfig);
+
+            $container->getDefinition(SessionStrategyListener::class)
+                ->addTag('kernel.event_subscriber', ['dispatcher' => $eventDispatcherId]);
+        }
+
+        if ($firewallConfig['authenticators']) {
+            $listeners[] = $this->createAuthenticatorManagerListener(
+                $container,
+                $name,
+                $firewallConfig,
+                $eventDispatcherId
+            );
+        }
+
+        if ($firewallConfig['anonymous']) {
+            $listeners[] = new Reference(AnonymousAuthenticationListener::class);
+        }
+
+        $listeners[] = new Reference(AccessListener::class);
+
+        $exceptionListener = $this->createExceptionListener($container, $name, $firewallConfig);
+
+        if ($firewallConfig['logout']['enabled']) {
+            $logoutListener = $this->createLogoutListener($container, $name, $firewallConfig, $eventDispatcherId);
+        }
+
+        return [$requestMatcher, $listeners, $exceptionListener, $logoutListener ?? null];
+    }
+
+    /**
+     * @param ContainerBuilder $container
      * @param array            $requestMatcherConfig
      *
      * @return Reference
@@ -284,79 +357,6 @@ class SecurityExtension extends ConfigurableExtension
             ]);
 
         return new Reference($id);
-    }
-
-    /**
-     * @param ContainerBuilder $container
-     * @param string           $name
-     * @param array            $firewallConfig
-     *
-     * @return array
-     */
-    private function createFirewall(ContainerBuilder $container, string $name, array $firewallConfig): array
-    {
-        $requestMatcher = $this->createRequestMatcher($container, $firewallConfig);
-
-        if (!$firewallConfig['security']) {
-            return [$requestMatcher, [], null, null, [], null];
-        }
-
-        $eventDispatcherId = $this->createEventDispatcher($container, $name);
-
-        $listeners = [new Reference(ChannelListener::class)];
-
-        if (!$firewallConfig['stateless']) {
-            $listeners[] = $this->createContextListener($container, $name, $firewallConfig);
-
-            $container->getDefinition(SessionStrategyListener::class)
-                ->addTag('kernel.event_subscriber', ['dispatcher' => $eventDispatcherId]);
-        }
-
-        if ($firewallConfig['authenticators']) {
-            $listeners[] = $this->createAuthenticatorManagerListener(
-                $container,
-                $name,
-                $firewallConfig,
-                $eventDispatcherId
-            );
-        }
-
-        if ($firewallConfig['anonymous']) {
-            $listeners[] = new Reference(AnonymousAuthenticationListener::class);
-        }
-
-        $listeners[] = new Reference(AccessListener::class);
-
-        $exceptionListener = $this->createExceptionListener($container, $name, $firewallConfig);
-
-        if ($firewallConfig['logout']['enabled']) {
-            $logoutListener = $this->createLogoutListener($container, $name, $firewallConfig, $eventDispatcherId);
-        }
-
-        return [$requestMatcher, $listeners, $exceptionListener, $logoutListener ?? null];
-    }
-
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $firewallsConfig
-     */
-    private function createFirewalls(ContainerBuilder $container, array $firewallsConfig): void
-    {
-        $firewallMapDefinition = $container->getDefinition(FirewallMap::class);
-
-        foreach ($firewallsConfig as $name => $firewallConfig) {
-            [
-                $requestMatcher,
-                $listeners,
-                $exceptionListener,
-                $logoutListener
-            ] = $this->createFirewall($container, $name, $firewallConfig);
-
-            $firewallMapDefinition->addMethodCall(
-                'add',
-                [$requestMatcher, $listeners, $exceptionListener, $logoutListener]
-            );
-        }
     }
 
     /**
