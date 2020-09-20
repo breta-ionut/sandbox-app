@@ -46,6 +46,12 @@ services:
     Symfony\Component\Security\Http\FirewallMap: ~
     Symfony\Component\Security\Http\FirewallMapInterface: '@Symfony\Component\Security\Http\FirewallMap'
 
+    Symfony\Component\Security\Http\Logout\LogoutUrlGenerator:
+        arguments:
+            - '@Symfony\Component\HttpFoundation\RequestStack'
+            - '@Symfony\Component\Routing\Generator\UrlGeneratorInterface'
+            - '@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
+
     Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy:
         arguments: [!abstract strategy]
 
@@ -95,6 +101,13 @@ services:
             - '@Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface'
             - false
 
+    Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener:
+        arguments:
+            - '@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
+            - !abstract secret
+            - '@Psr\Log\LoggerInterface'
+            - '@Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface'
+
     Symfony\Component\Security\Http\Firewall\AuthenticatorManagerListener:
         abstract: true
         arguments: [!abstract authenticator manager]
@@ -135,7 +148,7 @@ services:
             - '@Symfony\Component\Security\Http\HttpUtils'
             - !abstract event dispatcher
             - !abstract options
-            - '@Symfony\Component\Security\Csrf\CsrfTokenManagerInterface'
+            - !abstract csrf token manager
     # End of - Firewalls.
     # End of - Authentication.
 
