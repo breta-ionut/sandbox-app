@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Api\Exception;
 
 /**
- * Interface to be implemented by exceptions which expose information to API users.
+ * Interface to be implemented by exceptions which expose a specific message and code to API users.
  */
 interface UserMessageExceptionInterface
 {
