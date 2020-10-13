@@ -9,7 +9,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-class ValidationException extends \RuntimeException implements HttpExceptionInterface, UserMessageExceptionInterface
+class ValidationException
+    extends \RuntimeException
+    implements HttpExceptionInterface, UserMessageExceptionInterface, UserDataExceptionInterface
 {
     use NoCustomHeadersHttpExceptionTrait;
 
@@ -29,14 +31,6 @@ class ValidationException extends \RuntimeException implements HttpExceptionInte
         $message = 'Validation failed.';
 
         parent::__construct($message, $code, $previous);
-    }
-
-    /**
-     * @return ConstraintViolationListInterface
-     */
-    public function getViolations(): ConstraintViolationListInterface
-    {
-        return $this->violations;
     }
 
     /**
@@ -61,5 +55,13 @@ class ValidationException extends \RuntimeException implements HttpExceptionInte
     public function getUserCode(): int
     {
         return UserCodes::VALIDATION;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUserData()
+    {
+        return $this->violations;
     }
 }
