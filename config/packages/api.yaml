@@ -31,6 +31,9 @@ services:
     App\Api\Http\Listener\ExceptionListener:
         arguments: ['@app.api.http.listener.symfony_exception_listener']
 
-    App\Api\Serializer\ExceptionNormalizer:
+    App\Api\Serializer\ConstraintViolationListNormalizer:
+        decorates: Symfony\Component\Serializer\Normalizer\ConstraintViolationListNormalizer
+        arguments: ['@App\Api\Serializer\ConstraintViolationListNormalizer.inner']
+
+    App\Api\Serializer\ProblemNormalizer:
         arguments: ['%kernel.debug%']
-        tags: [{name: serializer.normalizer, priority: -100}]
