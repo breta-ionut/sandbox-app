@@ -9,12 +9,16 @@ use App\Api\Exception\UserMessageExceptionInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * RFC 7807 problem details.
+ */
 class Problem
 {
     private string $title = 'An error occurred.';
     private int $code = UserCodes::UNKNOWN_ERROR;
     private int $status = Response::HTTP_INTERNAL_SERVER_ERROR;
     private string $detail;
+    private array $headers = [];
 
     /**
      * Additional data to be exposed to API users.
@@ -29,35 +33,6 @@ class Problem
     public function __construct()
     {
         $this->detail = Response::$statusTexts[$this->status];
-    }
-
-    /**
-     * @param \Throwable $exception
-     *
-     * @return static
-     */
-    public static function createFromException(\Throwable $exception): self
-    {
-        $problem = new static();
-
-        if ($exception instanceof UserMessageExceptionInterface) {
-            $problem->title = $exception->getUserMessage();
-            $problem->code = $exception->getUserCode();
-        }
-
-        $flattenException = FlattenException::createFromThrowable($exception);
-
-        $problem->status = $flattenException->getStatusCode();
-        $problem->detail = $flattenException->getStatusText();
-
-        if ($exception instanceof UserDataExceptionInterface) {
-            $problem->data = $exception->getUserData();
-        }
-
-        $problem->exception = $exception;
-        $problem->flattenException = $flattenException;
-
-        return $problem;
     }
 
     /**
@@ -141,6 +116,38 @@ class Problem
     }
 
     /**
+     * @return array
+     */
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
+
+    /**
+     * @param array $headers
+     *
+     * @return $this
+     */
+    public function addHeaders(array $headers): self
+    {
+        $this->headers = \array_merge_recursive($this->headers, $headers);
+
+        return $this;
+    }
+
+    /**
+     * @param array $headers
+     *
+     * @return $this
+     */
+    public function setHeaders(array $headers): self
+    {
+        $this->headers = $headers;
+
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function hasData(): bool
@@ -164,6 +171,34 @@ class Problem
     public function setData($data): self
     {
         $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * @param \Throwable $exception
+     *
+     * @return $this
+     */
+    public function fromException(\Throwable $exception): self
+    {
+        if ($exception instanceof UserMessageExceptionInterface) {
+            $this->title = $exception->getUserMessage();
+            $this->code = $exception->getUserCode();
+        }
+
+        $flattenException = FlattenException::createFromThrowable($exception);
+
+        $this->status = $flattenException->getStatusCode();
+        $this->detail = $flattenException->getStatusText();
+        $this->headers = $flattenException->getHeaders();
+
+        if ($exception instanceof UserDataExceptionInterface) {
+            $this->data = $exception->getUserData();
+        }
+
+        $this->exception = $exception;
+        $this->flattenException = $flattenException;
 
         return $this;
     }
