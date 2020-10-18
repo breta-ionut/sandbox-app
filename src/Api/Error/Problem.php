@@ -128,18 +128,6 @@ class Problem
      *
      * @return $this
      */
-    public function addHeaders(array $headers): self
-    {
-        $this->headers = \array_merge_recursive($this->headers, $headers);
-
-        return $this;
-    }
-
-    /**
-     * @param array $headers
-     *
-     * @return $this
-     */
     public function setHeaders(array $headers): self
     {
         $this->headers = $headers;
@@ -187,7 +175,7 @@ class Problem
             $this->code = $exception->getUserCode();
         }
 
-        $flattenException = FlattenException::createFromThrowable($exception);
+        $flattenException = FlattenException::createFromThrowable($exception, $this->status, $this->headers);
 
         $this->status = $flattenException->getStatusCode();
         $this->detail = $flattenException->getStatusText();
