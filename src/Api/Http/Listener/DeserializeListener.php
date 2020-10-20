@@ -24,13 +24,11 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
  *      - "_api_update_argument": explicitly specifies the name of the argument to be updated. If not specified, the
  *        first argument eligible for update will be considered
  *      - "_api_update_deserialization_groups": additional groups to use when deserializing requests. The default
- *        deserialization group is "api_update"
+ *        deserialization group is "api_request" (provided by {@see RequestReader})
  */
 class DeserializeListener implements EventSubscriberInterface
 {
     use ApiEndpointsConfigurationTrait;
-
-    private const DEFAULT_DESERIALIZATION_GROUPS = ['api_update'];
 
     private EntityManagerInterface $entityManager;
     private RequestReader $requestReader;
@@ -62,7 +60,7 @@ class DeserializeListener implements EventSubscriberInterface
             if (\is_object($argument) && $this->entityManager->contains($argument)) {
                 $this->requestReader->read($request, ClassUtils::getClass($argument), [
                     AbstractNormalizer::OBJECT_TO_POPULATE => $argument,
-                    AbstractNormalizer::GROUPS => $this->getDeserializationGroups($request),
+                    AbstractNormalizer::GROUPS => $this->getApiSetting($request, 'update_deserialization_groups', []),
                 ]);
 
                 // The request content can be used to populate a single entity, therefore we stop at the first one.
@@ -106,18 +104,5 @@ class DeserializeListener implements EventSubscriberInterface
         }
 
         throw new \LogicException(\sprintf('No argument to update with name "%s" found.', $argumentToUpdateName));
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return string[]
-     */
-    private function getDeserializationGroups(Request $request): array
-    {
-        return \array_merge(
-            $this->getApiSetting($request, 'update_deserialization_groups', []),
-            self::DEFAULT_DESERIALIZATION_GROUPS
-        );
     }
 }
