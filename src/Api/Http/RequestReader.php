@@ -6,10 +6,13 @@ namespace App\Api\Http;
 
 use App\Api\Exception\MalformedInputException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class RequestReader
 {
+    private const DEFAULT_DESERIALIZATION_GROUPS = ['api_request'];
+
     private SerializerInterface $serializer;
 
     /**
@@ -50,6 +53,11 @@ class RequestReader
      */
     private function setContextDefaults(array $context): array
     {
+        $context[AbstractNormalizer::GROUPS] = \array_merge(
+            $context[AbstractNormalizer::GROUPS] ?? [],
+            self::DEFAULT_DESERIALIZATION_GROUPS
+        );
+
         return \array_merge(['api_request' => true], $context);
     }
 }
