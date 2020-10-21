@@ -1,16 +1,16 @@
 App\User\Model\User:
     attributes:
         id:
-            groups: [api_respond]
+            groups: [api_response]
 
         firstName:
-            groups: [api_receive, api_respond]
+            groups: [api_request, api_response]
 
         lastName:
-            groups: [api_receive, api_respond]
+            groups: [api_request, api_response]
 
         email:
-            groups: [api_receive, api_respond]
+            groups: [api_request, api_response]
 
         plainPassword:
-            groups: [api_receive]
+            groups: [api_request]
