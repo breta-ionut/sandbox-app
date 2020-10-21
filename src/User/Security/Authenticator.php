@@ -6,6 +6,7 @@ namespace App\User\Security;
 
 use App\Api\Exception\ValidationException;
 use App\Api\Http\RequestReader;
+use App\Api\Http\ResponseFactory;
 use App\User\Model\Login;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,23 +25,27 @@ class Authenticator extends AbstractAuthenticator
     private RequestReader $requestReader;
     private ValidatorInterface $validator;
     private UserProviderInterface $userProvider;
+    private ResponseFactory $responseFactory;
 
     /**
      * @param string                $loginPath
      * @param RequestReader         $requestReader
      * @param ValidatorInterface    $validator
      * @param UserProviderInterface $userProvider
+     * @param ResponseFactory       $responseFactory
      */
     public function __construct(
         string $loginPath,
         RequestReader $requestReader,
         ValidatorInterface $validator,
-        UserProviderInterface $userProvider
+        UserProviderInterface $userProvider,
+        ResponseFactory $responseFactory
     ) {
         $this->loginPath = $loginPath;
         $this->requestReader = $requestReader;
         $this->validator = $validator;
         $this->userProvider = $userProvider;
+        $this->responseFactory = $responseFactory;
     }
 
     /**
@@ -70,7 +75,7 @@ class Authenticator extends AbstractAuthenticator
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        return null;
+        return $this->responseFactory->createFromData($token->getUser());
     }
 
     /**
