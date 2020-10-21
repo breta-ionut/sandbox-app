@@ -26,16 +26,6 @@ class UserController extends AbstractController
     }
 
     /**
-     * @param UserInterface $user
-     *
-     * @return UserInterface
-     */
-    public function login(UserInterface $user): UserInterface
-    {
-        return $user;
-    }
-
-    /**
      * @return View
      */
     public function logout(): View
