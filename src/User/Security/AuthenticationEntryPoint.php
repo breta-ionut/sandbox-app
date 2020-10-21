@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\User\Security;
 
+use App\Api\Error\Problem;
 use App\Api\Http\ResponseFactory;
-use App\User\Model\AuthenticationError;
+use App\User\Error\UserCodes;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -28,12 +29,15 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        $authenticationError = new AuthenticationError($authException);
+        $problem = (new Problem())
+            ->setTitle('Authentication required.')
+            ->setCode(UserCodes::AUTHENTICATION_REQUIRED)
+            ->setStatus(Response::HTTP_UNAUTHORIZED);
 
-        return $this->responseFactory->createFromData(
-            $authenticationError,
-            Response::HTTP_UNAUTHORIZED,
-            ['Content-Type' => 'application/problem+json']
-        );
+        if (null !== $authException) {
+            $problem->fromException($authException);
+        }
+
+        return $this->responseFactory->createFromProblem($problem);
     }
 }
