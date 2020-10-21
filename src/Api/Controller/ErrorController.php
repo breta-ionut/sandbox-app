@@ -17,6 +17,6 @@ class ErrorController
      */
     public function error(\Throwable $exception, ResponseFactory $responseFactory): JsonResponse
     {
-        return $responseFactory->createFromThrowable($exception);
+        return $responseFactory->createFromException($exception);
     }
 }
