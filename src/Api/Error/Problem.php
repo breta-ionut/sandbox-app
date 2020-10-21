@@ -17,7 +17,14 @@ class Problem
     private string $title = 'An error occurred.';
     private int $code = UserCodes::UNKNOWN_ERROR;
     private int $status = Response::HTTP_INTERNAL_SERVER_ERROR;
+
+    /**
+     * Can be the text of the status when there's no need for other info.
+     *
+     * @var string
+     */
     private string $detail;
+
     private array $headers = [];
 
     /**
@@ -84,13 +91,18 @@ class Problem
     }
 
     /**
-     * @param int $status
+     * @param int  $status
+     * @param bool $updateDetail
      *
      * @return $this
      */
-    public function setStatus(int $status): self
+    public function setStatus(int $status, bool $updateDetail = true): self
     {
         $this->status = $status;
+
+        if ($updateDetail) {
+            $this->detail = Response::$statusTexts[$status];
+        }
 
         return $this;
     }
