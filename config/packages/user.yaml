@@ -15,5 +15,8 @@ services:
         $loginPath: /api/user/login
         $userProvider: '@App\User\Security\UserProvider'
 
+    App\User\Security\LogoutListener:
+        tags: [{name: kernel.event_subscriber, dispatcher: security.event_dispatcher.main}]
+
     App\User\User\UserManager:
         $userAuthenticator: '@security.authenticator_manager.api'

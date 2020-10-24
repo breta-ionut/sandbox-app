@@ -26,14 +26,6 @@ class UserController extends AbstractController
     }
 
     /**
-     * @return View
-     */
-    public function logout(): View
-    {
-        return new View(null, Response::HTTP_NO_CONTENT);
-    }
-
-    /**
      * @param User               $user
      * @param ValidatorInterface $validator
      * @param UserManager        $userManager
