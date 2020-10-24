@@ -51,6 +51,8 @@ class Authenticator extends AbstractAuthenticator
         ResponseFactory $responseFactory
     ) {
         $this->loginPath = $loginPath;
+        $this->tokenStorage = $tokenStorage;
+        $this->authenticationTrustResolver = $authenticationTrustResolver;
         $this->requestReader = $requestReader;
         $this->validator = $validator;
         $this->userProvider = $userProvider;
