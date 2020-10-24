@@ -101,6 +101,11 @@ paths:
                     content:
                         application/json:
                             schema: {$ref: '#/components/responses/ErrorResponse'}
+                '403':
+                    description: 'If the request was made by an already authenticated user.'
+                    content:
+                        application/json:
+                            schema: {$ref: '#/components/responses/ErrorResponse'}
                 '500':
                     description: 'If an internal error occurred.'
                     content:
