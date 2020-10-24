@@ -1,0 +1,7 @@
+App\User\Model\Login:
+    attributes:
+        username:
+            groups: [api_request]
+
+        password:
+            groups: [api_request]
