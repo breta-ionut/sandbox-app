@@ -7,6 +7,7 @@ namespace App\User\Security;
 use App\Api\Exception\ValidationException;
 use App\Api\Http\RequestReader;
 use App\Api\Http\ResponseFactory;
+use App\User\Exception\AuthenticationFailedException;
 use App\User\Model\Login;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -83,7 +84,7 @@ class Authenticator extends AbstractAuthenticator
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        throw $exception;
+        throw new AuthenticationFailedException(0, $exception);
     }
 
     /**
