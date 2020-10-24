@@ -11,6 +11,8 @@ use App\User\Exception\AuthenticationFailedException;
 use App\User\Model\Login;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -23,20 +25,26 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class Authenticator extends AbstractAuthenticator
 {
     private string $loginPath;
+    private TokenStorageInterface $tokenStorage;
+    private AuthenticationTrustResolverInterface $authenticationTrustResolver;
     private RequestReader $requestReader;
     private ValidatorInterface $validator;
     private UserProviderInterface $userProvider;
     private ResponseFactory $responseFactory;
 
     /**
-     * @param string                $loginPath
-     * @param RequestReader         $requestReader
-     * @param ValidatorInterface    $validator
-     * @param UserProviderInterface $userProvider
-     * @param ResponseFactory       $responseFactory
+     * @param string                               $loginPath
+     * @param TokenStorageInterface                $tokenStorage
+     * @param AuthenticationTrustResolverInterface $authenticationTrustResolver
+     * @param RequestReader                        $requestReader
+     * @param ValidatorInterface                   $validator
+     * @param UserProviderInterface                $userProvider
+     * @param ResponseFactory                      $responseFactory
      */
     public function __construct(
         string $loginPath,
+        TokenStorageInterface $tokenStorage,
+        AuthenticationTrustResolverInterface $authenticationTrustResolver,
         RequestReader $requestReader,
         ValidatorInterface $validator,
         UserProviderInterface $userProvider,
@@ -54,7 +62,9 @@ class Authenticator extends AbstractAuthenticator
      */
     public function supports(Request $request): ?bool
     {
-        return Request::METHOD_POST === $request->getMethod() && $request->getPathInfo() === $this->loginPath;
+        return Request::METHOD_POST === $request->getMethod()
+            && $request->getPathInfo() === $this->loginPath
+            && !$this->authenticationTrustResolver->isFullFledged($this->tokenStorage->getToken());
     }
 
     /**
