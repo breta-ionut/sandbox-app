@@ -16,17 +16,17 @@ paths:
                     description: 'If the data of the current user is successfully returned.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/schemas/UserResponse'}
+                            schema: {$ref: '#/components/responses/UserResponse'}
                 '401':
                     description: 'If the request is anonymous.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/schemas/ErrorResponse'}
+                            schema: {$ref: '#/components/responses/ErrorResponse'}
                 '500':
                     description: 'If an internal error occurred.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/schemas/ErrorResponse'}
+                            schema: {$ref: '#/components/responses/ErrorResponse'}
 
         post:
             summary: Register
@@ -51,22 +51,22 @@ paths:
                     description: 'If the user was successfully registered.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/schemas/UserResponse'}
+                            schema: {$ref: '#/components/responses/UserResponse'}
                 '400':
                     description: 'If the data sent for register is malformed (e.g. bad JSON) or invalid (e.g. email is already in use).'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/schemas/ValidationErrorResponse'}
+                            schema: {$ref: '#/components/responses/ValidationErrorResponse'}
                 '403':
                     description: 'If the request was made by an already authenticated user.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/schemas/ErrorResponse'}
+                            schema: {$ref: '#/components/responses/ErrorResponse'}
                 '500':
                     description: 'If an internal error occurred.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/schemas/ErrorResponse'}
+                            schema: {$ref: '#/components/responses/ErrorResponse'}
 
     /api/user/login:
         post:
@@ -90,22 +90,22 @@ paths:
                     description: 'If the user successfully logged in.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/schemas/UserResponse'}
+                            schema: {$ref: '#/components/responses/UserResponse'}
                 '400':
                     description: 'If the data sent for login is malformed (e.g. bad JSON) or invalid (e.g. email has invalid format).'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/schemas/ValidationErrorResponse'}
+                            schema: {$ref: '#/components/responses/ValidationErrorResponse'}
                 '401':
                     description: 'If the login was unsuccessful.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/schemas/ErrorResponse'}
+                            schema: {$ref: '#/components/responses/ErrorResponse'}
                 '500':
                     description: 'If an internal error occurred.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/schemas/ErrorResponse'}
+                            schema: {$ref: '#/components/responses/ErrorResponse'}
 
     /api/user/logout:
         delete:
@@ -115,19 +115,14 @@ paths:
             responses:
                 '204':
                     description: 'If the current user was successfully logged out.'
-                '401':
-                    description: 'If the request is anonymous.'
-                    content:
-                        application/json:
-                            schema: {$ref: '#/components/schemas/ErrorResponse'}
                 '500':
                     description: 'If an internal error occurred.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/schemas/ErrorResponse'}
+                            schema: {$ref: '#/components/responses/ErrorResponse'}
 
 components:
-    schemas:
+    responses:
         UserResponse:
             type: object
             properties:
@@ -139,6 +134,13 @@ components:
                     format: email
 
         # Error responses.
+        ErrorResponseDebug:
+            type: object
+            properties:
+                message: {type: string}
+                class: {type: string}
+                trace: {type: array}
+
         ErrorResponse:
             type: object
             properties:
@@ -146,6 +148,7 @@ components:
                 code: {type: number}
                 status: {type: number}
                 detail: {type: string}
+                debug: {$ref: '#/components/responses/ErrorResponseDebug'}
 
         ValidationErrorResponse:
             type: object
@@ -166,4 +169,5 @@ components:
                                 items: {type: string}
                             type: {type: string}
                             payload: {type: object}
+                debug: {$ref: '#/components/responses/ErrorResponseDebug'}
         # End of - Error responses.
