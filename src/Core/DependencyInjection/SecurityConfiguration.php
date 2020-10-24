@@ -234,9 +234,7 @@ class SecurityConfiguration implements ConfigurationInterface
                                         ->end()
                                     ->end()
 
-                                    ->scalarNode('target')
-                                        ->defaultValue('/')
-                                    ->end()
+                                    ->scalarNode('target')->end()
 
                                     ->booleanNode('invalidate_session')
                                         ->defaultTrue()

@@ -324,11 +324,13 @@ class SecurityExtension extends ConfigurableExtension
         $container->setDefinition($id, $definition);
 
         // Configure logout listeners.
-        $defaultListenerDefinition = (new ChildDefinition(DefaultLogoutListener::class))
-            ->setArgument('$targetUrl', $logoutConfig['target'])
-            ->addTag('kernel.event_subscriber', ['dispatcher' => $eventDispatcherId]);
+        if (isset($logoutConfig['target'])) {
+            $defaultListenerDefinition = (new ChildDefinition(DefaultLogoutListener::class))
+                ->setArgument('$targetUrl', $logoutConfig['target'])
+                ->addTag('kernel.event_subscriber', ['dispatcher' => $eventDispatcherId]);
 
-        $container->setDefinition('security.logout_default_listener.'.$firewall, $defaultListenerDefinition);
+            $container->setDefinition('security.logout_default_listener.' . $firewall, $defaultListenerDefinition);
+        }
 
         if (!$firewallConfig['stateless'] && $logoutConfig['invalidate_session']) {
             $container->getDefinition(SessionLogoutListener::class)
