@@ -139,7 +139,9 @@ components:
             properties:
                 message: {type: string}
                 class: {type: string}
-                trace: {type: array}
+                trace:
+                    type: array
+                    items: {type: object}
 
         ErrorResponse:
             type: object
