@@ -27,6 +27,7 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [
+                    'style-loader',
                     'css-loader',
                     {
                         loader: 'postcss-loader',
@@ -43,12 +44,12 @@ module.exports = {
                 ]
             },
             {
-                test: /\.js$/,
-                use: 'babel-loader'
-            },
-            {
                 test: /\.vue$/,
                 use: 'vue-loader'
+            },
+            {
+                test: /\.js$/,
+                use: 'babel-loader'
             }
         ]
     },
