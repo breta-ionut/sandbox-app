@@ -25,22 +25,24 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.sass$/,
+                test: /\.css$/,
                 use: [
                     'vue-style-loader',
+                    'style-loader',
                     'css-loader',
                     {
-                        loader: 'sass-loader',
+                        loader: 'postcss-loader',
                         options: {
-                            sourceMap: true,
-                            sassOptions: {compressed: true}
+                            postcssOptions: {
+                                ident: 'postcss',
+                                plugins: [
+                                    require('tailwindcss'),
+                                    require('autoprefixer')
+                                ]
+                            }
                         }
                     }
                 ]
-            },
-            {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader']
             },
             {
                 test: /\.vue$/,
