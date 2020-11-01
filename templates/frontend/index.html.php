@@ -2,11 +2,9 @@
 
 <?php $view->extend('base.html.php'); ?>
 
+<?php $view['slots']->set('html_classes', 'bg-gray-100'); ?>
+
 <?php $view['slots']->set('title', 'Sandbox application'); ?>
-
-<?php $view['slots']->start('stylesheets'); ?>
-
-<?php $view['slots']->stop(); ?>
 
 <?php $view['slots']->start('body'); ?>
     <div id="app"></div>
