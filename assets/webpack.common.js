@@ -1,7 +1,6 @@
 'use strict'
 
 const path = require('path')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const {VueLoaderPlugin} = require('vue-loader')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 
@@ -28,7 +27,7 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [
-                    MiniCssExtractPlugin.loader,
+                    'style-loader',
                     'css-loader',
                     {
                         loader: 'postcss-loader',
@@ -55,7 +54,6 @@ module.exports = {
         ]
     },
     plugins: [
-        new MiniCssExtractPlugin(),
         new VueLoaderPlugin(),
         new CleanWebpackPlugin()
     ]
