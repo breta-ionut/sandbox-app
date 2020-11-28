@@ -16,7 +16,7 @@
             </div>
 
             <div class="mt-8">
-                <input type="submit" name="submit" value="Submit" class="px-4 py-2 bg-blue hover:bg-blue-dark rounded text-white font-bold" />
+                <input type="submit" name="submit" value="Submit" class="px-4 py-2 bg-blue-300 hover:bg-blue-600 rounded text-white font-bold" />
             </div>
         </form>
     </div>
