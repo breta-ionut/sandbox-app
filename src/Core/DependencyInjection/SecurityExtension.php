@@ -275,7 +275,7 @@ class SecurityExtension extends ConfigurableExtension
 
         $entryPoint = isset($firewallConfig['entry_point']) ? new Reference($firewallConfig['entry_point']) : null;
         $definition = (new ChildDefinition(ExceptionListener::class))
-            ->setArgument('$providerKey', $firewall)
+            ->setArgument('$firewallName', $firewall)
             ->setArgument('$authenticationEntryPoint', $entryPoint)
             ->setArgument('$errorPage', $firewallConfig['access_denied_url'] ?? null)
             ->setArgument(
