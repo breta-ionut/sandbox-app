@@ -4,7 +4,7 @@ import VueAxios from 'vue-axios'
 
 import routes from './routes.js'
 import axios from './axios'
-import App from './views/App.vue'
+import App from './components/App.vue'
 
 const router = createRouter({history: createWebHistory(), routes})
 
