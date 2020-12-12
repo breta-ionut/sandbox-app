@@ -12,7 +12,7 @@ restart: stop
 		make start
 
 init:
-		cp .env.dist .env
+		cp -f .env.dist .env
 		make start
 		docker-compose exec php composer install
 		docker-compose exec node npm install
