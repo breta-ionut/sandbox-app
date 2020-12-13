@@ -24,12 +24,7 @@ services:
             context: ./docker/php
         restart: on-failure
         volumes: ["./:/var/www/sandbox"]
-        environment:
-            PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
-            APP_ENV: ${APP_ENV}
-            APP_DEBUG: ${APP_DEBUG}
-            DATABASE_URL: ${DATABASE_URL}
-            REDIS_URL: ${REDIS_URL}
+        env_file: [.env]
 
     node:
         image: node:latest
@@ -39,6 +34,7 @@ services:
         restart: on-failure
         volumes: ["./:/var/www/sandbox"]
         ports: ["8080:8080"]
+        env_file: [.env]
 
     nginx:
         build:
