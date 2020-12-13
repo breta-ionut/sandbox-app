@@ -8,14 +8,14 @@ export default {
     }),
 
     mutations: {
-        setUser(state, user) {
+        set(state, user) {
             state.user = user
         },
     },
 
     actions: {
         async login({commit}, credentials) {
-            return userApi.login(credentials).then((user) => commit('setUser', user))
+            return userApi.login(credentials).then((user) => commit('set', user))
         },
     },
 }
