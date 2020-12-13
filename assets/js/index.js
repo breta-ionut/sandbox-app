@@ -1,3 +1,6 @@
+import 'core-js'
+import 'regenerator-runtime/runtime'
+
 import {createApp} from 'vue'
 import {createRouter, createWebHistory} from 'vue-router'
 import VueAxios from 'vue-axios'
