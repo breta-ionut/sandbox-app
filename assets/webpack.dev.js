@@ -17,10 +17,10 @@ module.exports = merge(commonConfig, {
         allowedHosts: ['localhost', 'sandbox.local'],
         headers: {'Access-Control-Allow-Origin': '*'},
         hot: true,
-        watchOptions: {poll: true}
+        watchOptions: {poll: true},
     },
     output: {publicPath: 'https://localhost:8080/'},
     plugins: [
-        new ManifestPlugin({publicPath: 'https://localhost:8080/'})
-    ]
+        new ManifestPlugin({publicPath: 'https://localhost:8080/'}),
+    ],
 })

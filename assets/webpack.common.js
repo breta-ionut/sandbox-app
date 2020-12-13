@@ -6,7 +6,7 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 
 module.exports = {
     entry: {
-        index: path.resolve(__dirname, './js/index.js')
+        index: path.resolve(__dirname, './js/index.js'),
     },
     output: {
         path: path.resolve(__dirname, '../public/build/app'),
@@ -20,7 +20,7 @@ module.exports = {
                         `Entry "${pathData.chunk.name}" contains unknown content type "${pathData.contentHashType}".`
                     )
             }
-        }
+        },
     },
     module: {
         rules: [
@@ -44,11 +44,11 @@ module.exports = {
             {
                 test: /\.js$/,
                 use: 'babel-loader'
-            }
-        ]
+            },
+        ],
     },
     plugins: [
         new VueLoaderPlugin(),
-        new CleanWebpackPlugin()
-    ]
+        new CleanWebpackPlugin(),
+    ],
 }

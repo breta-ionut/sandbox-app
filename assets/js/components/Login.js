@@ -9,6 +9,6 @@ export default {
     methods: {
         login() {
             userApi.login({username: this.username, password: this.password})
-        }
-    }
+        },
+    },
 }

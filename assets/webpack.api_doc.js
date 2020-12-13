@@ -6,10 +6,10 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 module.exports = {
     mode: 'production',
     entry: {
-        api_doc: path.resolve(__dirname, './js/api_doc.js')
+        api_doc: path.resolve(__dirname, './js/api_doc.js'),
     },
     output: {
-        path: path.resolve(__dirname, '../public/build/api_doc')
+        path: path.resolve(__dirname, '../public/build/api_doc'),
     },
     module: {
         rules: [
@@ -20,10 +20,10 @@ module.exports = {
             {
                 test: /\.js$/,
                 use: 'babel-loader'
-            }
-        ]
+            },
+        ],
     },
     plugins: [
-        new CleanWebpackPlugin()
-    ]
+        new CleanWebpackPlugin(),
+    ],
 }
