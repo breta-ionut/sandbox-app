@@ -1,8 +1,11 @@
 'use strict'
 
 const path = require('path')
+const webpack = require('webpack')
 const {VueLoaderPlugin} = require('vue-loader')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
+
+const globals = require('./js/globals.js')
 
 module.exports = {
     entry: {
@@ -50,5 +53,6 @@ module.exports = {
     plugins: [
         new VueLoaderPlugin(),
         new CleanWebpackPlugin(),
+        new webpack.DefinePlugin(globals),
     ],
 }
