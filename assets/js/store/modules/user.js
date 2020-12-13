@@ -14,7 +14,7 @@ export default {
     },
 
     actions: {
-        login({commit}, credentials) {
+        async login({commit}, credentials) {
             return userApi.login(credentials).then((user) => commit('setUser', user))
         },
     },
