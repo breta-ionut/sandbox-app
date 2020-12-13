@@ -1,5 +1,3 @@
-import userApi from '../api/user.js'
-
 export default {
     data: () => ({
         username: null,
@@ -8,7 +6,7 @@ export default {
 
     methods: {
         login() {
-            userApi.login({username: this.username, password: this.password})
+            this.$store.dispatch('login', {username: this.username, password: this.password})
         },
     },
 }
