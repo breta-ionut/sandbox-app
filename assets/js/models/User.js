@@ -11,7 +11,7 @@ export default class User {
         return _.assign(new User(), _.pick(['firstName', 'lastName', 'email', 'plainPassword'], data))
     }
 
-    static fromApiResponse(data) {
+    static fromApiResponseData(data) {
         return _.assign(new User(), _.pick(['id', 'firstName', 'lastName', 'email'], data))
     }
 

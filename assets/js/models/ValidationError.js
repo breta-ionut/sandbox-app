@@ -1,12 +1,18 @@
-import Error from './Error.js';
+import _ from 'lodash'
+import Error from './Error.js'
+import ConstraintViolation from './ConstraintViolation.js'
 
 export class ValidationError extends Error {
     violations = []
 
-    constructor(title, code, detail, violations) {
-        super(title, code, detail);
+    static fromApiResponseData(data) {
+        let validationError = _.assign(new ValidationError(), _.pick(['title', 'code', 'detail'], data))
 
-        this.violations = violations
+        validationError.violations = data.violations.map(
+            (violationData) => ConstraintViolation.fromApiResponseData(violationData)
+        )
+
+        return validationError
     }
 
     getViolations() {
