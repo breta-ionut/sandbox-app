@@ -1,12 +1,16 @@
-import _ from 'lodash'
-
 export default class Error {
     title
     code
     detail
 
-    static fromApiResponseData(data) {
-        return _.assign(new Error(), _.pick(['title', 'code', 'detail'], data))
+    constructor(title, code, detail) {
+        this.title = title
+        this.code = code
+        this.detail = detail
+    }
+
+    static fromApiResponseData({title, code, detail}) {
+        return new Error(title, code, detail)
     }
 
     getTitle() {
