@@ -2,7 +2,7 @@ import _ from 'lodash'
 import Error from './Error.js'
 import ConstraintViolation from './ConstraintViolation.js'
 
-export class ValidationError extends Error {
+export default class ValidationError extends Error {
     violations = []
 
     static fromApiResponseData(data) {
