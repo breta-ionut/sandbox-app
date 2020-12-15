@@ -1,6 +1,7 @@
 import _ from 'lodash'
-import Error from './Error.js'
+
 import ConstraintViolation from './ConstraintViolation.js'
+import Error from './Error.js'
 
 export default class ValidationError extends Error {
     violations = []
