@@ -20,6 +20,7 @@
     },
     "devDependencies": {
         "@babel/core": "^7.12.3",
+        "@babel/plugin-proposal-class-properties": "^7.12.1",
         "@babel/preset-env": "^7.12.1",
         "@vue/cli": "^4.5.8",
         "@vue/compiler-sfc": "^3.0.0",
