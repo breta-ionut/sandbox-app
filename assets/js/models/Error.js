@@ -12,16 +12,4 @@ export default class Error {
     static fromApiResponseData({title, code, detail}) {
         return new Error(title, code, detail)
     }
-
-    getTitle() {
-        return this.title
-    }
-
-    getCode() {
-        return this.code
-    }
-
-    getDetail() {
-        return this.detail
-    }
 }

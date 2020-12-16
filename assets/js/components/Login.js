@@ -1,20 +1,15 @@
-import {mapState} from 'vuex'
+import userApi from '../api/user.js'
+import Credentials from '../models/Credentials.js'
 
 export default {
     data: () => ({
-        username: null,
-        password: null,
+        username: '',
+        password: '',
     }),
-
-    computed: mapState('user', ['user']),
 
     methods: {
         login() {
-            this.$store.dispatch('user/login', {username: this.username, password: this.password})
+            userApi.login(Credentials.fromViewData(this)).then((user) => this.$store.commit('user/set', user))
         },
     },
-
-    created() {
-        this.$store.dispatch('user/get')
-    }
 }

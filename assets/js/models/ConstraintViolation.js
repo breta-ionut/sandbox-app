@@ -7,12 +7,4 @@ export default class ConstraintViolation {
     static fromApiResponseData(data) {
         return _.assign(new ConstraintViolation(), _.pick(['propertyPath', 'title'], data))
     }
-
-    getPropertyPath() {
-        return this.propertyPath
-    }
-
-    getTitle() {
-        return this.title
-    }
 }

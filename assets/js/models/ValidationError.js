@@ -15,8 +15,4 @@ export default class ValidationError extends Error {
 
         return validationError
     }
-
-    getViolations() {
-        return this.violations
-    }
 }
