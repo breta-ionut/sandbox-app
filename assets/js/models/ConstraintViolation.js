@@ -11,6 +11,10 @@ export default class ConstraintViolation {
         return instance
     }
 
+    hasPropertyPath() {
+        return !!this.#propertyPath
+    }
+
     getPropertyPath() {
         return this.#propertyPath
     }

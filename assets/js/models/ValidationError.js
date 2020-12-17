@@ -18,7 +18,7 @@ export default class ValidationError extends Error {
 
     getTitlesOfErrorsWithoutPropertyPath() {
         return this.#violations
-            .filter((violation) => !violation.propertyPath)
+            .filter((violation) => !violation.hasPropertyPath())
             .map((violation) => violation.title)
     }
 
@@ -26,10 +26,18 @@ export default class ValidationError extends Error {
         const errorTitles = {}
 
         this.#violations.forEach((violation) => {
-            if (undefined === errorTitles[violation.propertyPath]) {
-                errorTitles[violation.propertyPath] = []
+            let propertyPath
+
+            if (!violation.hasPropertyPath()) {
+                return
+            }
+
+            propertyPath = violation.getPropertyPath()
+
+            if (undefined === errorTitles[propertyPath]) {
+                errorTitles[propertyPath] = [violation.getTitle()]
             } else {
-                errorTitles[violation.propertyPath].push(violation.title)
+                errorTitles[propertyPath].push(violation.getTitle())
             }
         })
 
