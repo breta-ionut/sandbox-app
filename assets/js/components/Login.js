@@ -9,7 +9,7 @@ export default {
 
     methods: {
         login() {
-            userApi.login(Credentials.fromViewData(this)).then((user) => this.$store.commit('user/set', user))
+            userApi.login(Credentials.fromViewData(this.$data)).then((user) => this.$store.commit('user/set', user))
         },
     },
 }

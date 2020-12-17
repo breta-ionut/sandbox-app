@@ -1,18 +1,18 @@
-import _ from 'lodash'
-
 import ConstraintViolation from './ConstraintViolation.js'
 import Error from './Error.js'
 
 export default class ValidationError extends Error {
-    violations = []
+    #violations = []
 
-    static fromApiResponseData(data) {
-        let validationError = _.assign(new ValidationError(), _.pick(['title', 'code', 'detail'], data))
+    static fromApiResponseData({title, code, detail, violations}) {
+        let instance = super.fromApiResponseData({title, code, detail})
 
-        validationError.violations = data.violations.map(
-            (violationData) => ConstraintViolation.fromApiResponseData(violationData)
-        )
+        instance.#violations = violations.map((violationData) => ConstraintViolation.fromApiResponseData(violationData))
 
-        return validationError
+        return instance
+    }
+
+    getViolations() {
+        return this.#violations
     }
 }

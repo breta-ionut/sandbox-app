@@ -1,10 +1,17 @@
-import _ from 'lodash'
-
 export default class Credentials {
-    username
-    password
+    #username
+    #password
 
-    static fromViewData(data) {
-        return _.assign(new Credentials(), _.pick(['username', 'password'], data))
+    static fromViewData({username, password}) {
+        const instance = new Credentials()
+
+        instance.#username = username
+        instance.#password = password
+
+        return instance
+    }
+
+    toJSON() {
+        return {username: this.#username, password: this.#password}
     }
 }

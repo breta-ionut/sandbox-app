@@ -1,10 +1,21 @@
-import _ from 'lodash'
-
 export default class ConstraintViolation {
-    propertyPath
-    title
+    #propertyPath
+    #title
 
-    static fromApiResponseData(data) {
-        return _.assign(new ConstraintViolation(), _.pick(['propertyPath', 'title'], data))
+    static fromApiResponseData({propertyPath, title}) {
+        const instance = new ConstraintViolation()
+
+        instance.#propertyPath = propertyPath
+        instance.#title = title
+
+        return instance
+    }
+
+    getPropertyPath() {
+        return this.#propertyPath
+    }
+
+    getTitle() {
+        return this.#title
     }
 }
