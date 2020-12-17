@@ -5,7 +5,7 @@ export default class ValidationError extends Error {
     #violations = []
 
     static fromApiResponseData({title, code, detail, violations}) {
-        let instance = super.fromApiResponseData({title, code, detail})
+        let instance = new ValidationError(title, code, detail)
 
         instance.#violations = violations.map((violationData) => ConstraintViolation.fromApiResponseData(violationData))
 
