@@ -4,3 +4,6 @@ App\User\Model\Login:
             - NotBlank: ~
             - Length: {max: 255}
             - Email: ~
+
+        password:
+            - NotBlank: ~
