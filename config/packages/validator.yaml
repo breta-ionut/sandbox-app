@@ -1,0 +1,2 @@
+validator:
+    email_validation_mode: html5
