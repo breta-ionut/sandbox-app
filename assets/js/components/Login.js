@@ -7,7 +7,7 @@ export default {
     data: () => ({
         username: '',
         password: '',
-        errors: {},
+        errors: {fields: {}},
     }),
 
     methods: {
