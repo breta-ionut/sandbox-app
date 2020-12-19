@@ -3,15 +3,19 @@ import errorCodes from '../api/errorCodes.js'
 import Credentials from '../models/Credentials.js'
 import ValidationError from '../models/ValidationError.js'
 
+const noErrors = () => ({global: [], fields: {}})
+
 export default {
     data: () => ({
         username: '',
         password: '',
-        errors: {fields: {}},
+        errors: noErrors(),
     }),
 
     methods: {
         login() {
+            this.errors = noErrors()
+
             userApi.login(Credentials.fromViewData(this.$data))
                 .then((user) => this.$store.commit('user/set', user))
                 .catch((error) => {

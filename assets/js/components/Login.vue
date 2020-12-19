@@ -3,7 +3,7 @@
 <template>
     <div class="flex justify-center py-16">
         <form class="px-8 py-4 bg-white border rounded shadow-md" @submit.prevent="login">
-            <div class="mt-2 mb-6 p-2 bg-red-100 border border-red-500 rounded text-sm text-red-500 text-center" v-if="errors.global">
+            <div class="mt-2 mb-6 p-2 bg-red-100 border border-red-500 rounded text-sm text-red-500 text-center" v-if="errors.global.length">
                 <p v-for="error in errors.global">{{ error }}</p>
             </div>
 
