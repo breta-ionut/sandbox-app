@@ -16,14 +16,14 @@ export default class ValidationError extends Error {
         return this.#violations
     }
 
-    getTitlesOfErrorsWithoutPropertyPath() {
+    getGlobalViolationTitles() {
         return this.#violations
             .filter((violation) => !violation.hasPropertyPath())
-            .map((violation) => violation.title)
+            .map((violation) => violation.getTitle())
     }
 
-    getErrorTitlesByPropertyPath() {
-        const errorTitles = {}
+    getFieldsViolationTitles() {
+        const violationTitles = {}
 
         this.#violations.forEach((violation) => {
             let propertyPath
@@ -34,13 +34,13 @@ export default class ValidationError extends Error {
 
             propertyPath = violation.getPropertyPath()
 
-            if (undefined === errorTitles[propertyPath]) {
-                errorTitles[propertyPath] = [violation.getTitle()]
+            if (undefined === violationTitles[propertyPath]) {
+                violationTitles[propertyPath] = [violation.getTitle()]
             } else {
-                errorTitles[propertyPath].push(violation.getTitle())
+                violationTitles[propertyPath].push(violation.getTitle())
             }
         })
 
-        return errorTitles
+        return violationTitles
     }
 }
