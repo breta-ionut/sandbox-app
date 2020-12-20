@@ -190,10 +190,6 @@ class SecurityConfiguration implements ConfigurationInterface
                                 ->defaultTrue()
                             ->end()
 
-                            ->booleanNode('anonymous')
-                                ->defaultFalse()
-                            ->end()
-
                             ->booleanNode('stateless')
                                 ->defaultFalse()
                             ->end()

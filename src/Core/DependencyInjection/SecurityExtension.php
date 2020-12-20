@@ -11,7 +11,6 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
@@ -28,8 +27,8 @@ use Symfony\Component\Security\Http\EventListener\DefaultLogoutListener;
 use Symfony\Component\Security\Http\EventListener\SessionLogoutListener;
 use Symfony\Component\Security\Http\EventListener\SessionStrategyListener;
 use Symfony\Component\Security\Http\EventListener\UserCheckerListener;
+use Symfony\Component\Security\Http\EventListener\UserProviderListener;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
-use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\AuthenticatorManagerListener;
 use Symfony\Component\Security\Http\Firewall\ChannelListener;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
@@ -131,10 +130,6 @@ class SecurityExtension extends ConfigurableExtension
                 $firewallConfig,
                 $eventDispatcherId
             );
-        }
-
-        if ($firewallConfig['anonymous']) {
-            $listeners[] = new Reference(AnonymousAuthenticationListener::class);
         }
 
         $listeners[] = new Reference(AccessListener::class);
@@ -248,6 +243,16 @@ class SecurityExtension extends ConfigurableExtension
             ->setArgument('$authenticationManager', new Reference($authenticatorManagerId));
 
         $container->setDefinition($id, $definition);
+
+        // Configure AuthenticatorManager listeners.
+        if (isset($firewallConfig['user_provider'])) {
+            $userProvider = new Reference($firewallConfig['user_provider']);
+            $userProviderListenerDefinition = (new ChildDefinition(UserProviderListener::class))
+                ->setArgument('$userProvider', $userProvider)
+                ->addTag('kernel.event_subscriber', ['dispatcher' => $eventDispatcherId]);
+
+            $container->setDefinition('security.user_provider_listener.'.$firewall, $userProviderListenerDefinition);
+        }
 
         $userChecker = new Reference($firewallConfig['user_checker'] ?? UserCheckerInterface::class);
         $userCheckerListenerDefinition = (new ChildDefinition(UserCheckerListener::class))
@@ -402,8 +407,5 @@ class SecurityExtension extends ConfigurableExtension
         $container->getDefinition(RetryAuthenticationEntryPoint::class)
             ->setArgument('$httpPort', $config['http_port'])
             ->setArgument('$httpsPort', $config['https_port']);
-
-        $container->getDefinition(AnonymousAuthenticationListener::class)
-            ->setArgument('$secret', new Parameter('container.build_hash'));
     }
 }

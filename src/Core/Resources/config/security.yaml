@@ -90,6 +90,10 @@ services:
     Symfony\Component\Security\Http\EventListener\UserCheckerListener:
         abstract: true
         arguments: [!abstract user checker]
+
+    Symfony\Component\Security\Http\EventListener\UserProviderListener:
+        abstract: true
+        arguments: [!abstract user provider]
     # End of - Listeners.
 
     # Firewalls.
@@ -100,13 +104,6 @@ services:
             - '@Symfony\Component\Security\Http\AccessMapInterface'
             - '@Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface'
             - false
-
-    Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener:
-        arguments:
-            - '@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
-            - !abstract secret
-            - '@Psr\Log\LoggerInterface'
-            - '@Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface'
 
     Symfony\Component\Security\Http\Firewall\AuthenticatorManagerListener:
         abstract: true
