@@ -249,7 +249,7 @@ class SecurityExtension extends ConfigurableExtension
             $userProvider = new Reference($firewallConfig['user_provider']);
             $userProviderListenerDefinition = (new ChildDefinition(UserProviderListener::class))
                 ->setArgument('$userProvider', $userProvider)
-                ->addTag('kernel.event_subscriber', ['dispatcher' => $eventDispatcherId]);
+                ->addTag('kernel.event_listener', ['method' => 'checkPassport', 'dispatcher' => $eventDispatcherId]);
 
             $container->setDefinition('security.user_provider_listener.'.$firewall, $userProviderListenerDefinition);
         }
