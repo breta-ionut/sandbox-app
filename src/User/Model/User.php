@@ -17,6 +17,7 @@ class User implements UserInterface
     private array $roles = [self::ROLE_DEFAULT];
     private string $plainPassword;
     private string $password;
+    private Token $currentToken;
 
     /**
      * @return int
@@ -175,6 +176,26 @@ class User implements UserInterface
     }
 
     /**
+     * @return Token
+     */
+    public function getCurrentToken(): Token
+    {
+        return $this->currentToken;
+    }
+
+    /**
+     * @param Token $currentToken
+     *
+     * @return $this
+     */
+    public function setCurrentToken(Token $currentToken): self
+    {
+        $this->currentToken = $currentToken;
+
+        return $this;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getSalt()
@@ -196,43 +217,5 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         unset($this->plainPassword);
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->email;
-    }
-
-    /**
-     * @return array
-     */
-    public function __serialize(): array
-    {
-        return [
-            $this->id,
-            $this->firstName,
-            $this->lastName,
-            $this->email,
-            $this->roles,
-            $this->password,
-        ];
-    }
-
-    /**
-     * @param array $data
-     */
-    public function __unserialize(array $data): void
-    {
-        [
-            $this->id,
-            $this->firstName,
-            $this->lastName,
-            $this->email,
-            $this->roles,
-            $this->password,
-        ] = $data;
     }
 }

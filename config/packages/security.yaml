@@ -13,7 +13,6 @@ security:
 
         api:
             path: ^/api/
-            anonymous: true
             entry_point: App\User\Security\AuthenticationEntryPoint
             access_denied_handler: App\User\Security\AccessDeniedHandler
             logout: {path: /api/user/logout}
