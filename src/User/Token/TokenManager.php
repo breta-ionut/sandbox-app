@@ -19,18 +19,21 @@ class TokenManager
     /**
      * @var int In minutes.
      */
-    private int $tokenLifetime;
+    private int $tokenAvailability;
 
     /**
      * @param TokenRepository        $repository
      * @param EntityManagerInterface $entityManager
-     * @param int                    $tokenLifetime
+     * @param int                    $tokenAvailability
      */
-    public function __construct(TokenRepository $repository, EntityManagerInterface $entityManager, int $tokenLifetime)
-    {
+    public function __construct(
+        TokenRepository $repository,
+        EntityManagerInterface $entityManager,
+        int $tokenAvailability
+    ) {
         $this->repository = $repository;
         $this->entityManager = $entityManager;
-        $this->tokenLifetime = $tokenLifetime;
+        $this->tokenAvailability = $tokenAvailability;
     }
 
     /**
@@ -44,7 +47,7 @@ class TokenManager
             $token = $this->create($user);
         }
 
-        $token->setExpiresAt(new \DateTime(\sprintf('+%d minutes', $this->tokenLifetime)));
+        $token->setExpiresAt(new \DateTime(\sprintf('+%d minutes', $this->tokenAvailability)));
 
         $this->entityManager->flush();
 
