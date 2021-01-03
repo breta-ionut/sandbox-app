@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Command\Doctrine\ORM;
+namespace App\Core\Command\Doctrine;
 
-use App\Core\Command\Doctrine\DoctrineCommandTrait;
 use Doctrine\DBAL\Tools\Console\Command\RunSqlCommand as BaseRunSqlCommand;
 
 class RunSqlCommand extends BaseRunSqlCommand

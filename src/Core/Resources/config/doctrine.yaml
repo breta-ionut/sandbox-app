@@ -22,26 +22,26 @@ services:
         factory: ['@Doctrine\ORM\EntityManager', getConnection]
 
     # Commands.
-    App\Core\Command\Doctrine\ORM\ClearMetadataCacheCommand: {tags: [console.command]}
-    App\Core\Command\Doctrine\ORM\ClearQueryCacheCommand: {tags: [console.command]}
-    App\Core\Command\Doctrine\ORM\ClearResultCacheCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\ClearMetadataCacheCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\ClearQueryCacheCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\ClearResultCacheCommand: {tags: [console.command]}
 
-    App\Core\Command\Doctrine\ORM\CreateDatabaseCommand:
+    App\Core\Command\Doctrine\CreateDatabaseCommand:
         arguments: ['@Doctrine\DBAL\Connection']
         tags: [console.command]
 
-    App\Core\Command\Doctrine\ORM\CreateSchemaCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\CreateSchemaCommand: {tags: [console.command]}
 
-    App\Core\Command\Doctrine\ORM\DropDatabaseCommand:
+    App\Core\Command\Doctrine\DropDatabaseCommand:
         arguments: ['@Doctrine\DBAL\Connection']
         tags: [console.command]
 
-    App\Core\Command\Doctrine\ORM\DropSchemaCommand: {tags: [console.command]}
-    App\Core\Command\Doctrine\ORM\EnsureProductionSettingsCommand: {tags: [console.command]}
-    App\Core\Command\Doctrine\ORM\InfoCommand: {tags: [console.command]}
-    App\Core\Command\Doctrine\ORM\MappingDescribeCommand: {tags: [console.command]}
-    App\Core\Command\Doctrine\ORM\RunDqlCommand: {tags: [console.command]}
-    App\Core\Command\Doctrine\ORM\RunSqlCommand: {tags: [console.command]}
-    App\Core\Command\Doctrine\ORM\UpdateSchemaCommand: {tags: [console.command]}
-    App\Core\Command\Doctrine\ORM\ValidateSchemaCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\DropSchemaCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\EnsureProductionSettingsCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\InfoCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\MappingDescribeCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\RunDqlCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\RunSqlCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\UpdateSchemaCommand: {tags: [console.command]}
+    App\Core\Command\Doctrine\ValidateSchemaCommand: {tags: [console.command]}
     # End of - Commands.

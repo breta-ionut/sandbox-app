@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Command\Doctrine\ORM;
+namespace App\Core\Command\Doctrine;
 
-use App\Core\Command\Doctrine\DoctrineCommandTrait;
 use Doctrine\ORM\Tools\Console\Command\MappingDescribeCommand as BaseMappingDescribeCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
@@ -41,9 +40,9 @@ class MappingDescribeCommand extends Command
 
         $this->setName(self::$defaultName)
             ->setAliases([])
-            ->setHelp($this->command->getHelp())
             ->setDefinition($this->command->getDefinition())
-            ->setDescription($this->command->getDescription());
+            ->setDescription($this->command->getDescription())
+            ->setHelp($this->command->getHelp());
     }
 
     /**

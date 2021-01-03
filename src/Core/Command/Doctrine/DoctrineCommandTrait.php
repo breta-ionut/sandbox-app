@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Core\Command\Doctrine;
 
-use Doctrine\Migrations\Configuration\Configuration;
-use Doctrine\Migrations\Tools\Console\Command\AbstractCommand as AbstractDoctrineMigrationsCommand;
-use Doctrine\Migrations\Tools\Console\Helper\ConfigurationHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Psr\Container\ContainerInterface;
@@ -30,14 +27,6 @@ trait DoctrineCommandTrait
 
         foreach (ConsoleRunner::createHelperSet($entityManager) as $alias => $helper) {
             $helperSet->set($helper, $alias);
-        }
-
-        // Additional helpers are needed by Doctrine Migrations commands.
-        if ($this instanceof AbstractDoctrineMigrationsCommand) {
-            $helperSet->set(
-                new ConfigurationHelper($entityManager->getConnection(), $container->get(Configuration::class)),
-                'configuration'
-            );
         }
 
         parent::setHelperSet($helperSet);
