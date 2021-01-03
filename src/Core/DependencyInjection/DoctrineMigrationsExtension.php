@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Core\DependencyInjection;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\Migrations\Configuration\Configuration;
+use Doctrine\Migrations\Configuration\Migration\ExistingConfiguration;
+use Doctrine\Migrations\Metadata\Storage\TableMetadataStorageConfiguration;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
 class DoctrineMigrationsExtension extends ConfigurableExtension
@@ -25,7 +25,8 @@ class DoctrineMigrationsExtension extends ConfigurableExtension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('doctrine_migrations.yaml');
 
-        $container->setDefinition(Configuration::class, $this->createMigrationsConfiguration($mergedConfig));
+        $container->getDefinition(ExistingConfiguration::class)
+            ->setArgument('$configurations', $this->createMigrationsConfiguration($mergedConfig));
     }
 
     /**
@@ -35,31 +36,40 @@ class DoctrineMigrationsExtension extends ConfigurableExtension
      */
     private function createMigrationsConfiguration(array $config): Definition
     {
-        $definition = new Definition(Configuration::class);
-        $definition->setArguments([new Reference(Connection::class)])
-            ->addMethodCall('setName', [$config['name']])
-            ->addMethodCall('setMigrationsTableName', [$config['table_name']])
-            ->addMethodCall('setMigrationsColumnName', [$config['column_name']])
-            ->addMethodCall('setMigrationsColumnLength', [$config['column_length']])
-            ->addMethodCall('setMigrationsExecutedAtColumnName', [$config['executed_at_column_name']])
-            ->addMethodCall('setMigrationsDirectory', [$config['dir']])
-            ->addMethodCall('setMigrationsNamespace', [$config['namespace']])
+        $definition = (new Definition(Configuration::class))
+            ->addMethodCall('setMigrationOrganization', [$config['organize_migrations']])
             ->addMethodCall('setCustomTemplate', [$config['custom_template']])
             ->addMethodCall('setAllOrNothing', [$config['all_or_nothing']])
-            ->setPublic(true);
+            ->addMethodCall('setCheckDatabasePlatform', [$config['check_database_platform']])
+            ->addMethodCall(
+                'setMetadataStorageConfiguration',
+                [$this->createMigrationsStorageConfiguration($config['storage'])]
+            );
 
-        switch ($config['organized_by']) {
-            case 'year':
-                $definition->addMethodCall('setMigrationsAreOrganizedByYear', [true]);
-
-                break;
-
-            case 'year_and_month':
-                $definition->addMethodCall('setMigrationsAreOrganizedByYearAndMonth', [true]);
-
-                break;
+        foreach ($config['migrations_paths'] as $namespace => $path) {
+            $definition->addMethodCall('addMigrationsDirectory', [$namespace, $path]);
+        }
+        foreach ($config['migrations'] as $migration) {
+            $definition->addMethodCall('addMigrationClass', [$migration]);
         }
 
+        $definition->addMethodCall('freeze');
+
         return $definition;
+    }
+
+    /**
+     * @param array $config
+     *
+     * @return Definition
+     */
+    private function createMigrationsStorageConfiguration(array $config): Definition
+    {
+        return (new Definition(TableMetadataStorageConfiguration::class))
+            ->addMethodCall('setTableName', [$config['table_name']])
+            ->addMethodCall('setVersionColumnName', [$config['version_column_name']])
+            ->addMethodCall('setVersionColumnLength', [$config['version_column_length']])
+            ->addMethodCall('setExecutedAtColumnName', [$config['executed_at_column_name']])
+            ->addMethodCall('setExecutionTimeColumnName', [$config['execution_time_column_name']]);
     }
 }
