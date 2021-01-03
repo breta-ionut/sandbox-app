@@ -18,53 +18,22 @@ class DoctrineMigrationsConfiguration implements ConfigurationInterface
         $root = $treeBuilder->getRootNode();
 
         $root
+            ->fixXmlConfig('migration_path')
+            ->fixXmlConfig('migration')
+
             ->children()
-                ->scalarNode('name')
-                    ->cannotBeEmpty()
-                    ->defaultValue('Application migrations')
+                ->arrayNode('migration_paths')
+                    ->useAttributeAsKey('namespace')
+                    ->normalizeKeys(false)
+                    ->defaultValue(['AppMigrations' => '%kernel.project_dir%/src/Migrations'])
+
+                    ->scalarPrototype()->end()
                 ->end()
 
-                ->scalarNode('table_name')
-                    ->cannotBeEmpty()
-                    ->defaultValue('migration_versions')
-                ->end()
-
-                ->scalarNode('column_name')
-                    ->cannotBeEmpty()
-                    ->defaultValue('version')
-                ->end()
-
-                ->integerNode('column_length')
-                    ->min(1)
-                    ->defaultValue(14)
-                ->end()
-
-                ->scalarNode('executed_at_column_name')
-                    ->cannotBeEmpty()
-                    ->defaultValue('executed_at')
-                ->end()
-
-                ->scalarNode('dir')
-                    ->cannotBeEmpty()
-                    ->defaultValue('%kernel.project_dir%/src/Migrations')
-                ->end()
-
-                ->scalarNode('namespace')
-                    ->cannotBeEmpty()
-                    ->defaultValue('AppMigrations')
-                ->end()
-
-                ->enumNode('organized_by')
-                    ->values([false, 'year', 'year_and_month'])
-                    ->defaultValue(false)
-                ->end()
-
-                ->scalarNode('custom_template')
-                    ->defaultValue(null)
-                ->end()
-
-                ->booleanNode('all_or_nothing')
-                    ->defaultValue(false)
+                ->arrayNode('migrations')
+                    ->scalarPrototype()
+                        ->cannotBeEmpty()
+                    ->end()
                 ->end()
             ->end();
 
