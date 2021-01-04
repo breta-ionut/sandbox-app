@@ -15,7 +15,7 @@
         }
     },
     "require": {
-        "php": "^7.4",
+        "php": "^8.0",
         "doctrine/migrations": "^3.0",
         "doctrine/orm": "^2.8",
         "phpdocumentor/reflection-docblock": "^5.1",

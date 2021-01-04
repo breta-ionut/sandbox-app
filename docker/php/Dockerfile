@@ -1,4 +1,4 @@
-FROM php:7.4-fpm
+FROM php:8.0-fpm
 
 ARG PHP_USER_ID=1000
 ARG PHP_GROUP_ID=1000
@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y git zip
 RUN docker-php-ext-install opcache pdo_mysql \
     && pecl install apcu xdebug \
     && docker-php-ext-enable apcu xdebug \
-    && echo "\nxdebug.remote_enable=1\nxdebug.remote_host=$PHP_HOST_IP" \
+    && echo "\nxdebug.mode=debug\nxdebug.client_host=$PHP_HOST_IP" \
         >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 COPY scripts/install_composer.sh /tmp/install_composer.sh
