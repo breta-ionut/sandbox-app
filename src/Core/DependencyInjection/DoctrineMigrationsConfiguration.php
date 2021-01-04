@@ -39,11 +39,11 @@ class DoctrineMigrationsConfiguration implements ConfigurationInterface
 
                 ->enumNode('organize_migrations')
                     ->values([
-                        false,
+                        Configuration::VERSIONS_ORGANIZATION_NONE,
                         Configuration::VERSIONS_ORGANIZATION_BY_YEAR,
                         Configuration::VERSIONS_ORGANIZATION_BY_YEAR_AND_MONTH,
                     ])
-                    ->defaultFalse()
+                    ->defaultValue(Configuration::VERSIONS_ORGANIZATION_NONE)
                     ->treatFalseLike(Configuration::VERSIONS_ORGANIZATION_NONE)
                 ->end()
 
