@@ -11,15 +11,24 @@ security:
             path: ^/api/doc
             security: false
 
+        api_login:
+            path: ^/api/user/login$
+            methods: POST
+            stateless: true
+            entry_point: App\User\Security\AuthenticationEntryPoint
+            access_denied_handler: App\User\Security\AccessDeniedHandler
+            authenticators: [App\User\Security\Authenticator\LoginAuthenticator]
+            user_provider: App\User\Security\UserProvider\LoginUserProvider
+
         api:
             path: ^/api/
+            stateless: true
             entry_point: App\User\Security\AuthenticationEntryPoint
             access_denied_handler: App\User\Security\AccessDeniedHandler
             logout: {path: /api/user/logout}
-            authenticators: [App\User\Security\Authenticator]
-            user_provider: App\User\Security\UserProvider
+            authenticators: [App\User\Security\Authenticator\TokenAuthenticator]
+            user_provider: App\User\Security\UserProvider\TokenUserProvider
 
     access_control:
-        - {path: ^/api/user/login$, roles: IS_ANONYMOUS}
         - {path: ^/api/user$, methods: POST, roles: IS_ANONYMOUS}
         - {path: ^/api, roles: IS_AUTHENTICATED_FULLY}
