@@ -8,6 +8,8 @@ use App\Api\Exception\ValidationException;
 use App\Api\Http\RequestReader;
 use App\User\Exception\AuthenticationFailedException;
 use App\User\Model\Login;
+use App\User\Model\User;
+use App\User\Token\TokenManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -23,15 +25,18 @@ class LoginAuthenticator extends AbstractAuthenticator
 {
     private RequestReader $requestReader;
     private ValidatorInterface $validator;
+    private TokenManager $tokenManager;
 
     /**
      * @param RequestReader      $requestReader
      * @param ValidatorInterface $validator
+     * @param TokenManager       $tokenManager
      */
-    public function __construct(RequestReader $requestReader, ValidatorInterface $validator)
+    public function __construct(RequestReader $requestReader, ValidatorInterface $validator, TokenManager $tokenManager)
     {
         $this->requestReader = $requestReader;
         $this->validator = $validator;
+        $this->tokenManager = $tokenManager;
     }
 
     /**
@@ -62,6 +67,10 @@ class LoginAuthenticator extends AbstractAuthenticator
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        /** @var User $user */
+        $user = $token->getUser();
+        $user->setCurrentToken($this->tokenManager->getOrCreate($user));
+
         return null;
     }
 

@@ -46,4 +46,14 @@ class UserController extends AbstractController
 
         return new View($user, Response::HTTP_CREATED);
     }
+
+    /**
+     * @param UserInterface $user
+     *
+     * @return UserInterface
+     */
+    public function login(UserInterface $user): UserInterface
+    {
+        return $user;
+    }
 }

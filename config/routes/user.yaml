@@ -3,15 +3,16 @@ app_user_user_get:
     methods: GET
     controller: 'App\User\Controller\UserController::getUser'
 
-app_user_user_login:
-    path: /api/user/login
-    methods: POST
-
-app_user_user_logout:
-    path: /api/user/logout
-    methods: DELETE
-
 app_user_user_register:
     path: /api/user
     methods: POST
     controller: 'App\User\Controller\UserController::register'
+
+app_user_user_login:
+    path: /api/user/login
+    methods: POST
+    controller: 'App\User\Controller\UserController::login'
+
+app_user_user_logout:
+    path: /api/user/logout
+    methods: DELETE
