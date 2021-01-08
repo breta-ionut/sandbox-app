@@ -20,6 +20,22 @@ class TokenRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param string $token
+     *
+     * @return Token|null
+     */
+    public function findOneAvailableByToken(string $token): ?Token
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.token = :token')
+            ->andWhere('t.expiresAt <= CURRENT_TIMESTAMP()')
+            ->setMaxResults(1)
+            ->setParameter('token', $token)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
      * @param User $user
      *
      * @return Token|null
