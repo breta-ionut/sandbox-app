@@ -1,0 +1,7 @@
+App\User\Model\Token:
+    attributes:
+        token:
+            groups: [api_response]
+
+        expiresAt:
+            groups: [api_response]
