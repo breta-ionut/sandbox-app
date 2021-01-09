@@ -34,6 +34,9 @@ class TokenUserProvider extends AbstractUserProvider
             throw new UsernameNotFoundException(\sprintf('Token "%s" does not exist or is expired.', $username));
         }
 
-        return $token->getUser();
+        $user = $token->getUser();
+        $user->setCurrentToken($token);
+
+        return $user;
     }
 }
