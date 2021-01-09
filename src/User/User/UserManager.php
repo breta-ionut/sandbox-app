@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\User\User;
 
 use App\User\Model\User;
-use App\User\Security\Authenticator;
+use App\User\Security\Authenticator\LoginAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -16,21 +16,21 @@ class UserManager
     private UserPasswordEncoderInterface $userPasswordEncoder;
     private EntityManagerInterface $entityManager;
     private UserAuthenticatorInterface $userAuthenticator;
-    private Authenticator $authenticator;
+    private LoginAuthenticator $authenticator;
     private RequestStack $requestStack;
 
     /**
      * @param UserPasswordEncoderInterface $userPasswordEncoder
      * @param EntityManagerInterface       $entityManager
      * @param UserAuthenticatorInterface   $userAuthenticator
-     * @param Authenticator                $authenticator
+     * @param LoginAuthenticator           $authenticator
      * @param RequestStack                 $requestStack
      */
     public function __construct(
         UserPasswordEncoderInterface $userPasswordEncoder,
         EntityManagerInterface $entityManager,
         UserAuthenticatorInterface $userAuthenticator,
-        Authenticator $authenticator,
+        LoginAuthenticator $authenticator,
         RequestStack $requestStack
     ) {
         $this->userPasswordEncoder = $userPasswordEncoder;
