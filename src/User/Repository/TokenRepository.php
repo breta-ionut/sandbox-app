@@ -28,7 +28,7 @@ class TokenRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('t')
             ->where('t.token = :token')
-            ->andWhere('t.expiresAt <= CURRENT_TIMESTAMP()')
+            ->andWhere('t.expiresAt > CURRENT_TIMESTAMP()')
             ->setMaxResults(1)
             ->setParameter('token', $token)
             ->getQuery()
@@ -44,7 +44,7 @@ class TokenRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('t')
             ->where('t.user = :user')
-            ->andWhere('t.expiresAt <= CURRENT_TIMESTAMP()')
+            ->andWhere('t.expiresAt > CURRENT_TIMESTAMP()')
             ->setMaxResults(1)
             ->setParameter('user', $user)
             ->getQuery()
