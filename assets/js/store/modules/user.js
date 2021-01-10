@@ -6,7 +6,7 @@ export default {
     }),
 
     getters: {
-        token: () => localStorage.user?.token,
+        token: () => localStorage['user.token'],
         isTokenAvailable: (state, getters) => !!getters.token,
     },
 
@@ -14,8 +14,7 @@ export default {
         set(state, user) {
             state.user = user
 
-            localStorage.user = localStorage.user || {}
-            localStorage.user.token = user.getCurrentToken().getToken()
+            localStorage['user.token'] = user.getCurrentToken().getToken()
         },
     },
 }
