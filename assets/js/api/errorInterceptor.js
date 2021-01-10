@@ -4,7 +4,7 @@ import errorCodes from './errorCodes.js'
 
 const ERROR_UNKNOWN_TITLE = 'An error occurred.'
 
-export default function (error) {
+export default error => {
     if (!error.response?.data?.code) {
         throw new Error(ERROR_UNKNOWN_TITLE, errorCodes.UNKNOWN_ERROR, null)
     }

@@ -10,14 +10,14 @@ export default class Error {
     #code
 
     /**
-     * @type {string}
+     * @type {string|null}
      */
     #detail
 
     /**
      * @param {string} title
      * @param {number} code
-     * @param {string} detail
+     * @param {string|null} detail
      */
     constructor(title, code, detail) {
         this.#title = title
@@ -47,7 +47,7 @@ export default class Error {
     }
 
     /**
-     * @returns {string}
+     * @returns {string|null}
      */
     getDetail() {
         return this.#detail
