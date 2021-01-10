@@ -47,6 +47,10 @@ export default class User {
         return this.#email
     }
 
+    getCurrentToken() {
+        return this.#currentToken
+    }
+
     toJSON() {
         return {
             firstName: this.#firstName,
