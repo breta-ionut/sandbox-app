@@ -1,3 +1,5 @@
+import User from '../../models/User.js'
+
 export default {
     namespaced: true,
 
