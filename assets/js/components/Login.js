@@ -1,6 +1,7 @@
 import userApi from '../api/user.js'
 import errorCodes from '../api/errorCodes.js'
 import Credentials from '../models/Credentials.js'
+import Error from '../models/Error.js'
 import ValidationError from '../models/ValidationError.js'
 
 const noErrors = () => ({global: [], fields: {}})
@@ -19,6 +20,10 @@ export default {
             userApi.login(Credentials.fromViewData(this.$data))
                 .then((user) => this.$store.commit('user/set', user))
                 .catch((error) => {
+                    if (!error instanceof Error) {
+                        throw error
+                    }
+
                     if (error instanceof ValidationError) {
                         this.errors.global.concat(error.getGlobalViolationTitles())
                         Object.assign(this.errors.fields, error.getFieldsViolationTitles())
