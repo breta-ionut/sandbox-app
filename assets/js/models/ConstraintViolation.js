@@ -1,7 +1,17 @@
 export default class ConstraintViolation {
+    /**
+     * @type {string|null}
+     */
     #propertyPath
+
+    /**
+     * @type {string}
+     */
     #title
 
+    /**
+     * @returns {ConstraintViolation}
+     */
     static fromApiResponseData({propertyPath, title}) {
         const instance = new ConstraintViolation()
 
@@ -11,14 +21,23 @@ export default class ConstraintViolation {
         return instance
     }
 
+    /**
+     * @returns {boolean}
+     */
     hasPropertyPath() {
         return !!this.#propertyPath
     }
 
+    /**
+     * @returns {string|null}
+     */
     getPropertyPath() {
         return this.#propertyPath
     }
 
+    /**
+     * @returns {string}
+     */
     getTitle() {
         return this.#title
     }

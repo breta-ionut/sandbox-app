@@ -1,7 +1,17 @@
 export default class Credentials {
+    /**
+     * @type {string}
+     */
     #username
+
+    /**
+     * @type {string}
+     */
     #password
 
+    /**
+     * @returns {Credentials}
+     */
     static fromViewData({username, password}) {
         const instance = new Credentials()
 
@@ -11,6 +21,9 @@ export default class Credentials {
         return instance
     }
 
+    /**
+     * @returns {Object}
+     */
     toJSON() {
         return {username: this.#username, password: this.#password}
     }
