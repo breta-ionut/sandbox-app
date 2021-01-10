@@ -20,12 +20,12 @@ export default {
                 .then((user) => this.$store.commit('user/set', user))
                 .catch((error) => {
                     if (error instanceof ValidationError) {
-                        this.errors.global = error.getGlobalViolationTitles()
-                        this.errors.fields = error.getFieldsViolationTitles()
+                        this.errors.global.concat(error.getGlobalViolationTitles())
+                        Object.assign(this.errors.fields, error.getFieldsViolationTitles())
                     } else if (error.getCode() === errorCodes.AUTHENTICATION_FAILED) {
-                        this.errors.global = ['Invalid credentials.']
+                        this.errors.global.push('Invalid credentials.')
                     } else {
-                        this.errors.global = ['Unknown error occurred. Please try again.']
+                        this.errors.global.push('Unknown error occurred. Please try again.')
                     }
                 })
         },
