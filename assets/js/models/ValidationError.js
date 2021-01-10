@@ -13,7 +13,7 @@ export default class ValidationError extends Error {
     static fromApiResponseData({title, code, detail, violations}) {
         let instance = new ValidationError(title, code, detail)
 
-        instance.#violations = violations.map((violationData) => ConstraintViolation.fromApiResponseData(violationData))
+        instance.#violations = violations.map(violationData => ConstraintViolation.fromApiResponseData(violationData))
 
         return instance
     }
@@ -30,8 +30,8 @@ export default class ValidationError extends Error {
      */
     getGlobalViolationTitles() {
         return this.#violations
-            .filter((violation) => !violation.hasPropertyPath())
-            .map((violation) => violation.getTitle())
+            .filter(violation => !violation.hasPropertyPath())
+            .map(violation => violation.getTitle())
     }
 
     /**
@@ -40,7 +40,7 @@ export default class ValidationError extends Error {
     getFieldsViolationTitles() {
         const violationTitles = {}
 
-        this.#violations.forEach((violation) => {
+        this.#violations.forEach(violation => {
             let propertyPath
 
             if (!violation.hasPropertyPath()) {
