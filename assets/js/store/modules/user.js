@@ -8,18 +8,18 @@ export default {
          * @type {User}
          */
         user: null,
+
+        /**
+         * @type {string|null}
+         */
+        token: localStorage['user.token'] || null,
     }),
 
     getters: {
         /**
-         * @returns {string}
-         */
-        token: () => localStorage['user.token'],
-
-        /**
          * @returns {boolean}
          */
-        isTokenAvailable: (state, getters) => !!getters.token,
+        hasToken: state => !!state.token,
     },
 
     mutations: {
@@ -29,8 +29,7 @@ export default {
          */
         set(state, user) {
             state.user = user
-
-            localStorage['user.token'] = user.getCurrentToken().getToken()
+            localStorage['user.token'] = state.token = user.getCurrentToken().getToken()
         },
     },
 }
