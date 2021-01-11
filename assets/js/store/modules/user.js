@@ -27,7 +27,7 @@ export default {
          * @param {Object} state
          * @param {User} user
          */
-        set(state, user) {
+        setUser(state, user) {
             state.user = user
             localStorage['user.token'] = state.token = user.getCurrentToken().getToken()
         },
