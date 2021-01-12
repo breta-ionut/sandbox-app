@@ -34,19 +34,19 @@ module.exports = {
                     {
                         loader: 'css-loader',
                         options: {
-                            importLoaders: 1
-                        }
+                            importLoaders: 1,
+                        },
                     },
-                    'postcss-loader'
-                ]
+                    'postcss-loader',
+                ],
             },
             {
                 test: /\.vue$/,
-                use: 'vue-loader'
+                use: 'vue-loader',
             },
             {
                 test: /\.js$/,
-                use: 'babel-loader'
+                use: 'babel-loader',
             },
         ],
     },
