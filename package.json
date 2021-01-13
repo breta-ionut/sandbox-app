@@ -40,8 +40,8 @@
         "webpack-merge": "^4.2.2"
     },
     "scripts": {
-        "build": "NODE_ENV=production webpack --config assets/webpack.prod.js",
-        "build-api-doc": "NODE_ENV=production webpack --config assets/webpack.api_doc.js",
-        "start": "NODE_ENV=development webpack-dev-server --config assets/webpack.dev.js"
+        "build": "NODE_ENV=production npx webpack --config assets/webpack.prod.js",
+        "build-api-doc": "NODE_ENV=production npx webpack --config assets/webpack.api_doc.js",
+        "start": "NODE_ENV=development npx webpack serve --config assets/webpack.dev.js"
     }
 }

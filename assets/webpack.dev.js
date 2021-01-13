@@ -3,7 +3,7 @@
 const merge = require('webpack-merge')
 const commonConfig = require(__dirname + '/webpack.common.js')
 const path = require('path')
-const ManifestPlugin = require('webpack-manifest-plugin')
+const AssetsManifestPlugin = require('webpack-assets-manifest')
 
 module.exports = merge(commonConfig, {
     mode: 'development',
@@ -13,7 +13,6 @@ module.exports = merge(commonConfig, {
         port: 8080,
         https: true,
         contentBase: path.resolve(__dirname, '../public/build'),
-        writeToDisk: (filename) => 'manifest.json' === path.basename(filename),
         allowedHosts: ['localhost', 'sandbox.local'],
         headers: {'Access-Control-Allow-Origin': '*'},
         hot: true,
@@ -21,6 +20,6 @@ module.exports = merge(commonConfig, {
     },
     output: {publicPath: 'https://localhost:8080/'},
     plugins: [
-        new ManifestPlugin({publicPath: 'https://localhost:8080/'}),
+        new AssetsManifestPlugin({output: 'manifest.json', writeToDisk: true, publicPath: 'https://localhost:8080/'}),
     ],
 })
