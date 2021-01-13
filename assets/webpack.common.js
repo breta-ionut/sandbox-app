@@ -48,6 +48,10 @@ module.exports = {
                 test: /\.js$/,
                 use: 'babel-loader',
             },
+            {
+                test: /\.(png|svg|jpg|jpeg|gif)$/i,
+                use: 'asset/resource',
+            },
         ],
     },
     plugins: [
