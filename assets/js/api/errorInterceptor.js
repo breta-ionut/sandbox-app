@@ -1,6 +1,6 @@
+import errorCodes from './errorCodes.js'
 import Error from '../models/Error.js'
 import ValidationError from '../models/ValidationError.js'
-import errorCodes from './errorCodes.js'
 
 const ERROR_UNKNOWN_TITLE = 'An error occurred.'
 

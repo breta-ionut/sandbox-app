@@ -4,10 +4,10 @@ import 'regenerator-runtime/runtime'
 import {createApp} from 'vue'
 import VueAxios from 'vue-axios'
 
-import router from './router.js'
 import axios from './axios.js'
-import store from './store/index.js'
 import App from './components/App.vue'
+import router from './router.js'
+import store from './store/index.js'
 
 createApp(App)
     .use(router)

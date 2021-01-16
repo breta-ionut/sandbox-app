@@ -1,5 +1,5 @@
-import userApi from '../api/user.js'
 import errorCodes from '../api/errorCodes.js'
+import userApi from '../api/user.js'
 import Credentials from '../models/Credentials.js'
 import Error from '../models/Error.js'
 import ValidationError from '../models/ValidationError.js'
