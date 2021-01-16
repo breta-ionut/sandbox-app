@@ -31,5 +31,10 @@ export default {
             state.user = user
             localStorage['user/token'] = state.token = user.getCurrentToken().getToken()
         },
+
+        unsetUser(state) {
+            state.user = null
+            localStorage['user/token'] = state.token = null
+        },
     },
 }

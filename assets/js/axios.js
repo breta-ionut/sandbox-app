@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+import authenticationRequiredInterceptor from './api/authenticationRequiredInterceptor.js'
 import authorizationInterceptor from './api/authorizationInterceptor.js'
 import errorInterceptor from './api/errorInterceptor.js'
 
@@ -8,5 +9,6 @@ axios.defaults.headers = {'Content-Type': 'application/json', Accept: 'applicati
 
 axios.interceptors.request.use(authorizationInterceptor)
 axios.interceptors.response.use(null, errorInterceptor)
+axios.interceptors.response.use(null, authenticationRequiredInterceptor)
 
 export default axios
