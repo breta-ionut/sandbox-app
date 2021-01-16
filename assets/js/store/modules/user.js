@@ -5,14 +5,14 @@ export default {
 
     state: () => ({
         /**
-         * @type {User}
-         */
-        user: null,
-
-        /**
          * @type {string|null}
          */
-        token: localStorage['user.token'] || null,
+        token: localStorage['user/token'] || null,
+
+        /**
+         * @type {User|null}
+         */
+        user: null,
     }),
 
     getters: {
@@ -29,7 +29,7 @@ export default {
          */
         setUser(state, user) {
             state.user = user
-            localStorage['user.token'] = state.token = user.getCurrentToken().getToken()
+            localStorage['user/token'] = state.token = user.getCurrentToken().getToken()
         },
     },
 }
