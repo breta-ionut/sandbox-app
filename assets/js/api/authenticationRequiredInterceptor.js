@@ -4,10 +4,10 @@ import router from '../router.js'
 import store from '../store/index.js'
 
 export default error => {
-    if (!error instanceof Error || error.getCode() !== errorCodes.AUTHENTICATION_REQUIRED) {
-        throw error
+    if (error instanceof Error && error.getCode() === errorCodes.AUTHENTICATION_REQUIRED) {
+        store.commit('user/unsetUser')
+        router.push({name: 'login'})
     }
 
-    store.commit('user/unsetUser')
-    router.push({name: 'login'})
+    throw error
 }
