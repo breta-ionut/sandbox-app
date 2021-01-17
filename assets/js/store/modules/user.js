@@ -13,6 +13,16 @@ export default {
          * @type {User|null}
          */
         user: null,
+
+        /**
+         * @type {boolean}
+         */
+        userLoading: false,
+
+        /**
+         * @type {boolean}
+         */
+        userLoaded: false,
     }),
 
     getters: {
@@ -35,6 +45,15 @@ export default {
         unsetUser(state) {
             state.user = null
             localStorage['user/token'] = state.token = null
+        },
+
+        setUserLoading(state) {
+            state.userLoading = true
+        },
+
+        setUserLoaded(state) {
+            state.userLoading = false
+            state.userLoaded = true
         },
     },
 }
