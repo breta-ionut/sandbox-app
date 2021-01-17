@@ -1,9 +1,33 @@
 import {createWebHistory, createRouter} from 'vue-router'
 
 import Login from './components/Login.vue'
+import store from './store/index.js'
 
 const routes = [
-    {path: '/login', name: 'login', component: Login},
+    {path: '/login', name: 'login', component: Login, meta: {anonymous: true}},
+    {path: '/', name: 'home'},
 ]
 
-export default createRouter({history: createWebHistory(), routes})
+const beforeEach = (to, from, next) => {
+    let isRouteAnonymous
+
+    if (!store.state['user/userLoading'] || !store.state['user/userLoaded']) {
+        store.dispatch('user/loadUser')
+            .then(() => next())
+            .catch(() => next(false))
+
+        return
+    }
+
+    isRouteAnonymous = to.matched.some(route => route.meta.anonymous)
+
+    if (isRouteAnonymous && store.getters['user/hasUser']) {
+        next({name: 'home'})
+    } else if (!isRouteAnonymous && !store.getters['user/hasUser']) {
+        next({name: 'login'})
+    } else {
+        next()
+    }
+}
+
+export default createRouter({history: createWebHistory(), routes, beforeEach})

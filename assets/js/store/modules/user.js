@@ -31,6 +31,11 @@ export default {
          * @returns {boolean}
          */
         hasToken: state => !!state.token,
+
+        /**
+         * @returns {boolean}
+         */
+        hasUser: state => !!state.user,
     },
 
     mutations: {
