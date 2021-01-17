@@ -1,3 +1,4 @@
+import userApi from '../../api/user.js'
 import User from '../../models/User.js'
 
 export default {
@@ -54,6 +55,16 @@ export default {
         setUserLoaded(state) {
             state.userLoading = false
             state.userLoaded = true
+        },
+    },
+
+    actions: {
+        loadUser({commit}) {
+            commit('setUserLoading')
+
+            return userApi.get()
+                .then(user => commit('setUser', user))
+                .always(() => commit('setUserLoaded'))
         },
     },
 }
