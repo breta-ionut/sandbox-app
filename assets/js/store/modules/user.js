@@ -69,7 +69,7 @@ export default {
 
             return userApi.get()
                 .then(user => commit('setUser', user))
-                .always(() => commit('setUserLoaded'))
+                .finally(() => commit('setUserLoaded'))
         },
     },
 }
