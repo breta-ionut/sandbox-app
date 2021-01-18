@@ -14,7 +14,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     let isRouteAnonymous
 
-    if (!store.state['user/userLoading'] || !store.state['user/userLoaded']) {
+    if (!store.state['user/userLoading'] && !store.state['user/userLoaded']) {
         store.dispatch('user/loadUser')
             .then(() => next())
             .catch(() => next(false))
