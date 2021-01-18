@@ -11,7 +11,7 @@ const router = createRouter({
     ],
 })
 
-router.beforeEach = (to, from, next) => {
+router.beforeEach((to, from, next) => {
     let isRouteAnonymous
 
     if (!store.state['user/userLoading'] || !store.state['user/userLoaded']) {
@@ -31,6 +31,6 @@ router.beforeEach = (to, from, next) => {
     } else {
         next()
     }
-}
+})
 
 export default router
