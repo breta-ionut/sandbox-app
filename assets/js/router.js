@@ -3,12 +3,15 @@ import {createWebHistory, createRouter} from 'vue-router'
 import Login from './components/Login.vue'
 import store from './store/index.js'
 
-const routes = [
-    {path: '/login', name: 'login', component: Login, meta: {anonymous: true}},
-    {path: '/', name: 'home'},
-]
+const router = createRouter({
+    history: createWebHistory(),
+    routes: [
+        {path: '/login', name: 'login', component: Login, meta: {anonymous: true}},
+        {path: '/', name: 'home'},
+    ],
+})
 
-const beforeEach = (to, from, next) => {
+router.beforeEach = (to, from, next) => {
     let isRouteAnonymous
 
     if (!store.state['user/userLoading'] || !store.state['user/userLoaded']) {
@@ -30,4 +33,4 @@ const beforeEach = (to, from, next) => {
     }
 }
 
-export default createRouter({history: createWebHistory(), routes, beforeEach})
+export default router
