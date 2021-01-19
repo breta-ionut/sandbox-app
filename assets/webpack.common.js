@@ -3,6 +3,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const {VueLoaderPlugin} = require('vue-loader')
+const CircularDependencyPlugin = require('circular-dependency-plugin')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 
 const globals = require('./js/globals.js')
@@ -56,6 +57,7 @@ module.exports = {
     },
     plugins: [
         new VueLoaderPlugin(),
+        new CircularDependencyPlugin({exclude: /node_modules/, failOnError: true, cwd: process.cwd()}),
         new CleanWebpackPlugin(),
         new webpack.DefinePlugin(globals),
     ],
