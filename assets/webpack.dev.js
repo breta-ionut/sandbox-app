@@ -18,7 +18,11 @@ module.exports = merge(commonConfig, {
         hot: true,
         watchOptions: {poll: true},
     },
-    output: {publicPath: 'https://localhost:8080/'},
+    output: {
+        hotUpdateChunkFilename: '[id].[fullhash].hot-update.js',
+        hotUpdateMainFilename: '[runtime].[fullhash].hot-update.json',
+        publicPath: 'https://localhost:8080/',
+    },
     plugins: [
         new AssetsManifestPlugin({output: 'manifest.json', writeToDisk: true, publicPath: 'https://localhost:8080/'}),
     ],
