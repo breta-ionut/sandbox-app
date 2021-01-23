@@ -18,7 +18,7 @@ export default {
             this.errors = noErrors()
 
             userApi.login(Credentials.fromViewData(this.$data))
-                .then(user => this.$store.commit('user/setUser', user))
+                .then(user => this.$store.commit('user/login', user))
                 .catch(error => {
                     if (!error instanceof Error) {
                         throw error

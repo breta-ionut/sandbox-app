@@ -15,18 +15,18 @@ router.beforeEach((to, from, next) => {
     let isRouteAnonymous
 
     if (!store.state['user/userLoading'] && !store.state['user/userLoaded']) {
-        store.dispatch('user/loadUser')
+        store.dispatch('user/getUser')
             .then(() => next())
             .catch(() => next(false))
 
         return
     }
 
-    isRouteAnonymous = to.matched.some(route => route.meta.anonymous)
+    isRouteAnonymous = to.matched.some(route => route.meta?.anonymous)
 
-    if (isRouteAnonymous && store.getters['user/hasUser']) {
+    if (isRouteAnonymous && store.getters['user/isAuthenticated']) {
         next({name: 'home'})
-    } else if (!isRouteAnonymous && !store.getters['user/hasUser']) {
+    } else if (!isRouteAnonymous && !store.getters['user/isAuthenticated']) {
         next({name: 'login'})
     } else {
         next()

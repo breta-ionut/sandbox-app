@@ -35,7 +35,7 @@ export default {
         /**
          * @returns {boolean}
          */
-        hasUser: state => !!state.user,
+        isAuthenticated: state => !!state.user,
     },
 
     mutations: {
@@ -43,33 +43,33 @@ export default {
          * @param {Object} state
          * @param {User} user
          */
-        setUser(state, user) {
+        login(state, user) {
             state.user = user
             localStorage['user/token'] = state.token = user.getCurrentToken().getToken()
         },
 
-        unsetUser(state) {
+        logout(state) {
             state.user = null
             localStorage['user/token'] = state.token = null
         },
 
-        setUserLoading(state) {
+        markUserAsLoading(state) {
             state.userLoading = true
         },
 
-        setUserLoaded(state) {
+        markUserAsLoaded(state) {
             state.userLoading = false
             state.userLoaded = true
         },
     },
 
     actions: {
-        loadUser({commit}) {
-            commit('setUserLoading')
+        getUser({commit}) {
+            commit('markUserAsLoading')
 
             return userApi.get()
-                .then(user => commit('setUser', user))
-                .finally(() => commit('setUserLoaded'))
+                .then(user => commit('login', user))
+                .finally(() => commit('markUserAsLoaded'))
         },
     },
 }
