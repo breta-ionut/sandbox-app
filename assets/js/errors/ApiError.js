@@ -1,4 +1,4 @@
-export default class Error {
+export default class ApiError extends Error {
     /**
      * @type {string}
      */
@@ -15,21 +15,30 @@ export default class Error {
     #detail
 
     /**
+     * @type {Object}
+     */
+    #original
+
+    /**
      * @param {string} title
      * @param {number} code
      * @param {string|null} detail
+     * @param {Object} original
      */
-    constructor(title, code, detail) {
+    constructor(title, code, detail, original) {
+        super(title)
+
         this.#title = title
         this.#code = code
         this.#detail = detail
+        this.#original = original
     }
 
     /**
-     * @returns {Error}
+     * @returns {ApiError}
      */
-    static fromApiResponseData({title, code, detail}) {
-        return new Error(title, code, detail)
+    static fromApiResponseData({title, code, detail}, original) {
+        return new ApiError(title, code, detail, original)
     }
 
     /**
@@ -51,5 +60,12 @@ export default class Error {
      */
     getDetail() {
         return this.#detail
+    }
+
+    /**
+     * @returns {Object}
+     */
+    getOriginal() {
+        return this.#original
     }
 }

@@ -1,17 +1,17 @@
-import ConstraintViolation from './ConstraintViolation.js'
-import Error from './Error.js'
+import ApiError from './ApiError.js'
+import ConstraintViolation from '../models/ConstraintViolation.js'
 
-export default class ValidationError extends Error {
+export default class ApiValidationError extends ApiError {
     /**
      * @type {ConstraintViolation[]}
      */
     #violations = []
 
     /**
-     * @returns {ValidationError}
+     * @returns {ApiValidationError}
      */
-    static fromApiResponseData({title, code, detail, violations}) {
-        let instance = new ValidationError(title, code, detail)
+    static fromApiResponseData({title, code, detail, violations}, original) {
+        let instance = new ApiValidationError(title, code, detail, original)
 
         instance.#violations = violations.map(violationData => ConstraintViolation.fromApiResponseData(violationData))
 
