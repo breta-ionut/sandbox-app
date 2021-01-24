@@ -18,11 +18,6 @@ export default {
         /**
          * @type {boolean}
          */
-        userLoading: false,
-
-        /**
-         * @type {boolean}
-         */
         userLoaded: false,
     }),
 
@@ -53,12 +48,7 @@ export default {
             localStorage['user/token'] = state.token = null
         },
 
-        markUserAsLoading(state) {
-            state.userLoading = true
-        },
-
         markUserAsLoaded(state) {
-            state.userLoading = false
             state.userLoaded = true
         },
     },
