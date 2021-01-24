@@ -54,11 +54,14 @@ export default {
     },
 
     actions: {
-        getUser({commit}) {
-            commit('markUserAsLoading')
+        getUser({state, commit}) {
+            if (state.userLoaded) {
+                return Promise.resolve(state.user)
+            }
 
             return userApi.get()
                 .then(user => commit('login', user))
+                .catch(() => commit('logout'))
                 .finally(() => commit('markUserAsLoaded'))
         },
     },
