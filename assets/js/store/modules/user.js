@@ -59,7 +59,7 @@ export default {
                 return Promise.resolve(state.user)
             }
 
-            return userApi.get()
+            return userApi.get(true)
                 .then(user => commit('login', user))
                 .catch(() => commit('logout'))
                 .finally(() => commit('markUserAsLoaded'))

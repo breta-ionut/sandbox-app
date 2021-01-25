@@ -4,10 +4,13 @@ import User from '../models/User.js'
 
 export default {
     /**
+     * @param {boolean|undefined} disableAutoLogout
+     *
      * @returns {Promise<User>}
      */
-    async get() {
-        return axios.get('/user').then(response => User.fromApiResponseData(response.data))
+    async get(disableAutoLogout) {
+        return axios.get('/user', {disableAutoLogout: !!disableAutoLogout})
+            .then(response => User.fromApiResponseData(response.data))
     },
 
     /**
