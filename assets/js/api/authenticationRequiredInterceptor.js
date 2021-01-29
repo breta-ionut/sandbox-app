@@ -4,13 +4,14 @@ import router from '../router.js'
 import store from '../store/index.js'
 
 export default error => {
-    if (error instanceof ApiError
-        && error.getCode() === errorCodes.AUTHENTICATION_REQUIRED
-        && !error.getOriginal().config?.disableAutoLogout
+    if (!error instanceof ApiError
+        || error.getCode() !== errorCodes.AUTHENTICATION_REQUIRED
+        || error.getOriginal().config?.disableAutoLogout
     ) {
-        store.commit('user/logout')
-        router.push({name: 'login'})
+        throw error
     }
 
-    throw error
+    store.commit('user/logout')
+
+    return router.push({name: 'login'}).then(() => throw error)
 }
