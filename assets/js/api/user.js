@@ -9,8 +9,7 @@ export default {
      * @returns {Promise<User>}
      */
     async get(disableAutoLogout) {
-        return axios.get('/user', {disableAutoLogout: !!disableAutoLogout})
-            .then(response => User.fromApiResponseData(response.data))
+        return axios.get('/user', {disableAutoLogout}).then(response => User.fromApiResponseData(response.data))
     },
 
     /**
