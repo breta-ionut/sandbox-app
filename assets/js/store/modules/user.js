@@ -44,8 +44,8 @@ export default {
         },
 
         logout(state) {
-            state.user = null
-            localStorage['user/token'] = state.token = null
+            state.token = state.user = null
+            delete localStorage['user/token']
         },
 
         markUserAsLoaded(state) {
