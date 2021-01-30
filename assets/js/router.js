@@ -12,7 +12,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    authentication.loadUser.then(() => {
+    authentication.loadUser().then(() => {
         let isRouteAnonymous = to.matched.some(route => route.meta?.anonymous)
 
         if (isRouteAnonymous && authentication.isAuthenticated()) {
