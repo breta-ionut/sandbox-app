@@ -24,7 +24,7 @@ export default {
                     return this.$router.push({name: 'home'})
                 })
                 .catch(error => {
-                    if (!error instanceof ApiError) {
+                    if (!(error instanceof ApiError)) {
                         throw error
                     }
 
