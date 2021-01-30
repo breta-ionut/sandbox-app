@@ -4,8 +4,6 @@ import ApiAuthenticationRequiredError from '../../errors/ApiAuthenticationRequir
 import User from '../../models/User.js'
 
 /**
- * @param {Object} state
- *
  * @throws {Error}
  */
 const ensureUserIsLoaded = state => {
@@ -69,6 +67,9 @@ export default {
     },
 
     actions: {
+        /**
+         * @returns {Promise<void>}
+         */
         loadUser({state, commit}) {
             if (state.userLoaded) {
                 return Promise.resolve()
