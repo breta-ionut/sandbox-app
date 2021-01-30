@@ -1,4 +1,3 @@
-import errorCodes from '../../api/errorCodes.js'
 import userApi from '../../api/user.js'
 import ApiAuthenticationRequiredError from '../../errors/ApiAuthenticationRequiredError.js'
 import User from '../../models/User.js'
@@ -70,20 +69,20 @@ export default {
         /**
          * @returns {Promise<void>}
          */
-        loadUser({state, commit}) {
+        async loadUser({state, commit}) {
             if (state.userLoaded) {
                 return Promise.resolve()
             }
 
-            return userApi.get(true)
-                .then(user => commit('login', user))
-                .catch(error => {
-                    if (!(error instanceof ApiAuthenticationRequiredError)) {
-                        throw error
-                    }
+            try {
+                commit('login', await userApi.get(true))
+            } catch (error) {
+                if (!(error instanceof ApiAuthenticationRequiredError)) {
+                    throw error
+                }
 
-                    commit('logout')
-                })
+                commit('logout')
+            }
         },
     },
 }
