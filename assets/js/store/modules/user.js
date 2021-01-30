@@ -41,16 +41,14 @@ export default {
          * @param {User} user
          */
         login(state, user) {
-            state.user = user
             localStorage['user/token'] = state.token = user.getCurrentToken().getToken()
+            state.user = user
+            state.userLoaded = true
         },
 
         logout(state) {
-            state.token = state.user = null
+            state.user = state.token = null
             delete localStorage['user/token']
-        },
-
-        markUserAsLoaded(state) {
             state.userLoaded = true
         },
     },
