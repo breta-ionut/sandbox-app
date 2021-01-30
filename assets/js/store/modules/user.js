@@ -1,4 +1,6 @@
+import errorCodes from '../../api/errorCodes.js'
 import userApi from '../../api/user.js'
+import ApiError from '../../errors/ApiError.js'
 import User from '../../models/User.js'
 
 export default {
@@ -61,8 +63,18 @@ export default {
 
             return userApi.get(true)
                 .then(user => commit('login', user))
-                .catch(() => commit('logout'))
-                .finally(() => commit('markUserAsLoaded'))
+                .catch(error => {
+                    if (!(error instanceof ApiError) || error.getCode() !== errorCodes.AUTHENTICATION_REQUIRED) {
+                        throw error
+                    }
+
+                    commit('logout')
+                })
+                .then(() => {
+                    commit('markUserAsLoaded')
+
+                    return state.user
+                })
         },
     },
 }
