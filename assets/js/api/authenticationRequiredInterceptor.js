@@ -4,7 +4,7 @@ import router from '../router.js'
 import store from '../store/index.js'
 
 export default error => {
-    if (!error instanceof ApiError
+    if (!(error instanceof ApiError)
         || error.getCode() !== errorCodes.AUTHENTICATION_REQUIRED
         || error.getOriginal().config?.disableAutoLogout
     ) {
