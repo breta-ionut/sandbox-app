@@ -9,7 +9,7 @@ export default {
      * @returns {Promise<User>}
      */
     async get(disableAutoLogout) {
-        return axios.get('/user', {disableAutoLogout}).then(response => User.fromApiResponseData(response.data))
+        return User.fromApiResponseData(await axios.get('/user', {disableAutoLogout}))
     },
 
     /**
@@ -18,6 +18,6 @@ export default {
      * @returns {Promise<User>}
      */
     async login(credentials) {
-        return axios.post('/user/login', credentials).then(response => User.fromApiResponseData(response.data))
+        return User.fromApiResponseData(await axios.post('/user/login', credentials))
     },
 }
