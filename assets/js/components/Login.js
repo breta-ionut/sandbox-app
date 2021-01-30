@@ -18,7 +18,11 @@ export default {
             this.errors = noErrors()
 
             userApi.login(Credentials.fromViewData(this.$data))
-                .then(user => this.$store.commit('user/login', user))
+                .then(user => {
+                    this.$store.commit('user/login', user)
+
+                    return this.$router.push({name: 'home'})
+                })
                 .catch(error => {
                     if (!error instanceof ApiError) {
                         throw error
