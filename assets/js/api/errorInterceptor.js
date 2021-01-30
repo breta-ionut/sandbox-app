@@ -1,4 +1,5 @@
 import errorCodes from './errorCodes.js'
+import ApiAuthenticationRequiredError from '../errors/ApiAuthenticationRequiredError.js'
 import ApiError from '../errors/ApiError.js'
 import ApiValidationError from '../errors/ApiValidationError.js'
 
@@ -12,6 +13,9 @@ export default error => {
     switch (error.response.data.code) {
         case errorCodes.VALIDATION:
             throw ApiValidationError.fromApiResponseData(error.response.data, error)
+
+        case errorCodes.AUTHENTICATION_REQUIRED:
+            throw ApiAuthenticationRequiredError.fromApiResponseData(error.response.data, error)
 
         default:
             throw ApiError.fromApiResponseData(error.response.data, error)
