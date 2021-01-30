@@ -38,7 +38,7 @@ export default class ApiError extends Error {
      * @returns {ApiError}
      */
     static fromApiResponseData({title, code, detail}, original) {
-        return new ApiError(title, code, detail, original)
+        return new this(title, code, detail, original)
     }
 
     /**

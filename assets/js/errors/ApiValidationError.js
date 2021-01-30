@@ -10,8 +10,8 @@ export default class ApiValidationError extends ApiError {
     /**
      * @returns {ApiValidationError}
      */
-    static fromApiResponseData({title, code, detail, violations}, original) {
-        let instance = new ApiValidationError(title, code, detail, original)
+    static fromApiResponseData({violations, ...data}, original) {
+        let instance = super.fromApiResponseData(data)
 
         instance.#violations = violations.map(violationData => ConstraintViolation.fromApiResponseData(violationData))
 
