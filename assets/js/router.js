@@ -1,7 +1,7 @@
 import {createWebHistory, createRouter} from 'vue-router'
 
 import Login from './components/Login.vue'
-import store from './store/index.js'
+import authentication from './user/authentication.js'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -12,12 +12,12 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    store.dispatch('user/getUser').finally(() => {
+    authentication.loadUser.then(() => {
         let isRouteAnonymous = to.matched.some(route => route.meta?.anonymous)
 
-        if (isRouteAnonymous && store.getters['user/isAuthenticated']) {
+        if (isRouteAnonymous && authentication.isAuthenticated()) {
             next({name: 'home'})
-        } else if (!isRouteAnonymous && !store.getters['user/isAuthenticated']) {
+        } else if (!isRouteAnonymous && !authentication.isAuthenticated()) {
             next({name: 'login'})
         } else {
             next()
