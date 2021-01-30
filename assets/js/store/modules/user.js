@@ -3,6 +3,17 @@ import userApi from '../../api/user.js'
 import ApiAuthenticationRequiredError from '../../errors/ApiAuthenticationRequiredError.js'
 import User from '../../models/User.js'
 
+/**
+ * @param {Object} state
+ *
+ * @throws {Error}
+ */
+const ensureUserIsLoaded = state => {
+    if (!state.userLoaded) {
+        throw new Error('The user is not loaded yet.')
+    }
+}
+
 export default {
     namespaced: true,
 
@@ -32,7 +43,11 @@ export default {
         /**
          * @returns {boolean}
          */
-        isAuthenticated: state => !!state.user,
+        isAuthenticated: state => {
+            ensureUserIsLoaded(state)
+
+            return !!state.user
+        },
     },
 
     mutations: {
