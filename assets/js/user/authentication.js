@@ -19,9 +19,6 @@ export default {
         return store.state.user.token
     },
 
-    /**
-     * @returns {Promise<void>}
-     */
     async loadUser() {
         return store.dispatch('user/loadUser')
     },
@@ -52,4 +49,4 @@ export default {
 
         return router.push({name: 'login'})
     },
-};
+}

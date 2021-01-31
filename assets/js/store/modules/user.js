@@ -66,9 +66,6 @@ export default {
     },
 
     actions: {
-        /**
-         * @returns {Promise<void>}
-         */
         async loadUser({state, commit}) {
             if (state.userLoaded) {
                 return Promise.resolve()
