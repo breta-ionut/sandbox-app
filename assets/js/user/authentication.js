@@ -38,7 +38,7 @@ export default {
     async login(user) {
         store.commit('user/login', user)
 
-        return router.push({name: 'home'})
+        return router.push({name: 'dashboard'})
     },
 
     /**
