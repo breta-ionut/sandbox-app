@@ -3,5 +3,7 @@
 @tailwind utilities;
 
 .main-loader {
+    width: 150px;
+    height: 150px;
     background: url("../images/main_loader.svg");
 }
