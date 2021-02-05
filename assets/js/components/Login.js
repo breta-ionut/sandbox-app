@@ -1,5 +1,4 @@
 import errorCodes from '../api/errorCodes.js'
-import userApi from '../api/user.js'
 import ApiError from '../errors/ApiError.js'
 import ApiValidationError from '../errors/ApiValidationError.js'
 import Credentials from '../models/Credentials.js'
@@ -26,23 +25,14 @@ export default {
     }),
 
     methods: {
-        /**
-         * @returns {Promise<any>}
-         */
         async login() {
-            let user
-
             this.resetErrors()
 
             try {
-                user = await userApi.login(Credentials.fromViewData(this.$data))
+                await authentication.login(Credentials.fromViewData(this.$data))
             } catch (error) {
                 this.handleApiError(error)
-
-                return
             }
-
-            return authentication.login(user)
         },
 
         resetErrors() {
