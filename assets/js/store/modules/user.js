@@ -1,5 +1,6 @@
 import userApi from '../../api/user.js'
 import ApiAuthenticationRequiredError from '../../errors/ApiAuthenticationRequiredError.js'
+import Credentials from '../../models/Credentials.js'
 import User from '../../models/User.js'
 
 /**
@@ -38,6 +39,19 @@ export default {
         hasToken: state => !!state.token,
 
         /**
+         * @returns {string}
+         *
+         * @throws {Error}
+         */
+        getToken: (state, getters) => {
+            if (!getters.hasToken) {
+                throw new Error('No authentication token available.')
+            }
+
+            return state.token
+        },
+
+        /**
          * @returns {boolean}
          */
         isAuthenticated: state => {
@@ -52,13 +66,13 @@ export default {
          * @param {Object} state
          * @param {User} user
          */
-        login(state, user) {
+        setUser(state, user) {
             localStorage['user/token'] = state.token = user.getCurrentToken().getToken()
             state.user = user
             state.userLoaded = true
         },
 
-        logout(state) {
+        unsetUser(state) {
             state.user = state.token = null
             delete localStorage['user/token']
             state.userLoaded = true
@@ -68,18 +82,26 @@ export default {
     actions: {
         async loadUser({state, commit}) {
             if (state.userLoaded) {
-                return Promise.resolve()
+                return
             }
 
             try {
-                commit('login', await userApi.get(true))
+                commit('setUser', await userApi.get(true))
             } catch (error) {
                 if (!(error instanceof ApiAuthenticationRequiredError)) {
                     throw error
                 }
 
-                commit('logout')
+                commit('unsetUser')
             }
+        },
+
+        /**
+         * @param {Function} commit
+         * @param {Credentials} credentials
+         */
+        async login({commit}, credentials) {
+            commit('setUser', await userApi.login(credentials))
         },
     },
 }
