@@ -1,4 +1,4 @@
-import User from '../models/User.js'
+import Credentials from '../models/Credentials.js'
 import router from '../router.js'
 import store from '../store/index.js'
 
@@ -11,42 +11,25 @@ export default {
     /**
      * @returns {string}
      */
-    getToken() {
-        if (!this.hasToken()) {
-            throw new Error('No authentication token available.')
-        }
+    getToken: () => store.getters['user/getToken'],
 
-        return store.state.user.token
-    },
-
-    async loadUser() {
-        return store.dispatch('user/loadUser')
-    },
+    loadUser: async () => await store.dispatch('user/loadUser'),
 
     /**
      * @returns {boolean}
      */
-    isAuthenticated() {
-        return store.getters['user/isAuthenticated']
-    },
+    isAuthenticated: () => store.getters['user/isAuthenticated'],
 
     /**
-     * @param {User} user
-     *
-     * @returns {Promise<any>}
+     * @param {Credentials} credentials
      */
-    async login(user) {
-        store.commit('user/login', user)
-
-        return router.push({name: 'dashboard'})
+    login: async credentials => {
+        await store.dispatch('user/login', credentials)
+        await router.push({name: 'dashboard'})
     },
 
-    /**
-     * @returns {Promise<any>}
-     */
-    async logout() {
-        store.commit('user/logout')
-
-        return router.push({name: 'login'})
+    logout: async () => {
+        store.commit('user/unsetUser')
+        await router.push({name: 'login'})
     },
 }
