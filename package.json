@@ -9,6 +9,7 @@
     "author": "Ionut Breta <breta.ionut@gmail.com>",
     "license": "MIT",
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^5.15.2",
         "axios": "^0.21.1",
         "lodash": "^4.17.20",
         "swagger-ui": "^3.40.0",
