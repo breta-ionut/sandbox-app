@@ -1,7 +1,7 @@
 import {createWebHistory, createRouter} from 'vue-router'
 
-import Dashboard from './components/Dashboard.vue'
-import Login from './components/Login.vue'
+import Dashboard from './pages/Dashboard.vue'
+import Login from './pages/Login.vue'
 import authentication from './user/authentication.js'
 
 const router = createRouter({
