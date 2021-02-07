@@ -1,10 +1,10 @@
 <template>
     <nav class="bg-gray-300">
         <div class="mx-auto px-2 sm:px-6 lg:px-8">
-            <div class="relative flex items-center justify-between h-16">
+            <div class="relative flex items-center justify-between h-20">
                 <div class="flex-1 flex items-center sm:items-stretch justify-center sm:justify-start">
                     <div class="flex-shrink-0 flex items-center">
-                        <img class="block w-auto h-12" src="../../images/logo.png" alt="Random Tools" />
+                        <img class="block w-auto h-16" src="../../images/logo.png" alt="Random Tools" />
                     </div>
                 </div>
 
