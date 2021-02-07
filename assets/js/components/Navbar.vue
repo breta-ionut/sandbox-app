@@ -1,10 +1,10 @@
 <template>
     <nav class="bg-gray-300">
-        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+        <div class="mx-auto px-2 sm:px-6 lg:px-8">
             <div class="relative flex items-center justify-between h-16">
                 <div class="flex-1 flex items-center sm:items-stretch justify-center sm:justify-start">
                     <div class="flex-shrink-0 flex items-center">
-                        <img class="block w-auto h-8" src="../../images/logo.png" alt="Random Tools" />
+                        <img class="block w-auto h-12" src="../../images/logo.png" alt="Random Tools" />
                     </div>
                 </div>
 
@@ -13,7 +13,7 @@
                         <div>
                             <button id="user-menu" class="flex bg-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300" aria-haspopup="true">
                                 <span class="sr-only">Open user menu</span>
-                                <span class="w-8 h-8 rounded-full fa fa-user"></span>
+                                <span class="w-8 h-8 text-lg rounded-full fa fa-user"></span>
                             </button>
                         </div>
 
