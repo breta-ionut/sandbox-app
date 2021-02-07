@@ -1,5 +1,5 @@
 <template>
-    <nav class="bg-gray-300">
+    <nav class="bg-white border-b border-gray-200 shadow">
         <div class="mx-auto px-2 sm:px-6 lg:px-8">
             <div class="relative flex items-center justify-between h-20">
                 <div class="flex-1 flex items-center sm:items-stretch justify-center sm:justify-start">
@@ -11,7 +11,7 @@
                 <div class="absolute sm:static inset-y-0 sm:inset-auto right-0 flex items-center sm:ml-6 pr-2 sm:pr-0">
                     <div class="relative ml-3">
                         <div>
-                            <button id="user-menu" class="flex bg-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300" aria-haspopup="true">
+                            <button id="user-menu" class="flex bg-white rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-offset-2 focus:ring-offset-white" aria-haspopup="true">
                                 <span class="sr-only">Open user menu</span>
                                 <span class="w-8 h-8 text-lg rounded-full fa fa-user"></span>
                             </button>
