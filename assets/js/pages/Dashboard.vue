@@ -1,1 +1,5 @@
-<template>Test!</template>
+<script src="./Dashboard.js"></script>
+
+<template>
+    <Navbar />
+</template>
