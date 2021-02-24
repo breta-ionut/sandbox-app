@@ -26,6 +26,6 @@ export default {
     },
 
     async logout() {
-        await axios.post('/user/logout')
+        await axios.delete('/user/logout')
     },
 }
