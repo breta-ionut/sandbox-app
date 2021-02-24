@@ -103,5 +103,17 @@ export default {
         async login({commit}, credentials) {
             commit('setUser', await userApi.login(credentials))
         },
+
+        /**
+         * @param {Function} commit
+         * @param {boolean|undefined} clientSideOnly
+         */
+        async logout({commit}, clientSideOnly) {
+            if (!clientSideOnly) {
+                await userApi.logout()
+            }
+
+            commit('unsetUser')
+        },
     },
 }

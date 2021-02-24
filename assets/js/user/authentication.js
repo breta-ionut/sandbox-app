@@ -28,8 +28,11 @@ export default {
         await router.push({name: 'dashboard'})
     },
 
-    logout: async () => {
-        store.commit('user/unsetUser')
+    /**
+     * @param {boolean|undefined} clientSideOnly
+     */
+    logout: async clientSideOnly => {
+        await store.dispatch('user/logout', clientSideOnly)
         await router.push({name: 'login'})
     },
 }

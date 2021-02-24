@@ -3,7 +3,7 @@ import authentication from '../user/authentication.js'
 
 export default async error => {
     if (error instanceof ApiAuthenticationRequiredError && !error.getOriginal().config?.disableAutoLogout) {
-        await authentication.logout()
+        await authentication.logout(true)
     }
 
     throw error

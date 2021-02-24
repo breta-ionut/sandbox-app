@@ -1,3 +1,5 @@
+import authentication from '../user/authentication.js'
+
 export default {
     data: () => ({
         /**
@@ -14,5 +16,9 @@ export default {
         hideUserMenu() {
             this.showUserMenu = false
         },
-    }
+
+        async logout() {
+            await authentication.logout()
+        },
+    },
 }

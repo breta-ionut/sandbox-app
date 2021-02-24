@@ -24,4 +24,8 @@ export default {
 
         return User.fromApiResponseData(response.data)
     },
+
+    async logout() {
+        await axios.post('/user/logout')
+    },
 }
