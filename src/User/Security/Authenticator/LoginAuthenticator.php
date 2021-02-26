@@ -7,7 +7,7 @@ namespace App\User\Security\Authenticator;
 use App\Api\Exception\ValidationException;
 use App\Api\Http\RequestReader;
 use App\User\Exception\AuthenticationFailedException;
-use App\User\Model\Login;
+use App\User\Model\Credentials;
 use App\User\Model\User;
 use App\User\Token\TokenManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,8 +52,8 @@ class LoginAuthenticator extends AbstractAuthenticator
      */
     public function authenticate(Request $request): PassportInterface
     {
-        /** @var Login $credentials */
-        $credentials = $this->requestReader->read($request, Login::class);
+        /** @var Credentials $credentials */
+        $credentials = $this->requestReader->read($request, Credentials::class);
         $this->validateCredentials($credentials);
 
         return new Passport(
@@ -83,11 +83,11 @@ class LoginAuthenticator extends AbstractAuthenticator
     }
 
     /**
-     * @param Login $credentials
+     * @param Credentials $credentials
      *
      * @throws ValidationException
      */
-    private function validateCredentials(Login $credentials): void
+    private function validateCredentials(Credentials $credentials): void
     {
         $violations = $this->validator->validate($credentials);
         if (\count($violations)) {

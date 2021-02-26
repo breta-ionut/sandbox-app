@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\User\Model;
 
-class Login
+class Credentials
 {
     private string $username;
     private string $password;
