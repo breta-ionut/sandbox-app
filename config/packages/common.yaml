@@ -35,5 +35,9 @@ services:
     App\Common\Filesystem\PublicFilesystem:
         arguments: ['@App\Common\Filesystem\PublicFilesystemAdapter']
 
+    App\Common\Filesystem\PublicFilesystemOperator: '@App\Common\Filesystem\PublicFilesystem'
+
     League\Flysystem\Filesystem:
         arguments: ['@League\Flysystem\FilesystemAdapter']
+
+    League\Flysystem\FilesystemOperator: '@League\Flysystem\Filesystem'
