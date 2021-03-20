@@ -1,6 +1,6 @@
 parameters:
-    env(PUBLIC_FILESYSTEM): public_local
-    env(PRIVATE_FILESYSTEM): private_local
+    env(PUBLIC_FILESYSTEM): local
+    env(PRIVATE_FILESYSTEM): local
 
 services:
     _defaults:
@@ -10,35 +10,30 @@ services:
     App\Common\:
         resource: '../../src/Common/*'
 
-    app.common.filesystem.adapter.public_local:
-        class: League\Flysystem\Local\LocalFilesystemAdapter
+    App\Common\Filesystem\Adapter\PublicLocalFilesystemAdapter:
         arguments: ['%kernel.project_dir%/public']
 
-    app.common.filesystem.adapter.private_local:
-        class: League\Flysystem\Local\LocalFilesystemAdapter
+    app.common.filesystem.public_adapter_locator:
+        class: Symfony\Component\DependencyInjection\ServiceLocator
+        arguments: [{local: '@App\Common\Filesystem\Adapter\PublicLocalFilesystemAdapter'}]
+
+    League\Flysystem\Local\LocalFilesystemAdapter:
         arguments: ['%kernel.project_dir%/upload']
 
-    app.common.filesystem.adapter_locator:
+    app.common.filesystem.private_adapter_locator:
         class: Symfony\Component\DependencyInjection\ServiceLocator
-        arguments:
-            -
-                public_local: '@app.common.filesystem.adapter.public_local'
-                private_local: '@app.common.filesystem.adapter.private_local'
+        arguments: [{local: '@League\Flysystem\Local\LocalFilesystemAdapter'}]
 
-    app.common.filesystem.public_adapter:
-        class: League\Flysystem\FilesystemAdapter
-        factory: ['@app.common.filesystem.adapter_locator', get]
+    App\Common\Filesystem\PublicFilesystemAdapter:
+        factory: ['@app.common.filesystem.public_adapter_locator', get]
         arguments: ['%env(PUBLIC_FILESYSTEM)%']
 
-    app.common.filesystem.private_adapter:
-        class: League\Flysystem\FilesystemAdapter
-        factory: ['@app.common.filesystem.adapter_locator', get]
+    League\Flysystem\FilesystemAdapter:
+        factory: ['@app.common.filesystem.private_adapter_locator', get]
         arguments: ['%env(PRIVATE_FILESYSTEM)%']
 
-    app.common.filesystem.public:
-        class: League\Flysystem\Filesystem
-        arguments: ['@app.common.filesystem.public_adapter']
+    App\Common\Filesystem\PublicFilesystem:
+        arguments: ['@App\Common\Filesystem\PublicFilesystemAdapter']
 
-    app.common.filesystem.private:
-        class: League\Flysystem\Filesystem
-        arguments: ['@app.common.filesystem.private_adapter']
+    League\Flysystem\Filesystem:
+        arguments: ['@League\Flysystem\FilesystemAdapter']
