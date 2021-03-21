@@ -6,13 +6,13 @@
 >
     <entity name="App\User\Model\User" repository-class="App\User\Repository\UserRepository">
         <id name="id" type="integer">
-            <generator strategy="AUTO" />
+            <generator />
         </id>
 
-        <field name="firstName" type="string" length="50" />
-        <field name="lastName" type="string" length="50" />
-        <field name="email" type="string" unique="true" />
+        <field name="firstName" length="50" />
+        <field name="lastName" length="50" />
+        <field name="email" unique="true" />
         <field name="roles" type="json_array" />
-        <field name="password" type="string" />
+        <field name="password" />
     </entity>
 </doctrine-mapping>
