@@ -13,6 +13,6 @@
             </options>
         </id>
 
-        <field name="path" length="4096" unique="true" />
+        <field name="path" length="4096" />
     </entity>
 </doctrine-mapping>
