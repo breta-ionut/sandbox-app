@@ -45,59 +45,6 @@ class DoctrineExtension extends ConfigurableExtension
     }
 
     /**
-     * @param array $databaseConfig
-     *
-     * @return array
-     */
-    private function getConnectionParams(array $databaseConfig): array
-    {
-        $connectionParams = [
-            'driver' => $databaseConfig['driver'],
-            'url' => $databaseConfig['url'],
-        ];
-
-        foreach (['server_version', 'charset', 'default_table_options'] as $configKey) {
-            if (isset($databaseConfig[$configKey])) {
-                $connectionParams[ContainerBuilder::camelize($configKey)] = $databaseConfig[$configKey];
-            }
-        }
-
-        return $connectionParams;
-    }
-
-    /**
-     * @param ContainerBuilder $container
-     * @param string           $mappingDir
-     * @param string           $namespacePrefixPattern
-     *
-     * @return string[]
-     */
-    private function getMappingPrefixes(
-        ContainerBuilder $container,
-        string $mappingDir,
-        string $namespacePrefixPattern
-    ): array {
-        $mappingDir = $container->getParameterBag()->resolveString($mappingDir);
-
-        if (!$container->fileExists($mappingDir, '/^$/')) {
-            return [];
-        }
-
-        $prefixes = [];
-        $directories = Finder::create()
-            ->directories()
-            ->in($mappingDir)
-            ->depth(0)
-            ->sortByName();
-
-        foreach ($directories as $directory) {
-            $prefixes[$directory->getRealPath()] = \sprintf($namespacePrefixPattern, $directory->getFilename());
-        }
-
-        return $prefixes;
-    }
-
-    /**
      * @param ContainerBuilder $container
      * @param array            $config
      */
@@ -139,5 +86,58 @@ class DoctrineExtension extends ConfigurableExtension
         $container->getDefinition(EntityManager::class)
             ->setArgument('$connection', $this->getConnectionParams($config['database']))
             ->setArgument('$config', $entityManagerConfig);
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param string           $mappingDir
+     * @param string           $namespacePrefixPattern
+     *
+     * @return string[]
+     */
+    private function getMappingPrefixes(
+        ContainerBuilder $container,
+        string $mappingDir,
+        string $namespacePrefixPattern
+    ): array {
+        $mappingDir = $container->getParameterBag()->resolveString($mappingDir);
+
+        if (!$container->fileExists($mappingDir, '/^$/')) {
+            return [];
+        }
+
+        $prefixes = [];
+        $directories = Finder::create()
+            ->directories()
+            ->in($mappingDir)
+            ->depth(0)
+            ->sortByName();
+
+        foreach ($directories as $directory) {
+            $prefixes[$directory->getRealPath()] = \sprintf($namespacePrefixPattern, $directory->getFilename());
+        }
+
+        return $prefixes;
+    }
+
+    /**
+     * @param array $databaseConfig
+     *
+     * @return array
+     */
+    private function getConnectionParams(array $databaseConfig): array
+    {
+        $connectionParams = [
+            'driver' => $databaseConfig['driver'],
+            'url' => $databaseConfig['url'],
+        ];
+
+        foreach (['server_version', 'charset', 'default_table_options'] as $configKey) {
+            if (isset($databaseConfig[$configKey])) {
+                $connectionParams[ContainerBuilder::camelize($configKey)] = $databaseConfig[$configKey];
+            }
+        }
+
+        return $connectionParams;
     }
 }
