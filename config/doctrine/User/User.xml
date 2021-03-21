@@ -7,6 +7,10 @@
     <entity name="App\User\Model\User" repository-class="App\User\Repository\UserRepository">
         <id name="id" type="integer">
             <generator />
+
+            <options>
+                <option name="unsigned">true</option>
+            </options>
         </id>
 
         <field name="firstName" length="50" />
