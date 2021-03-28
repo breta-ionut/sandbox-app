@@ -10,13 +10,27 @@ class Image
 {
     private int $id;
     private string $path;
-    private File $file;
+
+    /**
+     * @var int Should be a IMAGETYPE_* constant.
+     */
+    private int $type;
+
+    private ?File $file;
     private ?string $originalPublicUrl;
 
     /**
      * @var array<string, string>
      */
     private array $publicUrlsPerStyles = [];
+
+    /**
+     * @param File|null $file
+     */
+    public function __construct(?File $file)
+    {
+        $this->file = $file;
+    }
 
     /**
      * @return int
@@ -47,23 +61,39 @@ class Image
     }
 
     /**
+     * @return int
+     */
+    public function getType(): int
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param int $type
+     *
+     * @return $this
+     */
+    public function setType(int $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasFile(): bool
+    {
+        return null !== $this->file;
+    }
+
+    /**
      * @return File|null
      */
     public function getFile(): ?File
     {
         return $this->file;
-    }
-
-    /**
-     * @param File $file
-     *
-     * @return $this
-     */
-    public function setFile(File $file): static
-    {
-        $this->file = $file;
-
-        return $this;
     }
 
     /**
