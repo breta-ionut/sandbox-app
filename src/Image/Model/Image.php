@@ -12,7 +12,7 @@ class Image
     private string $path;
 
     /**
-     * @var int Should be a IMAGETYPE_* constant.
+     * @var int Should be a IMAGETYPE_* constant corresponding to a valid image type.
      */
     private int $type;
 
@@ -72,20 +72,18 @@ class Image
      * @param int $type
      *
      * @return $this
+     *
+     * @throws \DomainException
      */
     public function setType(int $type): static
     {
+        if (\IMAGETYPE_UNKNOWN === $type) {
+            throw new \DomainException('Unknown image type provided.');
+        }
+
         $this->type = $type;
 
         return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasFile(): bool
-    {
-        return null !== $this->file;
     }
 
     /**
