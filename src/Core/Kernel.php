@@ -55,7 +55,7 @@ abstract class Kernel extends BaseKernel
     /**
      * {@inheritDoc}
      */
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         return [];
     }
@@ -63,7 +63,7 @@ abstract class Kernel extends BaseKernel
     /**
      * {@inheritDoc}
      */
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $configDir = $this->getConfigDir();
 
@@ -74,7 +74,7 @@ abstract class Kernel extends BaseKernel
     /**
      * {@inheritDoc}
      */
-    public function boot()
+    public function boot(): void
     {
         parent::boot();
 
@@ -84,7 +84,7 @@ abstract class Kernel extends BaseKernel
     /**
      * {@inheritDoc}
      */
-    protected function getHttpKernel()
+    protected function getHttpKernel(): HttpKernelInterface
     {
         return $this->container->get(HttpKernelInterface::class);
     }
@@ -92,7 +92,7 @@ abstract class Kernel extends BaseKernel
     /**
      * {@inheritDoc}
      */
-    protected function build(ContainerBuilder $container)
+    protected function build(ContainerBuilder $container): void
     {
         foreach ($this->getExtensions() as $extension) {
             $container->registerExtension($extension);
@@ -116,7 +116,7 @@ abstract class Kernel extends BaseKernel
     /**
      * {@inheritDoc}
      */
-    protected function getKernelParameters()
+    protected function getKernelParameters(): array
     {
         return \array_merge(parent::getKernelParameters(), ['kernel.config_dir' => $this->getConfigDir()]);
     }

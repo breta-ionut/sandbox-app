@@ -5,6 +5,9 @@ start:
 start-rebuild:
 		docker-compose up -d --build
 
+enter:
+		docker-compose exec php bash
+
 stop:
 		docker-compose down
 
