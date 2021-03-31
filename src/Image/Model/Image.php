@@ -9,13 +9,14 @@ use Symfony\Component\HttpFoundation\File\File;
 class Image
 {
     private int $id;
-    private string $path;
 
     /**
      * @var int Should be a IMAGETYPE_* constant corresponding to a valid image type.
      */
     private int $type;
 
+    private string $path;
+    private \DateTime $createdAt;
     private ?File $file;
     private ?string $originalPublicUrl;
 
@@ -30,6 +31,7 @@ class Image
     public function __construct(?File $file)
     {
         $this->file = $file;
+        $this->createdAt = new \DateTime();
     }
 
     /**
@@ -38,26 +40,6 @@ class Image
     public function getId(): int
     {
         return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-
-    /**
-     * @param string $path
-     *
-     * @return $this
-     */
-    public function setPath(string $path): static
-    {
-        $this->path = $path;
-
-        return $this;
     }
 
     /**
@@ -84,6 +66,34 @@ class Image
         $this->type = $type;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return $this
+     */
+    public function setPath(string $path): static
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
     }
 
     /**

@@ -5,9 +5,6 @@ start:
 start-rebuild:
 		docker-compose up -d --build
 
-enter:
-		docker-compose exec php bash
-
 stop:
 		docker-compose down
 
@@ -27,6 +24,11 @@ clean-hard:
 		docker system prune -a --volumes -f
 # End of - Docker commands.
 
+# Backend commands.
+enter-back:
+		docker-compose exec php bash
+# End of - Backend commands.
+
 # Frontend commands.
 start-front:
 		docker-compose exec node npm run start
@@ -36,4 +38,7 @@ build-front:
 
 build-front-api-doc:
 		docker-compose exec node npm run build-api-doc
+
+enter-front:
+		docker-compose exec node bash
 # End of - Frontend commands.

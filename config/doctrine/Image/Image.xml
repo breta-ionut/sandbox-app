@@ -13,12 +13,13 @@
             </options>
         </id>
 
-        <field name="path" length="4096" />
-
         <field name="type" type="smallint">
             <options>
                 <option name="unsigned">true</option>
             </options>
         </field>
+
+        <field name="path" length="4096" />
+        <field name="createdAt" type="datetime" />
     </entity>
 </doctrine-mapping>
