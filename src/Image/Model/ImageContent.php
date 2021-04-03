@@ -21,11 +21,16 @@ class ImageContent
      * @param int             $type
      *
      * @throws \InvalidArgumentException
+     * @throws \DomainException
      */
     public function __construct(mixed $content, int $type)
     {
         if (!\is_resource($content) || !\is_string($content)) {
             throw new \InvalidArgumentException('The image content must be a resource (stream) or a string.');
+        }
+
+        if (\IMAGETYPE_UNKNOWN === $type) {
+            throw new \DomainException('Unknown image type provided.');
         }
 
         $this->content = $content;
