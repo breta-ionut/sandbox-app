@@ -16,7 +16,7 @@
         <field name="firstName" length="50" />
         <field name="lastName" length="50" />
         <field name="email" unique="true" />
-        <field name="roles" type="json_array" />
+        <field name="roles" type="json" />
         <field name="password" />
     </entity>
 </doctrine-mapping>

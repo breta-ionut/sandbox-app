@@ -13,9 +13,9 @@
             </options>
         </id>
 
-        <field name="type" type="smallint">
+        <field name="token" length="32" unique="true">
             <options>
-                <option name="unsigned">true</option>
+                <option name="fixed">true</option>
             </options>
         </field>
 

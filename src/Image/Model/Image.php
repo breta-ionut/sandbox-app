@@ -9,12 +9,7 @@ use Symfony\Component\HttpFoundation\File\File;
 class Image
 {
     private int $id;
-
-    /**
-     * @var int Should be a IMAGETYPE_* constant corresponding to a valid image type.
-     */
-    private int $type;
-
+    private string $token;
     private string $path;
     private \DateTime $createdAt;
     private ?File $file;
@@ -31,6 +26,7 @@ class Image
     public function __construct(?File $file)
     {
         $this->file = $file;
+        $this->token = \bin2hex(\random_bytes(16));
         $this->createdAt = new \DateTime();
     }
 
@@ -43,29 +39,11 @@ class Image
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getType(): int
+    public function getToken(): string
     {
-        return $this->type;
-    }
-
-    /**
-     * @param int $type
-     *
-     * @return $this
-     *
-     * @throws \DomainException
-     */
-    public function setType(int $type): static
-    {
-        if (\IMAGETYPE_UNKNOWN === $type) {
-            throw new \DomainException('Unknown image type provided.');
-        }
-
-        $this->type = $type;
-
-        return $this;
+        return $this->token;
     }
 
     /**
