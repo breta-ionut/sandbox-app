@@ -6,41 +6,34 @@ namespace App\Image\Model;
 
 class ImageContent
 {
-    /**
-     * @var resource|string
-     */
-    private mixed $content;
+    private string $content;
 
     /**
-     * @var int Should be a IMAGETYPE_* constant.
+     * @var int Should be a \IMAGETYPE_* constant other than \IMAGETYPE_UNKNOWN.
      */
     private int $type;
 
     /**
-     * @param resource|string $content
-     * @param int             $type
+     * @param string $content
      *
-     * @throws \InvalidArgumentException
-     * @throws \DomainException
+     * @throws \UnexpectedValueException
      */
-    public function __construct(mixed $content, int $type)
+    public function __construct(string $content)
     {
-        if (!\is_resource($content) || !\is_string($content)) {
-            throw new \InvalidArgumentException('The image content must be a resource (stream) or a string.');
-        }
+        $info = @\getimagesizefromstring($content);
 
-        if (\IMAGETYPE_UNKNOWN === $type) {
-            throw new \DomainException('Unknown image type provided.');
+        if (!isset($info[2]) || \IMAGETYPE_UNKNOWN === $info[2]) {
+            throw new \UnexpectedValueException('Image type could not be detected, perhaps the image isn\'t valid.');
         }
 
         $this->content = $content;
-        $this->type = $type;
+        $this->type = $info[2];
     }
 
     /**
-     * @return resource|string
+     * @return string
      */
-    public function reveal(): mixed
+    public function reveal(): string
     {
         return $this->content;
     }

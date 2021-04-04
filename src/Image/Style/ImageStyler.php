@@ -54,13 +54,7 @@ class ImageStyler
      */
     private function prepareImageForStyling(ImageContent $imageContent): ImageInterface
     {
-        $imageContent = $imageContent->reveal();
-
-        if (\is_resource($imageContent)) {
-            return $this->imagine->read($imageContent);
-        }
-
-        return $this->imagine->load($imageContent);
+        return $this->imagine->load($imageContent->reveal());
     }
 
     /**
@@ -73,6 +67,6 @@ class ImageStyler
     {
         $format = \image_type_to_extension($type, false);
 
-        return new ImageContent($image->get($format), $type);
+        return new ImageContent($image->get($format));
     }
 }
