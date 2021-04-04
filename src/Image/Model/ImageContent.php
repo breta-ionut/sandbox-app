@@ -6,7 +6,7 @@ namespace App\Image\Model;
 
 use Symfony\Component\HttpFoundation\File\File;
 
-class ImageContent
+class ImageContent implements \Stringable
 {
     private string $content;
 
@@ -43,18 +43,18 @@ class ImageContent
     }
 
     /**
-     * @return string
-     */
-    public function reveal(): string
-    {
-        return $this->content;
-    }
-
-    /**
      * @return int
      */
     public function getType(): int
     {
         return $this->type;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __toString(): string
+    {
+        return $this->content;
     }
 }

@@ -54,7 +54,7 @@ class ImageStyler
      */
     private function prepareImageForStyling(ImageContent $imageContent): ImageInterface
     {
-        return $this->imagine->load($imageContent->reveal());
+        return $this->imagine->load((string) $imageContent);
     }
 
     /**
