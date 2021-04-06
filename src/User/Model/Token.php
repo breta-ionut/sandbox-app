@@ -6,10 +6,17 @@ namespace App\User\Model;
 
 class Token
 {
+    private const TOKEN_SIZE = 64;
+
     private int $id;
     private string $token;
     private \DateTimeInterface $expiresAt;
     private User $user;
+
+    public function __construct()
+    {
+        $this->token = \bin2hex(\random_bytes(self::TOKEN_SIZE));
+    }
 
     /**
      * @return int
@@ -28,18 +35,6 @@ class Token
     }
 
     /**
-     * @param string $token
-     *
-     * @return $this
-     */
-    public function setToken(string $token): self
-    {
-        $this->token = $token;
-
-        return $this;
-    }
-
-    /**
      * @return \DateTimeInterface
      */
     public function getExpiresAt(): \DateTimeInterface
@@ -52,7 +47,7 @@ class Token
      *
      * @return $this
      */
-    public function setExpiresAt(\DateTimeInterface $expiresAt): self
+    public function setExpiresAt(\DateTimeInterface $expiresAt): static
     {
         $this->expiresAt = $expiresAt;
 
@@ -72,7 +67,7 @@ class Token
      *
      * @return $this
      */
-    public function setUser(User $user): self
+    public function setUser(User $user): static
     {
         $this->user = $user;
 

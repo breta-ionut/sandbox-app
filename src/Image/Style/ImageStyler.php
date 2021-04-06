@@ -38,7 +38,7 @@ class ImageStyler
             throw new \DomainException(\sprintf('Unknown image style "%s".', $style));
         }
 
-        $image = $this->prepareImageForStyling($imageContent);
+        $image = $this->loadImageForStyling($imageContent);
 
         $this->imageStylesLocator
             ->get($style)
@@ -52,7 +52,7 @@ class ImageStyler
      *
      * @return ImageInterface
      */
-    private function prepareImageForStyling(ImageContent $imageContent): ImageInterface
+    private function loadImageForStyling(ImageContent $imageContent): ImageInterface
     {
         return $this->imagine->load((string) $imageContent);
     }

@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class Image
 {
+    private const TOKEN_SIZE = 16;
+
     private int $id;
     private string $token;
     private string $path;
@@ -26,7 +28,7 @@ class Image
     public function __construct(?File $file)
     {
         $this->file = $file;
-        $this->token = \bin2hex(\random_bytes(16));
+        $this->token = \bin2hex(\random_bytes(self::TOKEN_SIZE));
         $this->createdAt = new \DateTime();
     }
 

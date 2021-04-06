@@ -11,8 +11,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class TokenManager
 {
-    private const TOKEN_LENGTH = 64;
-
     private TokenRepository $repository;
     private EntityManagerInterface $entityManager;
 
@@ -61,9 +59,7 @@ class TokenManager
      */
     private function create(User $user): Token
     {
-        $token = (new Token())
-            ->setToken(\bin2hex(\random_bytes(self::TOKEN_LENGTH)))
-            ->setUser($user);
+        $token = (new Token())->setUser($user);
 
         $this->entityManager->persist($token);
 
