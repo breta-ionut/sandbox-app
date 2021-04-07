@@ -43,11 +43,11 @@ class ImageContent implements \Stringable
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getType(): int
+    public function getFormat(): string
     {
-        return $this->type;
+        return \image_type_to_extension($this->type, false);
     }
 
     /**
