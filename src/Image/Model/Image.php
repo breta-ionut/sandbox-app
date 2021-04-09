@@ -15,6 +15,7 @@ class Image
     private string $path;
     private \DateTime $createdAt;
     private ?File $file;
+    private ?ImageContent $content;
     private ?string $originalPublicUrl;
 
     /**
@@ -82,6 +83,24 @@ class Image
     public function getFile(): ?File
     {
         return $this->file;
+    }
+
+    /**
+     * @return ImageContent
+     *
+     * @throws \LogicException
+     */
+    public function getContent(): ImageContent
+    {
+        if (isset($this->content)) {
+            return $this->content;
+        }
+
+        if (!isset($this->file)) {
+            throw new \LogicException('Cannot determine the image content since the image file is missing.');
+        }
+
+        return $this->content = ImageContent::fromFile($this->file);
     }
 
     /**
