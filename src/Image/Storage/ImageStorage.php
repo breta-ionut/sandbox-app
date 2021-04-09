@@ -48,6 +48,14 @@ class ImageStorage
 
     /**
      * @param Image $image
+     */
+    public function delete(Image $image): void
+    {
+        $this->privateFilesystem->delete($image->getPath());
+    }
+
+    /**
+     * @param Image $image
      *
      * @return string
      */
