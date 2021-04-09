@@ -40,5 +40,34 @@ class ImageStorage
      */
     public function upload(Image $image): void
     {
+        $path = $this->getImagePath($image);
+        $image->setPath($path);
+
+        $this->privateFilesystem->write($path, (string) $image->getContent());
+    }
+
+    /**
+     * @param Image $image
+     *
+     * @return string
+     */
+    private function getImagePath(Image $image): string
+    {
+        return \sprintf(
+            '/images/%s/%s.%s',
+            $this->getDateDirectory($image->getCreatedAt()),
+            $image->getToken(),
+            $image->getContent()->getFormat()
+        );
+    }
+
+    /**
+     * @param \DateTime $date
+     *
+     * @return string
+     */
+    private function getDateDirectory(\DateTime $date): string
+    {
+        return $date->format('Y-m-d');
     }
 }
