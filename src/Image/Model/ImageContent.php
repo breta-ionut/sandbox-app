@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Image\Model;
 
-use Symfony\Component\HttpFoundation\File\File;
-
 class ImageContent implements \Stringable
 {
     private string $content;
@@ -30,16 +28,6 @@ class ImageContent implements \Stringable
 
         $this->content = $content;
         $this->type = $info[2];
-    }
-
-    /**
-     * @param File $file
-     *
-     * @return static
-     */
-    public static function fromFile(File $file): static
-    {
-        return new static($file->getContent());
     }
 
     /**

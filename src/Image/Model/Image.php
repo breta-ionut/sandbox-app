@@ -100,7 +100,7 @@ class Image
             throw new \LogicException('Cannot determine the image content since the image file is missing.');
         }
 
-        return $this->content = ImageContent::fromFile($this->file);
+        return $this->content = new ImageContent($this->file->getContent());
     }
 
     /**
