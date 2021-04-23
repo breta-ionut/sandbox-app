@@ -40,7 +40,7 @@ class ImageStorage
      */
     public function upload(Image $image): void
     {
-        $path = $this->getImagePath($image);
+        $path = $this->getPath($image);
         $image->setPath($path);
 
         $this->privateFilesystem->write($path, (string) $image->getContent());
@@ -59,7 +59,7 @@ class ImageStorage
      *
      * @return string
      */
-    private function getImagePath(Image $image): string
+    private function getPath(Image $image): string
     {
         return \sprintf(
             '/images/%s/%s.%s',
@@ -85,7 +85,7 @@ class ImageStorage
      *
      * @return string
      */
-    private function getPublicImagePath(Image $image, string $style = null): string
+    private function getPublicPath(Image $image, string $style = null): string
     {
         return \sprintf(
             '/images/%s/%s%s',
