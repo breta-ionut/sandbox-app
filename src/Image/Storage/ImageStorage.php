@@ -78,4 +78,20 @@ class ImageStorage
     {
         return $date->format('Y-m-d');
     }
+
+    /**
+     * @param Image       $image
+     * @param string|null $style
+     *
+     * @return string
+     */
+    private function getPublicImagePath(Image $image, string $style = null): string
+    {
+        return \sprintf(
+            '/images/%s/%s%s',
+            $this->getDateDirectory($image->getCreatedAt()),
+            null !== $style ? "/$style" : '',
+            \basename($image->getPath())
+        );
+    }
 }
