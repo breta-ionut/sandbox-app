@@ -6,6 +6,7 @@ namespace App\Image\Storage;
 
 use App\Common\Filesystem\PublicFilesystemOperator;
 use App\Image\Model\Image;
+use App\Image\Model\ImageContent;
 use App\Image\Style\ImageStyler;
 use League\Flysystem\FilesystemOperator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -52,6 +53,21 @@ class ImageStorage
     public function delete(Image $image): void
     {
         $this->privateFilesystem->delete($image->getPath());
+    }
+
+    /**
+     * @param Image       $image
+     * @param string|null $style
+     */
+    public function publish(Image $image, string $style = null): void
+    {
+        $imageContent = new ImageContent($this->privateFilesystem->read($image->getPath()));
+
+        if (null !== $style) {
+            $imageContent = $this->imageStyler->apply($imageContent, $style);
+        }
+
+        $this->publicFilesystem->write($this->getPublicPath($image), (string) $imageContent);
     }
 
     /**
