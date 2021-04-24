@@ -18,7 +18,7 @@ class ResourceNotFoundException extends \RangeException implements HttpException
      * @param int             $code
      * @param \Throwable|null $previous
      */
-    public function __construct(string $class, $id, int $code = 0, \Throwable $previous = null)
+    public function __construct(string $class, mixed $id, int $code = 0, \Throwable $previous = null)
     {
         $message = \sprintf('Resource of type "%s" (identified by %s) could not be found.', $class, \json_encode($id));
 
