@@ -117,7 +117,24 @@ class ImageStorage
      *
      * @return string
      */
-    private function generatePublicUrl(Image $image, string $style = null): string
+    public function getPublicUrl(Image $image, string $style = null): string
+    {
+        $publicPath = $this->getPublicPath($image, $style);
+
+        if ($this->publicFilesystem->fileExists($publicPath)) {
+            return $this->publicFilesystem->publicUrl($publicPath);
+        }
+
+        return $this->generatePublicUrl($image, $style);
+    }
+
+    /**
+     * @param Image       $image
+     * @param string|null $style
+     *
+     * @return string
+     */
+    private function generatePublicUrl(Image $image, ?string $style): string
     {
         $parameters = ['token' => $image->getToken()] + (null !== $style ? \compact($style) : []);
 
