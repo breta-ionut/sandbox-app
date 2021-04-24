@@ -8,6 +8,9 @@ use App\Core\Doctrine\ServiceEntityRepository;
 use App\Image\Model\Image;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @method Image|null findOneByToken(string $token)
+ */
 class ImageRepository extends ServiceEntityRepository
 {
     /**

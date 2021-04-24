@@ -133,7 +133,7 @@ class ImageStorage
      *
      * @return string
      */
-    public function getPublicUrl(Image $image, string $style = null): string
+    private function getPublicUrl(Image $image, string $style = null): string
     {
         $publicPath = $this->getPublicPath($image, $style);
 
