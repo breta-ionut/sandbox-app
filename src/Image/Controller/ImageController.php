@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace App\Image\Controller;
 
 use App\Api\Exception\ResourceNotFoundException;
+use App\Api\Exception\ValidationException;
 use App\Core\Controller\AbstractController;
+use App\Image\Image\ImageManager;
 use App\Image\Model\Image;
 use App\Image\Repository\ImageRepository;
 use App\Image\Storage\ImageStorage;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ImageController extends AbstractController
 {
@@ -42,5 +46,29 @@ class ImageController extends AbstractController
         $publicUrl = $original ? $image->getOriginalPublicUrl() : $image->getPublicUrlForStyle($style);
 
         return new RedirectResponse($publicUrl, RedirectResponse::HTTP_MOVED_PERMANENTLY);
+    }
+
+    /**
+     * @param Request            $request
+     * @param ValidatorInterface $validator
+     * @param ImageManager       $imageManager
+     *
+     * @return Image
+     *
+     * @throws ValidationException
+     */
+    public function create(Request $request, ValidatorInterface $validator, ImageManager $imageManager): Image
+    {
+        $files = $request->files->all();
+        $image = new Image(\reset($files) ?: null);
+
+        $violations = $validator->validate($image);
+        if (0 !== \count($violations)) {
+            throw new ValidationException($violations);
+        }
+
+        $imageManager->create($image);
+
+        return $image;
     }
 }
