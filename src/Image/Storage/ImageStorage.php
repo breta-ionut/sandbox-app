@@ -67,7 +67,7 @@ class ImageStorage
             $imageContent = $this->imageStyler->apply($imageContent, $style);
         }
 
-        $this->publicFilesystem->write($this->getPublicPath($image), (string) $imageContent);
+        $this->publicFilesystem->write($this->getPublicPath($image, $style), (string) $imageContent);
     }
 
     /**
@@ -101,13 +101,26 @@ class ImageStorage
      *
      * @return string
      */
-    private function getPublicPath(Image $image, string $style = null): string
+    private function getPublicPath(Image $image, ?string $style): string
     {
         return \sprintf(
             '/images/%s/%s%s',
             $this->getDateDirectory($image->getCreatedAt()),
-            null !== $style ? "/$style" : '',
+            null !== $style ? "$style/" : '',
             \basename($image->getPath())
         );
+    }
+
+    /**
+     * @param Image       $image
+     * @param string|null $style
+     *
+     * @return string
+     */
+    private function generatePublicUrl(Image $image, string $style = null): string
+    {
+        $parameters = ['token' => $image->getToken()] + (null !== $style ? \compact($style) : []);
+
+        return $this->urlGenerator->generate('app_image_image_get', $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
     }
 }
