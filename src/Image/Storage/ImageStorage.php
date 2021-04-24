@@ -71,6 +71,22 @@ class ImageStorage
     }
 
     /**
+     * @param Image    $image
+     * @param bool     $original
+     * @param string[] $forStyles
+     */
+    public function setPublicUrls(Image $image, bool $original = false, array $forStyles = []): void
+    {
+        if ($original) {
+            $image->setOriginalPublicUrl($this->getPublicUrl($image));
+        }
+
+        foreach ($forStyles as $style) {
+            $image->setPublicUrlForStyle($style, $this->getPublicUrl($image, $style));
+        }
+    }
+
+    /**
      * @param Image $image
      *
      * @return string
