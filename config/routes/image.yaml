@@ -1,0 +1,9 @@
+app_image_image_get:
+    path: /api/image/{token}/{style}
+    methods: GET
+    controller: 'App\Image\Controller\ImageController::getImage'
+
+app_image_image_create:
+    path: /api/image
+    methods: POST
+    controller: 'App\Image\Controller\ImageController::create'
