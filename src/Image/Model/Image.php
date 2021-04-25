@@ -16,7 +16,7 @@ class Image
     private \DateTime $createdAt;
     private ?File $file;
     private ?ImageContent $content;
-    private ?string $originalPublicUrl;
+    private ?string $originalPublicUrl = null;
 
     /**
      * @var array<string, string>
