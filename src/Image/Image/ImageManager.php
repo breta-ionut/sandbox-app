@@ -22,7 +22,7 @@ class ImageManager
     /**
      * @param Image $image
      */
-    public function create(Image $image): void
+    public function upload(Image $image): void
     {
         $this->entityManager->persist($image);
         $this->entityManager->flush();

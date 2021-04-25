@@ -3,7 +3,7 @@ app_image_image_get:
     methods: GET
     controller: 'App\Image\Controller\ImageController::getImage'
 
-app_image_image_create:
+app_image_image_upload:
     path: /api/image
     methods: POST
-    controller: 'App\Image\Controller\ImageController::create'
+    controller: 'App\Image\Controller\ImageController::upload'

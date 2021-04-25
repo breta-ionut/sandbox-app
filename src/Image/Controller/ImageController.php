@@ -57,7 +57,7 @@ class ImageController extends AbstractController
      *
      * @throws ValidationException
      */
-    public function create(Request $request, ValidatorInterface $validator, ImageManager $imageManager): Image
+    public function upload(Request $request, ValidatorInterface $validator, ImageManager $imageManager): Image
     {
         $files = $request->files->all();
         $image = new Image(\reset($files) ?: null);
@@ -67,7 +67,7 @@ class ImageController extends AbstractController
             throw new ValidationException($violations);
         }
 
-        $imageManager->create($image);
+        $imageManager->upload($image);
 
         return $image;
     }
