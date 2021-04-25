@@ -28,7 +28,7 @@ class View
      * @param string[] $serializationGroups
      */
     public function __construct(
-        $data,
+        mixed $data,
         int $status = Response::HTTP_OK,
         array $headers = [],
         array $serializationGroups = []

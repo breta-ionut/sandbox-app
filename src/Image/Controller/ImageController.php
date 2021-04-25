@@ -6,6 +6,7 @@ namespace App\Image\Controller;
 
 use App\Api\Exception\ResourceNotFoundException;
 use App\Api\Exception\ValidationException;
+use App\Api\Http\View;
 use App\Core\Controller\AbstractController;
 use App\Image\Image\ImageManager;
 use App\Image\Model\Image;
@@ -13,6 +14,7 @@ use App\Image\Repository\ImageRepository;
 use App\Image\Storage\ImageStorage;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ImageController extends AbstractController
@@ -53,11 +55,11 @@ class ImageController extends AbstractController
      * @param ValidatorInterface $validator
      * @param ImageManager       $imageManager
      *
-     * @return Image
+     * @return View
      *
      * @throws ValidationException
      */
-    public function upload(Request $request, ValidatorInterface $validator, ImageManager $imageManager): Image
+    public function upload(Request $request, ValidatorInterface $validator, ImageManager $imageManager): View
     {
         $files = $request->files->all();
         $image = new Image(\reset($files) ?: null);
@@ -69,6 +71,6 @@ class ImageController extends AbstractController
 
         $imageManager->upload($image);
 
-        return $image;
+        return new View($image, Response::HTTP_CREATED);
     }
 }
