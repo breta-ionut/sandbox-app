@@ -33,7 +33,7 @@ class ImageController extends AbstractController
         ImageRepository $imageRepository,
         ImageStorage $imageStorage,
         string $token,
-        string $style = null
+        ?string $style
     ): RedirectResponse {
         $image = $imageRepository->findOneByToken($token);
         if (null === $image) {
