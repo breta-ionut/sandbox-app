@@ -44,6 +44,7 @@ paths:
                 content:
                     multipart/form-data:
                         schema:
+                            type: object
                             properties:
                                 image:
                                     type: string
@@ -56,7 +57,7 @@ paths:
                             schema:
                                 type: object
                                 properties:
-                                    id: {type: number}
+                                    id: {type: integer}
                                     originalPublicUrl:
                                         type: string
                                         format: uri
@@ -105,6 +106,7 @@ paths:
                 content:
                     application/json:
                         schema:
+                            type: object
                             properties:
                                 firstName: {type: string}
                                 lastName: {type: string}
@@ -146,6 +148,7 @@ paths:
                 content:
                     application/json:
                         schema:
+                            type: object
                             properties:
                                 username:
                                     type: string
@@ -205,7 +208,7 @@ components:
         UserResponse:
             type: object
             properties:
-                id: {type: number}
+                id: {type: integer}
                 firstName: {type: string}
                 lastName: {type: string}
                 email:
@@ -233,8 +236,8 @@ components:
             type: object
             properties:
                 title: {type: string}
-                code: {type: number}
-                status: {type: number}
+                code: {type: integer}
+                status: {type: integer}
                 detail: {type: string}
                 debug: {$ref: '#/components/responses/ErrorResponseDebug'}
 
@@ -242,8 +245,8 @@ components:
             type: object
             properties:
                 title: {type: string}
-                code: {type: number}
-                status: {type: number}
+                code: {type: integer}
+                status: {type: integer}
                 detail: {type: string}
                 violations:
                     type: array
