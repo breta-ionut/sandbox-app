@@ -7,3 +7,4 @@ app_image_image_upload:
     path: /api/image
     methods: POST
     controller: 'App\Image\Controller\ImageController::upload'
+    defaults: {_api_receive: false}
