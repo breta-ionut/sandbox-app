@@ -9,6 +9,71 @@ security:
     - TokenAuth: []
 
 paths:
+    /api/image/{token}/{style}:
+        get:
+            summary: Get image
+            description: 'Gets content of image with the given token with an optional style applied.'
+            tags: [Image]
+            parameters:
+                - in: path
+                  name: token
+                  schema: {type: string}
+                  required: true
+                  description: 'The token to identify the image.'
+                - in: path
+                  name: style
+                  schema: {type: string}
+                  required: false
+                  description: 'The style to be applied on the image content. If not provided, the original image content will be retrieved.'
+            responses:
+                '301':
+                    description: 'A redirect to the public URL of the successfully retrieved image.'
+                '500':
+                    description: 'If an internal error occurred.'
+                    content:
+                        application/json:
+                            schema: {$ref: '#/components/responses/ErrorResponse'}
+
+    /api/image:
+        post:
+            summary: Upload image
+            description: 'Uploads an image to the server.'
+            tags: [Image]
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            properties:
+                                image:
+                                    type: string
+                                    format: binary
+            responses:
+                '201':
+                    description: 'If the upload was successful.'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    id: {type: number}
+                                    originalPublicUrl:
+                                        type: string
+                                        format: uri
+                                    publicUrlsPerStyles:
+                                        type: object
+                                        additionalProperties: {type: string}
+                '400':
+                    description: 'If no image was sent or the one sent is invalid.'
+                    content:
+                        application/json:
+                            schema: {$ref: '#/components/responses/ValidationErrorResponse'}
+                '500':
+                    description: 'If an internal error occurred.'
+                    content:
+                        application/json:
+                            schema: {$ref: '#/components/responses/ErrorResponse'}
+
     /api/user:
         get:
             summary: Get current user
