@@ -33,7 +33,9 @@ services:
         arguments: ['%env(PRIVATE_FILESYSTEM)%']
 
     App\Common\Filesystem\PublicFilesystem:
-        arguments: ['@App\Common\Filesystem\PublicFilesystemAdapter']
+        arguments:
+            - '@App\Common\Filesystem\PublicFilesystemAdapter'
+            - {visibility: public, directory_visibility: public}
 
     App\Common\Filesystem\PublicFilesystemOperator: '@App\Common\Filesystem\PublicFilesystem'
 
