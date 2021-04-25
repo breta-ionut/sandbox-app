@@ -1,0 +1,10 @@
+App\Image\Model\Image:
+    attributes:
+        id:
+            groups: [api_request, api_response]
+
+        originalPublicUrl:
+            groups: [api_response]
+
+        publicUrlsPerStyles:
+            groups: [api_response]
