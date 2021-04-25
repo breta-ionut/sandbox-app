@@ -2,4 +2,4 @@ App\Image\Model\Image:
     properties:
         file:
             - NotNull: ~
-            - Image: {detectCorrupted: true, maxSize: 16MB}
+            - Image: {detectCorrupted: true, maxSize: 16M}
