@@ -8,7 +8,9 @@ use App\Common\Filesystem\PublicFilesystemOperator;
 use App\Image\Model\Image;
 use App\Image\Model\ImageContent;
 use App\Image\Style\ImageStyler;
+use League\Flysystem\Config;
 use League\Flysystem\FilesystemOperator;
+use League\Flysystem\Visibility;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ImageStorage
@@ -67,7 +69,11 @@ class ImageStorage
             $imageContent = $this->imageStyler->apply($imageContent, $style);
         }
 
-        $this->publicFilesystem->write($this->getPublicPath($image, $style), (string) $imageContent);
+        $this->publicFilesystem->write(
+            $this->getPublicPath($image, $style),
+            (string) $imageContent,
+            [Config::OPTION_VISIBILITY => Visibility::PUBLIC],
+        );
     }
 
     /**

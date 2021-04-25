@@ -1,5 +1,5 @@
 app_image_image_get:
-    path: /api/image/{token}/{style}
+    path: /api/image/{token}/{style?}
     methods: GET
     controller: 'App\Image\Controller\ImageController::getImage'
 
