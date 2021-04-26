@@ -24,6 +24,7 @@ paths:
                   name: style
                   schema: {type: string}
                   required: false
+                  allowEmptyValue: true
                   description: 'The style to be applied on the image content. If not provided, the original image content will be retrieved.'
             responses:
                 '301':
