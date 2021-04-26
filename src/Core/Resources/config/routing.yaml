@@ -38,6 +38,7 @@ services:
             -
                 cache_dir: '%kernel.cache_dir%'
                 debug: '%kernel.debug%'
+                matcher_class: App\Core\Routing\RedirectableCompiledUrlMatcher
                 resource_type: service
             - '@Symfony\Component\Routing\RequestContext'
 
