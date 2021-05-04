@@ -132,7 +132,7 @@ class DoctrineExtension extends ConfigurableExtension
             'url' => $databaseConfig['url'],
         ];
 
-        foreach (['server_version', 'charset', 'default_table_options'] as $configKey) {
+        foreach (['server_version', 'charset'] as $configKey) {
             if (isset($databaseConfig[$configKey])) {
                 $connectionParams[ContainerBuilder::camelize($configKey)] = $databaseConfig[$configKey];
             }

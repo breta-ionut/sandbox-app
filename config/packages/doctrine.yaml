@@ -1,9 +1,6 @@
 doctrine:
     database:
-        driver: pdo_mysql
+        driver: pdo_pgsql
         url: '%env(resolve:DATABASE_URL)%'
-        server_version: '8.0'
-        charset: utf8mb4
-        default_table_options:
-            charset: utf8mb4
-            collate: utf8mb4_unicode_ci
+        server_version: '13.2'
+        charset: utf8

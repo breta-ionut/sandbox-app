@@ -12,7 +12,7 @@ class DoctrineConfiguration implements ConfigurationInterface
     /**
      * {@inheritDoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('doctrine');
         $root = $treeBuilder->getRootNode();
@@ -34,18 +34,6 @@ class DoctrineConfiguration implements ConfigurationInterface
 
                         ->scalarNode('charset')
                             ->cannotBeEmpty()
-                        ->end()
-
-                        ->arrayNode('default_table_options')
-                            ->children()
-                                ->scalarNode('charset')
-                                    ->cannotBeEmpty()
-                                ->end()
-
-                                ->scalarNode('collate')
-                                    ->cannotBeEmpty()
-                                ->end()
-                            ->end()
                         ->end()
                     ->end()
                 ->end()
