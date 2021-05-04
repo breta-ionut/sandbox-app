@@ -6,20 +6,15 @@
 >
     <entity name="App\Image\Model\Image" repository-class="App\Image\Repository\ImageRepository">
         <id name="id" type="integer">
-            <generator />
+            <generator strategy="IDENTITY" />
 
             <options>
                 <option name="unsigned">true</option>
             </options>
         </id>
 
-        <field name="token" length="32" unique="true">
-            <options>
-                <option name="fixed">true</option>
-            </options>
-        </field>
-
-        <field name="path" length="4096" />
-        <field name="createdAt" type="datetime" />
+        <field name="token" unique="true" />
+        <field name="path" />
+        <field name="createdAt" type="datetimetz" />
     </entity>
 </doctrine-mapping>

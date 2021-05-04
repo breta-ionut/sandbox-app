@@ -6,15 +6,15 @@
 >
     <entity name="App\User\Model\User" repository-class="App\User\Repository\UserRepository">
         <id name="id" type="integer">
-            <generator />
+            <generator strategy="IDENTITY" />
 
             <options>
                 <option name="unsigned">true</option>
             </options>
         </id>
 
-        <field name="firstName" length="50" />
-        <field name="lastName" length="50" />
+        <field name="firstName" />
+        <field name="lastName" />
         <field name="email" unique="true" />
         <field name="roles" type="json" />
         <field name="password" />

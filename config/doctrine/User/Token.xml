@@ -6,20 +6,15 @@
 >
     <entity name="App\User\Model\Token">
         <id name="id" type="integer">
-            <generator />
+            <generator strategy="IDENTITY" />
 
             <options>
                 <option name="unsigned">true</option>
             </options>
         </id>
 
-        <field name="token" length="128" unique="true">
-            <options>
-                <option name="fixed">true</option>
-            </options>
-        </field>
-
-        <field name="expiresAt" type="datetime" />
+        <field name="token" unique="true" />
+        <field name="expiresAt" type="datetimetz" />
 
         <many-to-one field="user" target-entity="App\User\Model\User" />
     </entity>
