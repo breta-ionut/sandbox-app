@@ -7,7 +7,8 @@ ARG PHP_HOST_IP=172.17.0.1
 RUN groupadd --gid $PHP_GROUP_ID php \
     && useradd --uid $PHP_USER_ID --gid php --create-home php
 
-RUN apt-get update && apt-get install -y git zip zlib1g-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev libwebp-dev
+RUN apt-get update \
+    && apt-get install -y git zip zlib1g-dev libpq-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev libwebp-dev
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install opcache pdo_pgsql gd \
