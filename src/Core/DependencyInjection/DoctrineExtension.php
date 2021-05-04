@@ -127,10 +127,7 @@ class DoctrineExtension extends ConfigurableExtension
      */
     private function getConnectionParams(array $databaseConfig): array
     {
-        $connectionParams = [
-            'driver' => $databaseConfig['driver'],
-            'url' => $databaseConfig['url'],
-        ];
+        $connectionParams = ['driver' => $databaseConfig['driver'], 'url' => $databaseConfig['url']];
 
         foreach (['server_version', 'charset'] as $configKey) {
             if (isset($databaseConfig[$configKey])) {
