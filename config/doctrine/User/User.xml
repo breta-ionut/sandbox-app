@@ -13,10 +13,10 @@
             </options>
         </id>
 
-        <field name="firstName" />
-        <field name="lastName" />
-        <field name="email" unique="true" />
+        <field name="firstName" type="text" />
+        <field name="lastName" type="text" />
+        <field name="email" type="text" unique="true" />
         <field name="roles" type="json" />
-        <field name="password" />
+        <field name="password" type="text" />
     </entity>
 </doctrine-mapping>

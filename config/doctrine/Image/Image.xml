@@ -13,8 +13,8 @@
             </options>
         </id>
 
-        <field name="token" unique="true" />
-        <field name="path" />
+        <field name="token" type="text" unique="true" />
+        <field name="path" type="text" />
         <field name="createdAt" type="datetimetz" />
     </entity>
 </doctrine-mapping>

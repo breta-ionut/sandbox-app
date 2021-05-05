@@ -13,7 +13,7 @@
             </options>
         </id>
 
-        <field name="token" unique="true" />
+        <field name="token" type="text" unique="true" />
         <field name="expiresAt" type="datetimetz" />
 
         <many-to-one field="user" target-entity="App\User\Model\User" />
