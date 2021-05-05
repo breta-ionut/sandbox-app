@@ -11,6 +11,9 @@ stop:
 restart: stop
 		make start
 
+restart-rebuild: stop
+		make start-rebuild
+
 init:
 		cp -f .env.dist .env
 		make start
