@@ -61,13 +61,14 @@ class DeserializeListener implements EventSubscriberInterface
             if (\is_object($argument) && $this->entityManager->contains($argument)) {
                 $context = [
                     AbstractObjectNormalizer::OBJECT_TO_POPULATE => $argument,
-                    AbstractObjectNormalizer::DEEP_OBJECT_TO_POPULATE => true,
                     AbstractObjectNormalizer::GROUPS => $this->getApiSetting(
                         $request,
                         'update_deserialization_groups',
                         [],
                     ),
-                ] + $this->getApiSetting($request, 'update_deserialization_context', []);
+                ] + $this->getApiSetting($request, 'update_deserialization_context', []) + [
+                    AbstractObjectNormalizer::DEEP_OBJECT_TO_POPULATE => true,
+                ];
 
                 $this->requestReader->read($request, ClassUtils::getClass($argument), $context);
 
