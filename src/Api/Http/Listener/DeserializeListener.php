@@ -12,7 +12,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
 /**
  * Populates Doctrine entities passed to controllers with data from API requests content.
@@ -25,6 +25,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
  *        first argument eligible for update will be considered
  *      - "_api_update_deserialization_groups": additional groups to use when deserializing requests. The default
  *        deserialization group is "api_request" (provided by {@see RequestReader})
+ *      - "_api_update_deserialization_context": additional context to pass when deserializing requests
  */
 class DeserializeListener implements EventSubscriberInterface
 {
@@ -58,10 +59,17 @@ class DeserializeListener implements EventSubscriberInterface
 
         foreach ($arguments as $argument) {
             if (\is_object($argument) && $this->entityManager->contains($argument)) {
-                $this->requestReader->read($request, ClassUtils::getClass($argument), [
-                    AbstractNormalizer::OBJECT_TO_POPULATE => $argument,
-                    AbstractNormalizer::GROUPS => $this->getApiSetting($request, 'update_deserialization_groups', []),
-                ]);
+                $context = [
+                    AbstractObjectNormalizer::OBJECT_TO_POPULATE => $argument,
+                    AbstractObjectNormalizer::DEEP_OBJECT_TO_POPULATE => true,
+                    AbstractObjectNormalizer::GROUPS => $this->getApiSetting(
+                        $request,
+                        'update_deserialization_groups',
+                        [],
+                    ),
+                ] + $this->getApiSetting($request, 'update_deserialization_context', []);
+
+                $this->requestReader->read($request, ClassUtils::getClass($argument), $context);
 
                 // The request content can be used to populate a single entity, therefore we stop at the first one.
                 return;
