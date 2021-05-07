@@ -25,6 +25,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
  *        perform a proper deserialization
  *      - "_api_receive_deserialization_groups": additional groups to use when deserializing requests. The default
  *        deserialization group is "api_request" (provided by {@see RequestReader})
+ *      - "_api_receive_deserialization_context": additional context to pass when deserializing requests
  */
 class InputObjectValueResolver implements ArgumentValueResolverInterface
 {
@@ -60,11 +61,10 @@ class InputObjectValueResolver implements ArgumentValueResolverInterface
     public function resolve(Request $request, ArgumentMetadata $argument)
     {
         $inputClass = $this->getInputClass($request, $argument);
-        $inputObject = $this->requestReader->read(
-            $request,
-            $inputClass,
-            [AbstractNormalizer::GROUPS => $this->getApiSetting($request, 'receive_deserialization_groups', [])]
-        );
+        $context = [AbstractNormalizer::GROUPS => $this->getApiSetting($request, 'receive_deserialization_groups', [])]
+            + $this->getApiSetting($request, 'receive_deserialization_context');
+
+        $inputObject = $this->requestReader->read($request, $inputClass, $context);
 
         $this->resolvedRequests[$request] = true;
 
