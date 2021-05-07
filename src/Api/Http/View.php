@@ -21,28 +21,33 @@ class View
      */
     private array $serializationGroups;
 
+    private array $serializationContext;
+
     /**
      * @param mixed    $data
      * @param int      $status
      * @param array    $headers
      * @param string[] $serializationGroups
+     * @param array    $serializationContext
      */
     public function __construct(
         mixed $data,
         int $status = Response::HTTP_OK,
         array $headers = [],
-        array $serializationGroups = []
+        array $serializationGroups = [],
+        array $serializationContext = [],
     ) {
         $this->data = $data;
         $this->status = $status;
         $this->headers = $headers;
         $this->serializationGroups = $serializationGroups;
+        $this->serializationContext = $serializationContext;
     }
 
     /**
      * @return mixed
      */
-    public function getData()
+    public function getData(): mixed
     {
         return $this->data;
     }
@@ -69,5 +74,13 @@ class View
     public function getSerializationGroups(): array
     {
         return $this->serializationGroups;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSerializationContext(): array
+    {
+        return $this->serializationContext;
     }
 }
