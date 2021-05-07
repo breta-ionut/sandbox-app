@@ -62,7 +62,7 @@ class InputObjectValueResolver implements ArgumentValueResolverInterface
     {
         $inputClass = $this->getInputClass($request, $argument);
         $context = [AbstractNormalizer::GROUPS => $this->getApiSetting($request, 'receive_deserialization_groups', [])]
-            + $this->getApiSetting($request, 'receive_deserialization_context');
+            + $this->getApiSetting($request, 'receive_deserialization_context', []);
 
         $inputObject = $this->requestReader->read($request, $inputClass, $context);
 
