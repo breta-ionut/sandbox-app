@@ -27,7 +27,7 @@ class ProblemNormalizer implements NormalizerInterface, NormalizerAwareInterface
     /**
      * {@inheritDoc}
      */
-    public function normalize($object, string $format = null, array $context = [])
+    public function normalize($object, string $format = null, array $context = []): array
     {
         /** @var Problem $object */
         $data = [
@@ -57,7 +57,7 @@ class ProblemNormalizer implements NormalizerInterface, NormalizerAwareInterface
     /**
      * {@inheritDoc}
      */
-    public function supportsNormalization($data, string $format = null)
+    public function supportsNormalization($data, string $format = null): bool
     {
         return $data instanceof Problem;
     }

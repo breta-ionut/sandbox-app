@@ -12,5 +12,5 @@ interface UserDataExceptionInterface
     /**
      * @return mixed
      */
-    public function getUserData();
+    public function getUserData(): mixed;
 }

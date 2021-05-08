@@ -26,7 +26,7 @@ class MalformedInputException extends \RuntimeException implements HttpException
     /**
      * {@inheritDoc}
      */
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return Response::HTTP_BAD_REQUEST;
     }

@@ -47,14 +47,14 @@ class ConfigureApiEndpointsListener implements EventSubscriberInterface
         if (!$requestAttributes->has('_api_receive')) {
             $requestAttributes->set(
                 '_api_receive',
-                \in_array($request->getMethod(), [Request::METHOD_POST, Request::METHOD_PUT, Request::METHOD_PATCH])
+                \in_array($request->getMethod(), [Request::METHOD_POST, Request::METHOD_PUT, Request::METHOD_PATCH]),
             );
         }
 
         if (!$requestAttributes->has('_api_update')) {
             $requestAttributes->set(
                 '_api_update',
-                \in_array($request->getMethod(), [Request::METHOD_PUT, Request::METHOD_PATCH])
+                \in_array($request->getMethod(), [Request::METHOD_PUT, Request::METHOD_PATCH]),
             );
         }
     }
@@ -62,7 +62,7 @@ class ConfigureApiEndpointsListener implements EventSubscriberInterface
     /**
      * {@inheritDoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [KernelEvents::REQUEST => ['onKernelRequest', 16]];
     }

@@ -25,7 +25,7 @@ class ValidationException
     public function __construct(
         ConstraintViolationListInterface $violations,
         int $code = 0,
-        \Throwable $previous = null
+        \Throwable $previous = null,
     ) {
         $this->violations = $violations;
         $message = 'Validation failed.';
@@ -36,7 +36,7 @@ class ValidationException
     /**
      * {@inheritDoc}
      */
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return Response::HTTP_BAD_REQUEST;
     }
@@ -60,7 +60,7 @@ class ValidationException
     /**
      * {@inheritDoc}
      */
-    public function getUserData()
+    public function getUserData(): ConstraintViolationListInterface
     {
         return $this->violations;
     }

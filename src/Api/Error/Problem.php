@@ -55,7 +55,7 @@ class Problem
      *
      * @return $this
      */
-    public function setTitle(string $title): self
+    public function setTitle(string $title): static
     {
         $this->title = $title;
 
@@ -75,7 +75,7 @@ class Problem
      *
      * @return $this
      */
-    public function setCode(int $code): self
+    public function setCode(int $code): static
     {
         $this->code = $code;
 
@@ -96,7 +96,7 @@ class Problem
      *
      * @return $this
      */
-    public function setStatus(int $status, bool $updateDetail = true): self
+    public function setStatus(int $status, bool $updateDetail = true): static
     {
         $this->status = $status;
 
@@ -120,7 +120,7 @@ class Problem
      *
      * @return $this
      */
-    public function setDetail(string $detail): self
+    public function setDetail(string $detail): static
     {
         $this->detail = $detail;
 
@@ -140,7 +140,7 @@ class Problem
      *
      * @return $this
      */
-    public function setHeaders(array $headers): self
+    public function setHeaders(array $headers): static
     {
         $this->headers = $headers;
 
@@ -158,7 +158,7 @@ class Problem
     /**
      * @return mixed
      */
-    public function getData()
+    public function getData(): mixed
     {
         return $this->data;
     }
@@ -168,7 +168,7 @@ class Problem
      *
      * @return $this
      */
-    public function setData($data): self
+    public function setData(mixed $data): static
     {
         $this->data = $data;
 
@@ -180,7 +180,7 @@ class Problem
      *
      * @return $this
      */
-    public function fromException(\Throwable $exception): self
+    public function fromException(\Throwable $exception): static
     {
         if ($exception instanceof UserMessageExceptionInterface) {
             $this->title = $exception->getUserMessage();

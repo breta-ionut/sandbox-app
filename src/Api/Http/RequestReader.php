@@ -32,14 +32,14 @@ class RequestReader
      *
      * @throws MalformedInputException
      */
-    public function read(Request $request, string $type, array $context = [])
+    public function read(Request $request, string $type, array $context = []): mixed
     {
         try {
             return $this->serializer->deserialize(
                 $request->getContent(),
                 $type,
                 'json',
-                $this->setContextDefaults($context)
+                $this->setContextDefaults($context),
             );
         } catch (\Throwable $exception) {
             throw new MalformedInputException(0, $exception);
@@ -55,7 +55,7 @@ class RequestReader
     {
         $context[AbstractNormalizer::GROUPS] = \array_merge(
             $context[AbstractNormalizer::GROUPS] ?? [],
-            self::DEFAULT_DESERIALIZATION_GROUPS
+            self::DEFAULT_DESERIALIZATION_GROUPS,
         );
 
         return \array_merge(['api_request' => true], $context);

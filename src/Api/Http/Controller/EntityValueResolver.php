@@ -32,7 +32,7 @@ class EntityValueResolver implements ArgumentValueResolverInterface
     /**
      * {@inheritDoc}
      */
-    public function supports(Request $request, ArgumentMetadata $argument)
+    public function supports(Request $request, ArgumentMetadata $argument): bool
     {
         $entityClass = $argument->getType();
         $supports = \class_exists($entityClass)
@@ -51,7 +51,7 @@ class EntityValueResolver implements ArgumentValueResolverInterface
     /**
      * {@inheritDoc}
      */
-    public function resolve(Request $request, ArgumentMetadata $argument)
+    public function resolve(Request $request, ArgumentMetadata $argument): \Generator
     {
         $entityClass = $argument->getType();
         $id = $this->ids[$this->getIdStorageKey($request, $argument->getName())];

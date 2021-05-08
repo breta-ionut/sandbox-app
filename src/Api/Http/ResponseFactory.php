@@ -36,7 +36,7 @@ class ResponseFactory
         \Throwable $exception,
         int $status = Response::HTTP_INTERNAL_SERVER_ERROR,
         array $headers = [],
-        array $context = []
+        array $context = [],
     ): JsonResponse {
         $problem = (new Problem())
             ->setStatus($status)
@@ -68,10 +68,10 @@ class ResponseFactory
      * @return JsonResponse
      */
     public function createFromData(
-        $data,
+        mixed $data,
         int $status = Response::HTTP_OK,
         array $headers = [],
-        array $context = []
+        array $context = [],
     ): JsonResponse {
         if (null !== $data) {
             $json = $this->serializer->serialize($data, 'json', $this->setContextDefaults($context));
@@ -91,12 +91,12 @@ class ResponseFactory
     {
         $context[AbstractNormalizer::GROUPS] = \array_merge(
             $context[AbstractNormalizer::GROUPS] ?? [],
-            self::DEFAULT_SERIALIZATION_GROUPS
+            self::DEFAULT_SERIALIZATION_GROUPS,
         );
 
         return \array_merge(
             ['json_encode_options' => JsonResponse::DEFAULT_ENCODING_OPTIONS, 'api_response' => true],
-            $context
+            $context,
         );
     }
 }
