@@ -59,18 +59,11 @@ class DeserializeListener implements EventSubscriberInterface
 
         foreach ($arguments as $argument) {
             if (\is_object($argument) && $this->entityManager->contains($argument)) {
-                $context = [
-                    AbstractObjectNormalizer::OBJECT_TO_POPULATE => $argument,
-                    AbstractObjectNormalizer::GROUPS => $this->getApiSetting(
-                        $request,
-                        'update_deserialization_groups',
-                        [],
-                    ),
-                ] + $this->getApiSetting($request, 'update_deserialization_context', []) + [
-                    AbstractObjectNormalizer::DEEP_OBJECT_TO_POPULATE => true,
-                ];
-
-                $this->requestReader->read($request, ClassUtils::getClass($argument), $context);
+                $this->requestReader->read(
+                    $request,
+                    ClassUtils::getClass($argument),
+                    $this->getEntityDeserializationContext($request, $argument),
+                );
 
                 // The request content can be used to populate a single entity, therefore we stop at the first one.
                 return;
@@ -113,5 +106,21 @@ class DeserializeListener implements EventSubscriberInterface
         }
 
         throw new \LogicException(\sprintf('No argument to update with name "%s" found.', $argumentToUpdateName));
+    }
+
+    /**
+     * @param Request $request
+     * @param object  $entity
+     *
+     * @return array
+     */
+    private function getEntityDeserializationContext(Request $request, object $entity): array
+    {
+        return [
+            AbstractObjectNormalizer::OBJECT_TO_POPULATE => $entity,
+            AbstractObjectNormalizer::GROUPS => $this->getApiSetting($request, 'update_deserialization_groups', []),
+        ] + $this->getApiSetting($request, 'update_deserialization_context', []) + [
+            AbstractObjectNormalizer::DEEP_OBJECT_TO_POPULATE => true,
+        ];
     }
 }
