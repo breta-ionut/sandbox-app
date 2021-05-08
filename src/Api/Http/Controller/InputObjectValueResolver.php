@@ -46,7 +46,7 @@ class InputObjectValueResolver implements ArgumentValueResolverInterface
     /**
      * {@inheritDoc}
      */
-    public function supports(Request $request, ArgumentMetadata $argument)
+    public function supports(Request $request, ArgumentMetadata $argument): bool
     {
         return $this->isApiReceiveEnabled($request)
             && $this->isInputObjectArgument($request, $argument)
@@ -58,13 +58,10 @@ class InputObjectValueResolver implements ArgumentValueResolverInterface
     /**
      * {@inheritDoc}
      */
-    public function resolve(Request $request, ArgumentMetadata $argument)
+    public function resolve(Request $request, ArgumentMetadata $argument): \Generator
     {
         $inputClass = $this->getInputClass($request, $argument);
-        $context = [AbstractNormalizer::GROUPS => $this->getApiSetting($request, 'receive_deserialization_groups', [])]
-            + $this->getApiSetting($request, 'receive_deserialization_context', []);
-
-        $inputObject = $this->requestReader->read($request, $inputClass, $context);
+        $inputObject = $this->requestReader->read($request, $inputClass, $this->getDeserializationContext($request));
 
         $this->resolvedRequests[$request] = true;
 
@@ -113,5 +110,16 @@ class InputObjectValueResolver implements ArgumentValueResolverInterface
         }
 
         return $inputClass;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getDeserializationContext(Request $request): array
+    {
+        return [AbstractNormalizer::GROUPS => $this->getApiSetting($request, 'receive_deserialization_groups', [])]
+            + $this->getApiSetting($request, 'receive_deserialization_context', []);
     }
 }
