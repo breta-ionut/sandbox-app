@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Api\Http;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 class View
 {
@@ -69,18 +70,10 @@ class View
     }
 
     /**
-     * @return string[]
-     */
-    public function getSerializationGroups(): array
-    {
-        return $this->serializationGroups;
-    }
-
-    /**
      * @return array
      */
     public function getSerializationContext(): array
     {
-        return $this->serializationContext;
+        return [AbstractNormalizer::GROUPS => $this->serializationGroups] + $this->serializationContext;
     }
 }

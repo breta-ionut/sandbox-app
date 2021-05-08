@@ -10,7 +10,6 @@ use App\Api\Http\View;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 /**
  * Converts data returned by API controllers to responses using serialization. The serialization can be disabled by
@@ -47,14 +46,11 @@ class SerializeListener implements EventSubscriberInterface
         $controllerResult = $event->getControllerResult();
 
         if ($controllerResult instanceof View) {
-            $context = [AbstractNormalizer::GROUPS => $controllerResult->getSerializationGroups()]
-                + $controllerResult->getSerializationContext();
-
             $response = $this->responseFactory->createFromData(
                 $controllerResult->getData(),
                 $controllerResult->getStatus(),
                 $controllerResult->getHeaders(),
-                $context,
+                $controllerResult->getSerializationContext(),
             );
         } else {
             $response = $this->responseFactory->createFromData($controllerResult);
@@ -66,7 +62,7 @@ class SerializeListener implements EventSubscriberInterface
     /**
      * {@inheritDoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [KernelEvents::VIEW => 'onKernelView'];
     }
