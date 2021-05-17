@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Api\Serializer;
 
 use App\Api\Exception\ResourceNotFoundException;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -13,16 +12,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 class EntityDenormalizer implements ContextAwareDenormalizerInterface, DenormalizerAwareInterface
 {
     use EntityDenormalizerTrait, DenormalizerAwareTrait;
-
-    private EntityManagerInterface $entityManager;
-
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
 
     /**
      * {@inheritDoc}
