@@ -13,7 +13,7 @@ trait ApiEndpointsConfigurationTrait
      *
      * @return bool
      */
-    public function isApiRequest(Request $request): bool
+    private function isApiRequest(Request $request): bool
     {
         return $request->attributes->getBoolean('_api_endpoint');
     }
@@ -23,7 +23,7 @@ trait ApiEndpointsConfigurationTrait
      *
      * @return bool
      */
-    public function isApiReceiveEnabled(Request $request): bool
+    private function isApiReceiveEnabled(Request $request): bool
     {
         return $this->isApiRequest($request) && $request->attributes->getBoolean('_api_receive');
     }
@@ -33,7 +33,7 @@ trait ApiEndpointsConfigurationTrait
      *
      * @return bool
      */
-    public function isApiUpdateEnabled(Request $request): bool
+    private function isApiUpdateEnabled(Request $request): bool
     {
         return $this->isApiRequest($request) && $request->attributes->getBoolean('_api_update');
     }
@@ -43,7 +43,7 @@ trait ApiEndpointsConfigurationTrait
      *
      * @return bool
      */
-    public function isApiRespondEnabled(Request $request): bool
+    private function isApiRespondEnabled(Request $request): bool
     {
         return $this->isApiRequest($request) && $request->attributes->getBoolean('_api_respond', true);
     }
@@ -54,7 +54,7 @@ trait ApiEndpointsConfigurationTrait
      *
      * @return bool
      */
-    public function hasApiSetting(Request $request, string $key): bool
+    private function hasApiSetting(Request $request, string $key): bool
     {
         return $request->attributes->has('_api_'.$key);
     }
@@ -66,7 +66,7 @@ trait ApiEndpointsConfigurationTrait
      *
      * @return mixed
      */
-    public function getApiSetting(Request $request, string $key, mixed $default = null): mixed
+    private function getApiSetting(Request $request, string $key, mixed $default = null): mixed
     {
         return $request->attributes->get('_api_'.$key, $default);
     }
