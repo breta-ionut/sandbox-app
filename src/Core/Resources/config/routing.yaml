@@ -1,13 +1,24 @@
 services:
-    App\Core\Routing\Loader:
+    # Loaders.
+    App\Core\Routing\RootLoader:
         arguments: ['@Symfony\Component\Routing\Loader\PhpFileLoader', '%kernel.config_dir%', '%kernel.environment%']
         public: true
 
     routing.file_locator:
         class: Symfony\Component\Config\FileLocator
 
+    App\Core\Routing\AnnotationControllerLoader: ~
+
     routing.resolver:
         class: Symfony\Component\Config\Loader\LoaderResolver
+
+    Symfony\Component\Routing\Loader\AnnotationDirectoryLoader:
+        arguments: ['@routing.file_locator', '@App\Core\Routing\AnnotationControllerLoader']
+        tags: [routing.loader]
+
+    Symfony\Component\Routing\Loader\AnnotationFileLoader:
+        arguments: ['@routing.file_locator', '@App\Core\Routing\AnnotationControllerLoader']
+        tags: [routing.loader]
 
     Symfony\Component\Routing\Loader\ContainerLoader:
         arguments: ['@service_container']
@@ -28,13 +39,14 @@ services:
     routing.loader:
         class: Symfony\Component\Config\Loader\DelegatingLoader
         arguments: ['@routing.resolver']
+    # End of - Loaders.
 
     Symfony\Component\Routing\RequestContext: ~
 
     Symfony\Component\Routing\Router:
         arguments:
             - '@routing.loader'
-            - App\Core\Routing\Loader::load
+            - App\Core\Routing\RootLoader::load
             -
                 cache_dir: '%kernel.cache_dir%'
                 debug: '%kernel.debug%'

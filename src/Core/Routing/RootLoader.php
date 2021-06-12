@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Routing\Loader\PhpFileLoader;
 use Symfony\Component\Routing\RouteCollection;
 
-class Loader
+class RootLoader
 {
     private PhpFileLoader $phpFileLoader;
     private string $configDir;
