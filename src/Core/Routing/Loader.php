@@ -14,11 +14,6 @@ class Loader
     private string $configDir;
     private string $environment;
 
-    /**
-     * @param PhpFileLoader $phpFileLoader
-     * @param string        $configDir
-     * @param string        $environment
-     */
     public function __construct(PhpFileLoader $phpFileLoader, string $configDir, string $environment)
     {
         $this->phpFileLoader = $phpFileLoader;
@@ -26,9 +21,6 @@ class Loader
         $this->environment = $environment;
     }
 
-    /**
-     * @return RouteCollection
-     */
     public function load(): RouteCollection
     {
         $routes = new RouteCollection();
