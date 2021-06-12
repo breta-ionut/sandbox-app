@@ -12,7 +12,9 @@ services:
 
     Symfony\Component\Validator\ValidatorBuilder:
         factory: [Symfony\Component\Validator\Validation, createValidatorBuilder]
-        calls: [[setConstraintValidatorFactory, ['@Symfony\Component\Validator\ContainerConstraintValidatorFactory']]]
+        calls:
+            - [enableAnnotationMapping, [true]]
+            - [setConstraintValidatorFactory, ['@Symfony\Component\Validator\ContainerConstraintValidatorFactory']]
 
     Symfony\Component\Validator\Validator\ValidatorInterface:
         factory: ['@Symfony\Component\Validator\ValidatorBuilder', getValidator]

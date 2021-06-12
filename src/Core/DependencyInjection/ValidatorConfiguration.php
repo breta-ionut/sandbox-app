@@ -19,10 +19,6 @@ class ValidatorConfiguration implements ConfigurationInterface
 
         $root
             ->children()
-                ->scalarNode('mapping_dir')
-                    ->defaultValue('%kernel.config_dir%/validator')
-                ->end()
-
                 ->enumNode('email_validation_mode')
                     ->values(['loose', 'strict', 'html5'])
                     ->defaultValue('loose')
