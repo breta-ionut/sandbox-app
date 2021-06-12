@@ -12,7 +12,7 @@ class ValidatorConfiguration implements ConfigurationInterface
     /**
      * {@inheritDoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('validator');
         $root = $treeBuilder->getRootNode();

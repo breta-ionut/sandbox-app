@@ -3,12 +3,10 @@ parameters:
 
 services:
     # Mapping.
-    Symfony\Component\Serializer\Mapping\Loader\LoaderChain:
-        arguments:
-            - [] # Loaders.
+    Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader: ~
 
     Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory:
-        arguments: ['@Symfony\Component\Serializer\Mapping\Loader\LoaderChain']
+        arguments: ['@Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader']
 
     Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface: '@Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory'
 

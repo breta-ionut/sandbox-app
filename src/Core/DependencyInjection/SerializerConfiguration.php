@@ -12,17 +12,13 @@ class SerializerConfiguration implements ConfigurationInterface
     /**
      * {@inheritDoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('serializer');
         $root = $treeBuilder->getRootNode();
 
         $root
             ->children()
-                ->scalarNode('mapping_dir')
-                    ->defaultValue('%kernel.config_dir%/serializer')
-                ->end()
-
                 ->scalarNode('name_converter')
                     ->cannotBeEmpty()
                 ->end()
