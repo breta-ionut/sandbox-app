@@ -8,53 +8,29 @@ use App\User\Model\User;
 use App\User\Security\Authenticator\LoginAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class UserManager
 {
-    private UserPasswordEncoderInterface $userPasswordEncoder;
-    private EntityManagerInterface $entityManager;
-    private UserAuthenticatorInterface $userAuthenticator;
-    private LoginAuthenticator $authenticator;
-    private RequestStack $requestStack;
-
-    /**
-     * @param UserPasswordEncoderInterface $userPasswordEncoder
-     * @param EntityManagerInterface       $entityManager
-     * @param UserAuthenticatorInterface   $userAuthenticator
-     * @param LoginAuthenticator           $authenticator
-     * @param RequestStack                 $requestStack
-     */
     public function __construct(
-        UserPasswordEncoderInterface $userPasswordEncoder,
-        EntityManagerInterface $entityManager,
-        UserAuthenticatorInterface $userAuthenticator,
-        LoginAuthenticator $authenticator,
-        RequestStack $requestStack
+        private UserPasswordHasherInterface $userPasswordHasher,
+        private EntityManagerInterface $entityManager,
+        private UserAuthenticatorInterface $userAuthenticator,
+        private LoginAuthenticator $authenticator,
+        private RequestStack $requestStack,
     ) {
-        $this->userPasswordEncoder = $userPasswordEncoder;
-        $this->entityManager = $entityManager;
-        $this->userAuthenticator = $userAuthenticator;
-        $this->authenticator = $authenticator;
-        $this->requestStack = $requestStack;
     }
 
-    /**
-     * @param User $user
-     */
     public function create(User $user): void
     {
-        $password = $this->userPasswordEncoder->encodePassword($user, $user->getPlainPassword());
+        $password = $this->userPasswordHasher->hashPassword($user, $user->getPlainPassword());
         $user->setPassword($password);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
 
-    /**
-     * @param User $user
-     */
     public function authenticate(User $user): void
     {
         $this->userAuthenticator->authenticateUser(
