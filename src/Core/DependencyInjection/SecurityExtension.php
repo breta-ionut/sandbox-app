@@ -10,13 +10,13 @@ use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\AccessMap;
@@ -46,12 +46,12 @@ class SecurityExtension extends ConfigurableExtension
     /**
      * {@inheritDoc}
      */
-    protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('security.yaml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('security.php');
 
-        $this->createEncoders($container, $mergedConfig['encoders']);
+        $this->createPasswordHashers($container, $mergedConfig['password_hashers']);
         $this->createFirewalls($container, $mergedConfig['firewalls']);
         $this->configureAccessMap($container, $mergedConfig['access_control']);
         $this->configureOther($container, $mergedConfig);
@@ -59,25 +59,18 @@ class SecurityExtension extends ConfigurableExtension
         $container->registerForAutoconfiguration(VoterInterface::class)->addTag('security.voter');
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $encodersConfig
-     */
-    private function createEncoders(ContainerBuilder $container, array $encodersConfig): void
+    private function createPasswordHashers(ContainerBuilder $container, array $passwordHashersConfig): void
     {
-        foreach ($encodersConfig as $class => $encoderConfig) {
-            if (isset($encoderConfig['id'])) {
-                $encodersConfig[$class] = new Reference($encoderConfig['id']);
+        foreach ($passwordHashersConfig as $class => $passwordHasherConfig) {
+            if (isset($passwordHasherConfig['id'])) {
+                $passwordHashersConfig[$class] = new Reference($passwordHasherConfig['id']);
             }
         }
 
-        $container->getDefinition(EncoderFactory::class)->setArgument('$encoders', $encodersConfig);
+        $container->getDefinition(PasswordHasherFactory::class)
+            ->setArgument('$passwordHashers', $passwordHashersConfig);
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $firewallsConfig
-     */
     private function createFirewalls(ContainerBuilder $container, array $firewallsConfig): void
     {
         $firewallMapDefinition = $container->getDefinition(FirewallMap::class);
@@ -97,13 +90,6 @@ class SecurityExtension extends ConfigurableExtension
         }
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param string           $name
-     * @param array            $firewallConfig
-     *
-     * @return array
-     */
     private function createFirewall(ContainerBuilder $container, string $name, array $firewallConfig): array
     {
         $requestMatcher = $this->createRequestMatcher($container, $firewallConfig);
@@ -143,12 +129,6 @@ class SecurityExtension extends ConfigurableExtension
         return [$requestMatcher, $listeners, $exceptionListener, $logoutListener ?? null];
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $requestMatcherConfig
-     *
-     * @return Reference
-     */
     private function createRequestMatcher(ContainerBuilder $container, array $requestMatcherConfig): Reference
     {
         $arguments = [
@@ -167,12 +147,6 @@ class SecurityExtension extends ConfigurableExtension
         return new Reference($id);
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param string           $firewall
-     *
-     * @return string
-     */
     private function createEventDispatcher(ContainerBuilder $container, string $firewall): string
     {
         $eventDispatcherId = 'security.event_dispatcher.'.$firewall;
@@ -182,13 +156,6 @@ class SecurityExtension extends ConfigurableExtension
         return $eventDispatcherId;
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param string           $firewall
-     * @param array            $firewallConfig
-     *
-     * @return Reference
-     */
     private function createContextListener(
         ContainerBuilder $container,
         string $firewall,
@@ -210,14 +177,6 @@ class SecurityExtension extends ConfigurableExtension
         return new Reference($id);
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param string           $firewall
-     * @param array            $firewallConfig
-     * @param string           $eventDispatcherId
-     *
-     * @return Reference
-     */
     private function createAuthenticatorManagerListener(
         ContainerBuilder $container,
         string $firewall,
@@ -268,13 +227,6 @@ class SecurityExtension extends ConfigurableExtension
         return new Reference($id);
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param string           $firewall
-     * @param array            $firewallConfig
-     *
-     * @return Reference
-     */
     private function createExceptionListener(
         ContainerBuilder $container,
         string $firewall,
@@ -300,14 +252,6 @@ class SecurityExtension extends ConfigurableExtension
         return new Reference($id);
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param string           $firewall
-     * @param array            $firewallConfig
-     * @param string           $eventDispatcherId
-     *
-     * @return Reference
-     */
     private function createLogoutListener(
         ContainerBuilder $container,
         string $firewall,
@@ -370,10 +314,6 @@ class SecurityExtension extends ConfigurableExtension
         return new Reference($id);
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $accessControlConfig
-     */
     private function configureAccessMap(ContainerBuilder $container, array $accessControlConfig): void
     {
         $accessMapDefinition = $container->getDefinition(AccessMap::class);
@@ -388,10 +328,6 @@ class SecurityExtension extends ConfigurableExtension
         }
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $config
-     */
     private function configureOther(ContainerBuilder $container, array $config): void
     {
         $container->getDefinition(AuthenticatorManager::class)

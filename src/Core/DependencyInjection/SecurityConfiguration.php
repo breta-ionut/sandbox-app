@@ -8,8 +8,8 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
 class SecurityConfiguration implements ConfigurationInterface
@@ -17,12 +17,12 @@ class SecurityConfiguration implements ConfigurationInterface
     /**
      * {@inheritDoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('security');
         $root = $treeBuilder->getRootNode();
 
-        $this->addEncodersSection($root);
+        $this->addPasswordHashersSection($root);
         $this->addFirewallsSection($root);
         $this->addAccessControlSection($root);
         $this->addOtherSettingsSection($root);
@@ -30,23 +30,20 @@ class SecurityConfiguration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    /**
-     * @param ArrayNodeDefinition $root
-     */
-    private function addEncodersSection(ArrayNodeDefinition $root): void
+    private function addPasswordHashersSection(ArrayNodeDefinition $root): void
     {
         $root
-            ->fixXmlConfig('encoder')
+            ->fixXmlConfig('password_hasher')
 
             ->children()
-                ->arrayNode('encoders')
+                ->arrayNode('password_hashers')
                     ->useAttributeAsKey('class')
                     ->normalizeKeys(false)
 
                     ->arrayPrototype()
                         ->info(\sprintf(
-                            'See %s::getEncoderConfigFromAlgorithm() on how to configure the encoders.',
-                            EncoderFactory::class
+                            'See %s::getHasherConfigFromAlgorithm() on how to configure the hashers.',
+                            PasswordHasherFactory::class,
                         ))
 
                         ->beforeNormalization()
@@ -112,7 +109,7 @@ class SecurityConfiguration implements ConfigurationInterface
                             ->end()
 
                             ->scalarNode('id')
-                                ->info('The id of a custom password encoder.')
+                                ->info('The id of a custom password hasher.')
 
                                 ->cannotBeEmpty()
                             ->end()
@@ -122,9 +119,6 @@ class SecurityConfiguration implements ConfigurationInterface
             ->end();
     }
 
-    /**
-     * @param ArrayNodeDefinition $root
-     */
     private function addFirewallsSection(ArrayNodeDefinition $root): void
     {
         $root
@@ -302,9 +296,6 @@ class SecurityConfiguration implements ConfigurationInterface
             ->end();
     }
 
-    /**
-     * @param ArrayNodeDefinition $root
-     */
     private function addAccessControlSection(ArrayNodeDefinition $root): void
     {
         $root
@@ -386,9 +377,6 @@ class SecurityConfiguration implements ConfigurationInterface
             ->end();
     }
 
-    /**
-     * @param ArrayNodeDefinition $root
-     */
     private function addOtherSettingsSection(ArrayNodeDefinition $root): void
     {
         $root
