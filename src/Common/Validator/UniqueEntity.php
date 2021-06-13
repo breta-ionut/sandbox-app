@@ -13,7 +13,12 @@ class UniqueEntity extends Constraint
     public const NOT_UNIQUE_ERROR = 'd8eecc54-f6fb-40c0-a9af-89ed7e843ce9';
 
     public string $message = 'This value is already used.';
-    public array $fields;
+
+    /**
+     * @var string[]|string
+     */
+    public array|string $fields;
+
     public string $repositoryMethod = 'count';
     public ?string $errorPath = null;
 
