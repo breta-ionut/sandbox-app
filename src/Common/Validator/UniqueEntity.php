@@ -7,6 +7,7 @@ namespace App\Common\Validator;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class UniqueEntity extends Constraint
 {
     public const NOT_UNIQUE_ERROR = 'd8eecc54-f6fb-40c0-a9af-89ed7e843ce9';
@@ -42,7 +43,7 @@ class UniqueEntity extends Constraint
     /**
      * {@inheritDoc}
      */
-    public function getDefaultOption()
+    public function getDefaultOption(): ?string
     {
         return 'fields';
     }
@@ -50,7 +51,7 @@ class UniqueEntity extends Constraint
     /**
      * {@inheritDoc}
      */
-    public function getRequiredOptions()
+    public function getRequiredOptions(): array
     {
         return ['fields'];
     }
@@ -58,7 +59,7 @@ class UniqueEntity extends Constraint
     /**
      * {@inheritDoc}
      */
-    public function getTargets()
+    public function getTargets(): string|array
     {
         return [Constraint::CLASS_CONSTRAINT];
     }

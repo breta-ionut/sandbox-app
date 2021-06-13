@@ -1,5 +1,0 @@
-App\Image\Model\Image:
-    properties:
-        file:
-            - NotNull: ~
-            - Image: {detectCorrupted: true, maxSize: 16M}

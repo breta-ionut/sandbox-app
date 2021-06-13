@@ -4,83 +4,103 @@ declare(strict_types=1);
 
 namespace App\User\Model;
 
+use App\Common\Validator\UniqueEntity;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
+use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-class User implements UserInterface
+#[UniqueEntity('email')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface, LegacyPasswordAuthenticatedUserInterface
 {
     private const ROLE_DEFAULT = 'ROLE_USER';
 
+    #[Groups('api_response')]
     private int $id;
+
+    #[Groups(['api_request', 'api_response'])]
+
+    #[NotBlank]
+    #[Length(max: 50)]
     private string $firstName;
+
+    #[Groups(['api_request', 'api_response'])]
+
+    #[NotBlank]
+    #[Length(max: 50)]
     private string $lastName;
+
+    #[Groups(['api_request', 'api_response'])]
+
+    #[NotBlank]
+    #[Length(max: 255)]
+    #[Email]
     private string $email;
-    private array $roles = [self::ROLE_DEFAULT];
-    private string $plainPassword;
-    private string $password;
-    private Token $currentToken;
 
     /**
-     * @return int
+     * @var string[]
      */
+    private array $roles = [self::ROLE_DEFAULT];
+
+    #[Groups('api_request')]
+
+    #[NotBlank]
+    #[Length(min: 8, max: PasswordHasherInterface::MAX_PASSWORD_LENGTH)]
+    private string $plainPassword;
+
+    private string $password;
+
+    #[Groups('api_response')]
+    private Token $currentToken;
+
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getFirstName(): string
     {
         return $this->firstName;
     }
 
     /**
-     * @param string $firstName
-     *
      * @return $this
      */
-    public function setFirstName(string $firstName): self
+    public function setFirstName(string $firstName): static
     {
         $this->firstName = $firstName;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getLastName(): string
     {
         return $this->lastName;
     }
 
     /**
-     * @param string $lastName
-     *
      * @return $this
      */
-    public function setLastName(string $lastName): self
+    public function setLastName(string $lastName): static
     {
         $this->lastName = $lastName;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getEmail(): string
     {
         return $this->email;
     }
 
     /**
-     * @param string $email
-     *
      * @return $this
      */
-    public function setEmail(string $email): self
+    public function setEmail(string $email): static
     {
         $this->email = $email;
 
@@ -90,17 +110,15 @@ class User implements UserInterface
     /**
      * {@inheritDoc}
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->roles;
     }
 
     /**
-     * @param string $role
-     *
      * @return $this
      */
-    public function addRole(string $role): self
+    public function addRole(string $role): static
     {
         if (!\in_array($role, $this->roles, true)) {
             $this->roles[] = $role;
@@ -110,13 +128,11 @@ class User implements UserInterface
     }
 
     /**
-     * @param string $role
-     *
      * @return $this
      *
      * @throws \InvalidArgumentException
      */
-    public function removeRole(string $role): self
+    public function removeRole(string $role): static
     {
         if ($role === self::ROLE_DEFAULT) {
             throw new \InvalidArgumentException(\sprintf(
@@ -135,20 +151,15 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPlainPassword(): string
     {
         return $this->plainPassword;
     }
 
     /**
-     * @param string $plainPassword
-     *
      * @return $this
      */
-    public function setPlainPassword(string $plainPassword): self
+    public function setPlainPassword(string $plainPassword): static
     {
         $this->plainPassword = $plainPassword;
 
@@ -158,37 +169,30 @@ class User implements UserInterface
     /**
      * {@inheritDoc}
      */
-    public function getPassword()
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
     /**
-     * @param string $password
-     *
      * @return $this
      */
-    public function setPassword(string $password): self
+    public function setPassword(string $password): static
     {
         $this->password = $password;
 
         return $this;
     }
 
-    /**
-     * @return Token
-     */
     public function getCurrentToken(): Token
     {
         return $this->currentToken;
     }
 
     /**
-     * @param Token $currentToken
-     *
      * @return $this
      */
-    public function setCurrentToken(Token $currentToken): self
+    public function setCurrentToken(Token $currentToken): static
     {
         $this->currentToken = $currentToken;
 
@@ -198,15 +202,23 @@ class User implements UserInterface
     /**
      * {@inheritDoc}
      */
-    public function getSalt()
+    public function eraseCredentials(): void
     {
-        return null;
+        unset($this->plainPassword);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getUsername()
+    public function getUsername(): string
+    {
+        return $this->getUserIdentifier();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUserIdentifier(): string
     {
         return $this->email;
     }
@@ -214,8 +226,8 @@ class User implements UserInterface
     /**
      * {@inheritDoc}
      */
-    public function eraseCredentials()
+    public function getSalt(): ?string
     {
-        unset($this->plainPassword);
+        return null;
     }
 }

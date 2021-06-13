@@ -5,27 +5,36 @@ declare(strict_types=1);
 namespace App\Image\Model;
 
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Image as ImageConstraint;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class Image
 {
     private const TOKEN_SIZE = 16;
 
+    #[Groups(['api_request', 'api_response'])]
     private int $id;
+
     private string $token;
     private string $path;
     private \DateTime $createdAt;
+
+    #[NotNull]
+    #[ImageConstraint(maxSize: '16M', detectCorrupted: true)]
     private ?File $file;
+
     private ?ImageContent $content;
+
+    #[Groups('api_response')]
     private ?string $originalPublicUrl = null;
 
     /**
      * @var array<string, string>
      */
+    #[Groups('api_response')]
     private array $publicUrlsPerStyles = [];
 
-    /**
-     * @param File|null $file
-     */
     public function __construct(?File $file)
     {
         $this->file = $file;
@@ -33,33 +42,22 @@ class Image
         $this->createdAt = new \DateTime();
     }
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getToken(): string
     {
         return $this->token;
     }
 
-    /**
-     * @return string
-     */
     public function getPath(): string
     {
         return $this->path;
     }
 
     /**
-     * @param string $path
-     *
      * @return $this
      */
     public function setPath(string $path): static
@@ -69,25 +67,17 @@ class Image
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
 
-    /**
-     * @return File|null
-     */
     public function getFile(): ?File
     {
         return $this->file;
     }
 
     /**
-     * @return ImageContent
-     *
      * @throws \LogicException
      */
     public function getContent(): ImageContent
@@ -103,17 +93,12 @@ class Image
         return $this->content = new ImageContent($this->file->getContent());
     }
 
-    /**
-     * @return string|null
-     */
     public function getOriginalPublicUrl(): ?string
     {
         return $this->originalPublicUrl;
     }
 
     /**
-     * @param string $originalPublicUrl
-     *
      * @return $this
      */
     public function setOriginalPublicUrl(string $originalPublicUrl): static
@@ -132,10 +117,6 @@ class Image
     }
 
     /**
-     * @param string $style
-     *
-     * @return string
-     *
      * @throws \RangeException
      */
     public function getPublicUrlForStyle(string $style): string
@@ -148,9 +129,6 @@ class Image
     }
 
     /**
-     * @param string $style
-     * @param string $publicUrl
-     *
      * @return $this
      */
     public function setPublicUrlForStyle(string $style, string $publicUrl): static
