@@ -17,7 +17,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\Authentication\AuthenticatorManager;
@@ -217,12 +216,13 @@ class SecurityExtension extends ConfigurableExtension
             $container->setDefinition('security.user_provider_listener.'.$firewall, $userProviderListenerDefinition);
         }
 
-        $userChecker = new Reference($firewallConfig['user_checker'] ?? UserCheckerInterface::class);
-        $userCheckerListenerDefinition = (new ChildDefinition(UserCheckerListener::class))
-            ->setArgument('$userChecker', $userChecker)
-            ->addTag('kernel.event_subscriber', ['dispatcher' => $eventDispatcherId]);
+        if (isset($firewallConfig['user_checker'])) {
+            $userCheckerListenerDefinition = (new ChildDefinition(UserCheckerListener::class))
+                ->setArgument('$userChecker', new Reference($firewallConfig['user_checker']))
+                ->addTag('kernel.event_subscriber', ['dispatcher' => $eventDispatcherId]);
 
-        $container->setDefinition('security.user_checker_listener.'.$firewall, $userCheckerListenerDefinition);
+            $container->setDefinition('security.user_checker_listener.' . $firewall, $userCheckerListenerDefinition);
+        }
 
         return new Reference($id);
     }
