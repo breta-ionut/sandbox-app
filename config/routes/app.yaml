@@ -3,6 +3,7 @@ app_api:
     type: annotation
     prefix: /api
     name_prefix: app_api_
+    trailing_slash_on_root: false
 
 app_frontend:
     resource: '../../src/Frontend/Controller/'
@@ -14,9 +15,11 @@ app_image:
     type: annotation
     prefix: /api/image
     name_prefix: app_image_
+    trailing_slash_on_root: false
 
 app_user:
     resource: '../../src/User/Controller/'
     type: annotation
     prefix: /api/user
     name_prefix: app_user_
+    trailing_slash_on_root: false
