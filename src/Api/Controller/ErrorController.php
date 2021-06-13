@@ -9,12 +9,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ErrorController
 {
-    /**
-     * @param \Throwable      $exception
-     * @param ResponseFactory $responseFactory
-     *
-     * @return JsonResponse
-     */
     public function error(\Throwable $exception, ResponseFactory $responseFactory): JsonResponse
     {
         return $responseFactory->createFromException($exception);

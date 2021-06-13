@@ -1,3 +1,0 @@
-app_frontend_index_index:
-    path: /{path<^(?!api/).*?>}
-    controller: 'App\Frontend\Controller\IndexController::index'

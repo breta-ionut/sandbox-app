@@ -1,0 +1,22 @@
+app_api:
+    resource: '../../src/Api/Controller/'
+    type: annotation
+    prefix: /api
+    name_prefix: app_api_
+
+app_frontend:
+    resource: '../../src/Frontend/Controller/'
+    type: annotation
+    name_prefix: app_frontend_
+
+app_image:
+    resource: '../../src/Image/Controller/'
+    type: annotation
+    prefix: /api/image
+    name_prefix: app_image_
+
+app_user:
+    resource: '../../src/User/Controller/'
+    type: annotation
+    prefix: /api/user
+    name_prefix: app_user_

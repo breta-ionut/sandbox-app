@@ -15,25 +15,21 @@ use App\Image\Storage\ImageStorage;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+#[Route(name: 'image_')]
 class ImageController extends AbstractController
 {
     /**
-     * @param ImageRepository $imageRepository
-     * @param ImageStorage    $imageStorage
-     * @param string          $token
-     * @param string|null     $style
-     *
-     * @return RedirectResponse
-     *
      * @throws ResourceNotFoundException
      */
+    #[Route('/{token}/{style}', name: 'get', methods: 'GET')]
     public function getImage(
         ImageRepository $imageRepository,
         ImageStorage $imageStorage,
         string $token,
-        ?string $style
+        string $style = null,
     ): RedirectResponse {
         $image = $imageRepository->findOneByToken($token);
         if (null === $image) {
@@ -51,14 +47,9 @@ class ImageController extends AbstractController
     }
 
     /**
-     * @param Request            $request
-     * @param ValidatorInterface $validator
-     * @param ImageManager       $imageManager
-     *
-     * @return View
-     *
      * @throws ValidationException
      */
+    #[Route(name: 'upload', defaults: ['_api_receive' => false], methods: 'POST')]
     public function upload(Request $request, ValidatorInterface $validator, ImageManager $imageManager): View
     {
         $files = $request->files->all();
