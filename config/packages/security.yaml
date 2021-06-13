@@ -1,5 +1,5 @@
 security:
-    encoders:
+    password_hashers:
         App\User\Model\User: auto
 
     firewalls:
