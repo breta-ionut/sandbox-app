@@ -12,7 +12,6 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
@@ -69,7 +68,7 @@ return static function (ContainerConfigurator $container): void {
     $services->set(PasswordHasherFactory::class)
         ->args([abstract_arg('password hashers')]);
 
-    $services->alias(PasswordHasherInterface::class, PasswordHasherFactory::class);
+    $services->alias(PasswordHasherFactoryInterface::class, PasswordHasherFactory::class);
 
     $services->set(UserPasswordHasher::class)
         ->args([service(PasswordHasherFactoryInterface::class)]);
