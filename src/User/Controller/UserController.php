@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[Route('/user', name: 'user_')]
+#[Route(name: 'user_')]
 class UserController extends AbstractController
 {
     #[Route(name: 'get', methods: 'GET')]
