@@ -30,19 +30,21 @@ class UniqueEntity extends Constraint
     ];
 
     /**
-     * {@inheritDoc}
+     * @param string[]|null $groups
+     *
+     * @throws ConstraintDefinitionException
      */
-    public function __set(string $option, $value)
+    public function __construct(array|string $options = null, array $groups = null, mixed $payload = null)
     {
-        if ('fields' === $option) {
-            $value = (array) $value;
-
-            if (0 === \count($value)) {
-                throw new ConstraintDefinitionException('The "fields" option must contain at least one value.');
-            }
+        if (\is_string($options)) {
+            $options = [$options];
         }
 
-        parent::__set($option, $value);
+        parent::__construct($options, $groups, $payload);
+
+        if (0 === \count($this->fields)) {
+            throw new ConstraintDefinitionException('The "fields" option must contain at least one value.');
+        }
     }
 
     /**

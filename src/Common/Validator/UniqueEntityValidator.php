@@ -19,9 +19,6 @@ class UniqueEntityValidator extends ConstraintValidator
 
     private EntityManagerInterface $entityManager;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -30,7 +27,7 @@ class UniqueEntityValidator extends ConstraintValidator
     /**
      * {@inheritDoc}
      */
-    public function validate($value, Constraint $constraint)
+    public function validate(mixed $value, Constraint $constraint): void
     {
         if (!$constraint instanceof UniqueEntity) {
             throw new UnexpectedTypeException($constraint, UniqueEntity::class);
@@ -64,7 +61,7 @@ class UniqueEntityValidator extends ConstraintValidator
     /**
      * {@inheritDoc}
      */
-    protected function formatValue($value, int $format = 0)
+    protected function formatValue(mixed $value, int $format = 0): string
     {
         if (!\is_object($value)
             || (($format & self::PRETTY_DATE) && $value instanceof \DateTimeInterface)
@@ -89,7 +86,7 @@ class UniqueEntityValidator extends ConstraintValidator
     /**
      * {@inheritDoc}
      */
-    protected function formatValues(array $values, int $format = 0)
+    protected function formatValues(array $values, int $format = 0): string
     {
         foreach ($values as $key => $value) {
             $values[$key] = \sprintf('%s: %s', $key, $this->formatValue($value, $format));
@@ -99,10 +96,6 @@ class UniqueEntityValidator extends ConstraintValidator
     }
 
     /**
-     * @param object $value
-     *
-     * @return string
-     *
      * @throws ValidatorException
      */
     private function getEntityClass(object $value): string
@@ -116,11 +109,7 @@ class UniqueEntityValidator extends ConstraintValidator
     }
 
     /**
-     * @param object   $value
-     * @param string   $class
      * @param string[] $fields
-     *
-     * @return array
      *
      * @throws ConstraintDefinitionException
      */
@@ -149,12 +138,6 @@ class UniqueEntityValidator extends ConstraintValidator
     }
 
     /**
-     * @param string $class
-     * @param string $repositoryMethod
-     * @param array  $criteria
-     *
-     * @return int
-     *
      * @throws ConstraintDefinitionException
      * @throws UnexpectedTypeException
      */
@@ -177,11 +160,6 @@ class UniqueEntityValidator extends ConstraintValidator
         return $count;
     }
 
-    /**
-     * @param UniqueEntity $constraint
-     *
-     * @return string
-     */
     private function getErrorPath(UniqueEntity $constraint): string
     {
         if (null !== $constraint->errorPath) {
@@ -191,11 +169,6 @@ class UniqueEntityValidator extends ConstraintValidator
         return 1 === \count($constraint->fields) ? \reset($constraint->fields) : '';
     }
 
-    /**
-     * @param array $criteria
-     *
-     * @return string
-     */
     private function formatCriteria(array $criteria): string
     {
         $format = self::PRETTY_DATE | self::OBJECT_TO_STRING | self::ENTITY_ID;
