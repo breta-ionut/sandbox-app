@@ -14,7 +14,7 @@ use Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
@@ -25,10 +25,10 @@ class AssetsExtension extends ConfigurableExtension
     /**
      * {@inheritDoc}
      */
-    protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('assets.yaml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('assets.php');
 
         $defaultPackage = $this->createPackage($container, '_default', $mergedConfig);
 
@@ -40,13 +40,6 @@ class AssetsExtension extends ConfigurableExtension
         $container->setDefinition(Packages::class, new Definition(null, [$defaultPackage, $packages]));
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param string           $packageName
-     * @param array            $config
-     *
-     * @return Reference
-     */
     private function createVersionStrategy(ContainerBuilder $container, string $packageName, array $config): Reference
     {
         if (isset($config['version'])) {
@@ -63,13 +56,6 @@ class AssetsExtension extends ConfigurableExtension
         return new Reference($id);
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param string           $name
-     * @param array            $config
-     *
-     * @return Reference
-     */
     private function createPackage(ContainerBuilder $container, string $name, array $config): Reference
     {
         $versionStrategy = $this->createVersionStrategy($container, $name, $config);
