@@ -23,28 +23,18 @@ class CacheClearCommand extends Command
      */
     protected static $defaultName = 'cache:clear';
 
-    private string $cacheDir;
-    private Filesystem $filesystem;
-    private CacheClearerInterface $cacheClearer;
-
-    /**
-     * @param string                $cacheDir
-     * @param Filesystem            $filesystem
-     * @param CacheClearerInterface $cacheClearer
-     */
-    public function __construct(string $cacheDir, Filesystem $filesystem, CacheClearerInterface $cacheClearer)
-    {
+    public function __construct(
+        private string $cacheDir,
+        private Filesystem $filesystem,
+        private CacheClearerInterface $cacheClearer,
+    ) {
         parent::__construct();
-
-        $this->cacheDir = $cacheDir;
-        $this->filesystem = $filesystem;
-        $this->cacheClearer = $cacheClearer;
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Clears the application cache.')
             ->addOption('no-warmup', 'N', InputOption::VALUE_NONE, 'If cache should not be warmed.')
@@ -60,7 +50,7 @@ EOT
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!\is_writable($this->cacheDir)) {
             throw new \RuntimeException(\sprintf('Cache directory "%s" is not writable.', $this->cacheDir));
@@ -86,7 +76,7 @@ EOT
             \var_export($kernel->isDebug(), true)
         ));
 
-        return 0;
+        return self::SUCCESS;
     }
 
     /**
@@ -103,8 +93,6 @@ EOT
     }
 
     /**
-     * @param bool $rebootKernel
-     *
      * @return string The new cache directory.
      */
     private function warmupCache(bool $rebootKernel): string
@@ -145,11 +133,6 @@ EOT
         return $warmupDir;
     }
 
-    /**
-     * @param string       $oldCacheDir
-     * @param string       $warmupDir
-     * @param SymfonyStyle $style
-     */
     private function activateNewCache(string $oldCacheDir, string $warmupDir, SymfonyStyle $style): void
     {
         $this->filesystem->rename($this->cacheDir, $oldCacheDir);

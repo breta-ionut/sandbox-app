@@ -18,21 +18,14 @@ class CachePoolPruneCommand extends Command
     protected static $defaultName = 'cache:pool:prune';
 
     /**
-     * @var PruneableInterface[]|iterable
+     * @param iterable<PruneableInterface> $pools
      */
-    private iterable $pools;
-
-    /**
-     * @param PruneableInterface[]|iterable $pools
-     */
-    public function __construct(iterable $pools)
+    public function __construct(private iterable $pools)
     {
         parent::__construct();
-
-        $this->pools = $pools;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Prunes all the cache pools supporting this operation.')
             ->setHelp(<<<'EOT'
@@ -46,7 +39,7 @@ EOT
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $style = new SymfonyStyle($input, $output);
 
@@ -67,6 +60,6 @@ EOT
             $style->warning('Some cache pools were not pruned.');
         }
 
-        return 0;
+        return self::SUCCESS;
     }
 }

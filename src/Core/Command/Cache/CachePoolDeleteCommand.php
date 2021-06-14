@@ -19,22 +19,15 @@ class CachePoolDeleteCommand extends Command
      */
     protected static $defaultName = 'cache:pool:delete';
 
-    private Psr6CacheClearer $cacheClearer;
-
-    /**
-     * @param Psr6CacheClearer $cacheClearer
-     */
-    public function __construct(Psr6CacheClearer $cacheClearer)
+    public function __construct(private Psr6CacheClearer $cacheClearer)
     {
         parent::__construct();
-
-        $this->cacheClearer = $cacheClearer;
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Deletes a specific item from a cache pool.')
             ->addArgument('pool', InputArgument::REQUIRED, 'The pool to delete from.')
@@ -50,7 +43,7 @@ EOT
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $poolName = $input->getArgument('pool');
         if (!$this->cacheClearer->hasPool($poolName)) {
@@ -65,7 +58,7 @@ EOT
         if (!$pool->hasItem($key)) {
             $style->note(\sprintf('No item "%s" found in cache pool "%s".', $key, $poolName));
 
-            return 0;
+            return self::SUCCESS;
         }
 
         if (!$pool->deleteItem($key)) {
@@ -78,6 +71,6 @@ EOT
 
         $style->success(\sprintf('Successfully deleted item "%s" from cache pool "%s".', $key, $poolName));
 
-        return 0;
+        return self::SUCCESS;
     }
 }

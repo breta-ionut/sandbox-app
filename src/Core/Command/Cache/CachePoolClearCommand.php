@@ -18,22 +18,15 @@ class CachePoolClearCommand extends Command
      */
     protected static $defaultName = 'cache:pool:clear';
 
-    private Psr6CacheClearer $cacheClearer;
-
-    /**
-     * @param Psr6CacheClearer $cacheClearer
-     */
-    public function __construct(Psr6CacheClearer $cacheClearer)
+    public function __construct(private Psr6CacheClearer $cacheClearer)
     {
         parent::__construct();
-
-        $this->cacheClearer = $cacheClearer;
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Clears cache pools.')
             ->addArgument('pools', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'The cache pools to clear.')
@@ -48,7 +41,7 @@ EOT
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $style = new SymfonyStyle($input, $output);
 
@@ -66,6 +59,6 @@ EOT
 
         $style->success('Successfully cleared cache pool(s).');
 
-        return 0;
+        return self::SUCCESS;
     }
 }
