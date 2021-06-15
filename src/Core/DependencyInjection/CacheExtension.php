@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
@@ -25,10 +25,10 @@ class CacheExtension extends ConfigurableExtension
     /**
      * {@inheritDoc}
      */
-    protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('cache.yaml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('cache.php');
 
         if (isset($config['prefix_seed'])) {
             $container->setParameter(
@@ -41,10 +41,6 @@ class CacheExtension extends ConfigurableExtension
         $this->createAndConfigurePools($container, $mergedConfig);
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $config
-     */
     private function configureAdaptersAndDefaultProviders(ContainerBuilder $container, array $config): void
     {
         $version = new Parameter('container.build_id');
@@ -65,10 +61,6 @@ class CacheExtension extends ConfigurableExtension
         }
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $config
-     */
     private function createAndConfigurePools(ContainerBuilder $container, array $config): void
     {
         $poolsConfig = [

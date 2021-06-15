@@ -13,7 +13,7 @@ class CacheConfiguration implements ConfigurationInterface
     /**
      * {@inheritDoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('cache');
         $root = $treeBuilder->getRootNode();
@@ -83,12 +83,6 @@ class CacheConfiguration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    /**
-     * @param string $name
-     * @param string $info
-     *
-     * @return ArrayNodeDefinition
-     */
     private function createAdaptersNode(string $name, string $info): ArrayNodeDefinition
     {
         return (new ArrayNodeDefinition($name))
