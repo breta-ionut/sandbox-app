@@ -18,7 +18,7 @@ use Doctrine\Persistence\Mapping\Driver\SymfonyFileLocator;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Finder\Finder;
@@ -31,10 +31,10 @@ class DoctrineExtension extends ConfigurableExtension
     /**
      * {@inheritDoc}
      */
-    protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('doctrine.yaml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('doctrine.php');
 
         $this->configureEntityManager($container, $mergedConfig);
 
@@ -44,10 +44,6 @@ class DoctrineExtension extends ConfigurableExtension
             ->addTag(RegisterDoctrineListenersAndSubscribersPass::SUBSCRIBER_TAG);
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $config
-     */
     private function configureEntityManager(ContainerBuilder $container, array $config): void
     {
         $fileLocator = new Definition(SymfonyFileLocator::class, [
@@ -89,10 +85,6 @@ class DoctrineExtension extends ConfigurableExtension
     }
 
     /**
-     * @param ContainerBuilder $container
-     * @param string           $mappingDir
-     * @param string           $namespacePrefixPattern
-     *
      * @return string[]
      */
     private function getMappingPrefixes(
@@ -120,11 +112,6 @@ class DoctrineExtension extends ConfigurableExtension
         return $prefixes;
     }
 
-    /**
-     * @param array $databaseConfig
-     *
-     * @return array
-     */
     private function getConnectionParams(array $databaseConfig): array
     {
         $connectionParams = ['driver' => $databaseConfig['driver'], 'url' => $databaseConfig['url']];
