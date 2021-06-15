@@ -13,7 +13,7 @@ class AssetsConfiguration implements ConfigurationInterface
     /**
      * {@inheritDoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('assets');
         $root = $treeBuilder->getRootNode();
@@ -24,9 +24,6 @@ class AssetsConfiguration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    /**
-     * @param ArrayNodeDefinition $root
-     */
     private function addDefaultPackageSection(ArrayNodeDefinition $root): void
     {
         $root
@@ -72,9 +69,6 @@ class AssetsConfiguration implements ConfigurationInterface
             ->end();
     }
 
-    /**
-     * @param ArrayNodeDefinition $root
-     */
     private function addPackagesSection(ArrayNodeDefinition $root): void
     {
         $root

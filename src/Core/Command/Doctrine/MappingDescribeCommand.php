@@ -24,7 +24,7 @@ class MappingDescribeCommand extends Command
     /**
      * {@inheritDoc}
      */
-    public function setApplication(Application $application = null)
+    public function setApplication(Application $application = null): void
     {
         parent::setApplication($application);
 
@@ -48,7 +48,7 @@ class MappingDescribeCommand extends Command
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         return $this->command->execute($input, $output);
     }
@@ -56,7 +56,7 @@ class MappingDescribeCommand extends Command
     /**
      * {@inheritDoc}
      */
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output): void
     {
         $this->command->interact($input, $output);
     }
@@ -64,7 +64,7 @@ class MappingDescribeCommand extends Command
     /**
      * {@inheritDoc}
      */
-    protected function initialize(InputInterface $input, OutputInterface $output)
+    protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         $this->command->initialize($input, $output);
     }

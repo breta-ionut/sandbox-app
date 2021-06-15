@@ -19,16 +19,9 @@ class CreateDatabaseCommand extends Command
      */
     protected static $defaultName = 'doctrine:database:create';
 
-    private Connection $connection;
-
-    /**
-     * @param Connection $connection
-     */
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
         parent::__construct();
-
-        $this->connection = $connection;
     }
 
     /**
@@ -54,7 +47,7 @@ EOT
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $style = new SymfonyStyle($input, $output);
 
@@ -65,7 +58,7 @@ EOT
         if (null === $name) {
             $style->error('A "path" or "dbname" connection parameter is required to determine the database to create.');
 
-            return 1;
+            return self::FAILURE;
         }
 
         // Strip all references to the database name from the parameters before initiating the connection, in order to
@@ -87,11 +80,11 @@ EOT
                 $style->success(\sprintf('Database "%s" already exists.', $name));
             }
 
-            return 0;
+            return self::SUCCESS;
         } catch (\Throwable $exception) {
             $style->error([\sprintf('Error occurred while creating database "%s":', $name), $exception->getMessage()]);
 
-            return 1;
+            return self::FAILURE;
         } finally {
             $connection->close();
         }

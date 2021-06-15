@@ -25,7 +25,7 @@ class RegisterDoctrineListenersAndSubscribersPass implements CompilerPassInterfa
     /**
      * {@inheritDoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $eventManager = $container->getDefinition(self::EVENT_MANAGER_ID);
         $parameterBag = $container->getParameterBag();

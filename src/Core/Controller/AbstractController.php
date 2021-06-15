@@ -24,7 +24,7 @@ abstract class AbstractController implements ServiceSubscriberInterface
     /**
      * {@inheritDoc}
      */
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         return [
             ContainerBagInterface::class,
@@ -36,8 +36,6 @@ abstract class AbstractController implements ServiceSubscriberInterface
     }
 
     /**
-     * @param ContainerInterface $container
-     *
      * @required
      */
     public function setContainer(ContainerInterface $container): void
@@ -45,50 +43,28 @@ abstract class AbstractController implements ServiceSubscriberInterface
         $this->container = $container;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return mixed
-     */
-    protected function getParameter(string $name)
+    protected function getParameter(string $name): mixed
     {
         return $this->container
             ->get(ContainerBagInterface::class)
             ->get($name);
     }
 
-    /**
-     * @return EntityManagerInterface
-     */
     protected function getEntityManager(): EntityManagerInterface
     {
         return $this->container->get(EntityManagerInterface::class);
     }
 
-    /**
-     * @param string $route
-     * @param array  $parameters
-     * @param int    $referenceType
-     *
-     * @return string
-     */
     protected function generateUrl(
         string $route,
         array $parameters = [],
-        int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH
+        int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH,
     ): string {
         return $this->container
             ->get(UrlGeneratorInterface::class)
             ->generate($route, $parameters, $referenceType);
     }
 
-    /**
-     * @param string        $template
-     * @param array         $parameters
-     * @param Response|null $response
-     *
-     * @return Response
-     */
     protected function render(string $template, array $parameters = [], Response $response = null): Response
     {
         $content = $this->container
@@ -102,74 +78,46 @@ abstract class AbstractController implements ServiceSubscriberInterface
         return $response->setContent($content);
     }
 
-    /**
-     * @param mixed $data
-     * @param int   $status
-     * @param array $headers
-     * @param array $context
-     *
-     * @return JsonResponse
-     */
     protected function json(
-        $data,
+        mixed $data,
         int $status = Response::HTTP_OK,
         array $headers = [],
-        array $context = []
+        array $context = [],
     ): JsonResponse {
         $json = $this->container
             ->get(Serializer::class)
             ->serialize(
                 $data,
                 'json',
-                \array_merge(['json_encode_options' => JsonResponse::DEFAULT_ENCODING_OPTIONS], $context)
+                \array_merge(['json_encode_options' => JsonResponse::DEFAULT_ENCODING_OPTIONS], $context),
             );
 
         return new JsonResponse($json, $status, $headers, true);
     }
 
-    /**
-     * @param \SplFileInfo|string $file
-     * @param string|null         $filename
-     * @param string              $disposition
-     *
-     * @return BinaryFileResponse
-     */
     protected function file(
-        $file,
+        \SplFileInfo|string $file,
         string $filename = null,
-        string $disposition = ResponseHeaderBag::DISPOSITION_ATTACHMENT
+        string $disposition = ResponseHeaderBag::DISPOSITION_ATTACHMENT,
     ): BinaryFileResponse {
         $response = new BinaryFileResponse($file);
         $response->setContentDisposition(
             $disposition,
-            null !== $filename ? $filename : $response->getFile()->getFilename()
+            null !== $filename ? $filename : $response->getFile()->getFilename(),
         );
 
         return $response;
     }
 
-    /**
-     * @param string $url
-     * @param int    $status
-     *
-     * @return RedirectResponse
-     */
     protected function redirect(string $url, int $status = Response::HTTP_FOUND): RedirectResponse
     {
         return new RedirectResponse($url, $status);
     }
 
-    /**
-     * @param string $route
-     * @param array  $parameters
-     * @param int    $status
-     *
-     * @return RedirectResponse
-     */
     protected function redirectToRoute(
         string $route,
         array $parameters = [],
-        int $status = Response::HTTP_FOUND
+        int $status = Response::HTTP_FOUND,
     ): RedirectResponse {
         return $this->redirect($this->generateUrl($route, $parameters), $status);
     }

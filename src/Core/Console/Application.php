@@ -19,7 +19,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class Application extends BaseApplication
 {
-    private KernelInterface $kernel;
     private bool $commandsRegistered = false;
 
     /**
@@ -27,16 +26,9 @@ class Application extends BaseApplication
      */
     private array $registrationErrors = [];
 
-    /**
-     * @param KernelInterface $kernel
-     * @param string          $name
-     * @param string          $version
-     */
-    public function __construct(KernelInterface $kernel, string $name, string $version)
+    public function __construct(private KernelInterface $kernel, string $name, string $version)
     {
         parent::__construct($name, $version);
-
-        $this->kernel = $kernel;
 
         $definition = $this->getDefinition();
         $definition->addOption(
@@ -53,9 +45,6 @@ class Application extends BaseApplication
         );
     }
 
-    /**
-     * @return KernelInterface
-     */
     public function getKernel(): KernelInterface
     {
         return $this->kernel;
@@ -64,7 +53,7 @@ class Application extends BaseApplication
     /**
      * {@inheritDoc}
      */
-    public function doRun(InputInterface $input, OutputInterface $output)
+    public function doRun(InputInterface $input, OutputInterface $output): int
     {
         $this->registerCommands();
         $this->setDispatcher($this->kernel->getContainer()->get(EventDispatcherInterface::class));
@@ -80,7 +69,7 @@ class Application extends BaseApplication
     /**
      * {@inheritDoc}
      */
-    public function getLongVersion()
+    public function getLongVersion(): string
     {
         return parent::getLongVersion()
             .\sprintf(
@@ -93,7 +82,7 @@ class Application extends BaseApplication
     /**
      * {@inheritDoc}
      */
-    public function add(Command $command)
+    public function add(Command $command): ?Command
     {
         $this->registerCommands();
 
@@ -103,7 +92,7 @@ class Application extends BaseApplication
     /**
      * {@inheritDoc}
      */
-    public function get($name)
+    public function get($name): Command
     {
         $this->registerCommands();
 
@@ -113,7 +102,7 @@ class Application extends BaseApplication
     /**
      * {@inheritDoc}
      */
-    public function has($name)
+    public function has($name): bool
     {
         $this->registerCommands();
 
@@ -123,7 +112,7 @@ class Application extends BaseApplication
     /**
      * {@inheritDoc}
      */
-    public function find($name)
+    public function find($name): Command
     {
         $this->registerCommands();
 
@@ -133,7 +122,7 @@ class Application extends BaseApplication
     /**
      * {@inheritDoc}
      */
-    public function all(string $namespace = null)
+    public function all(string $namespace = null): array
     {
         $this->registerCommands();
 
@@ -141,9 +130,6 @@ class Application extends BaseApplication
     }
 
     /**
-     * @param ContainerInterface $container
-     * @param string             $id
-     *
      * @throws LogicException
      */
     private function registerServiceAsCommand(ContainerInterface $container, string $id): void
@@ -184,10 +170,6 @@ class Application extends BaseApplication
         }
     }
 
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     */
     private function renderRegistrationErrors(InputInterface $input, OutputInterface $output): void
     {
         if ($output instanceof ConsoleOutputInterface) {

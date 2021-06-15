@@ -21,7 +21,7 @@ class ServiceEntityRepositoriesPass implements CompilerPassInterface
     /**
      * {@inheritDoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $parameterBag = $container->getParameterBag();
         $repositories = [];

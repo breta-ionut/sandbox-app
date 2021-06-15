@@ -14,29 +14,22 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DropDatabaseCommand extends Command
 {
-    private const RETURN_CODE_NO_FORCE = 3;
+    private const NO_FORCE = 3;
 
     /**
      * {@inheritDoc}
      */
     protected static $defaultName = 'doctrine:database:drop';
 
-    private Connection $connection;
-
-    /**
-     * @param Connection $connection
-     */
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
         parent::__construct();
-
-        $this->connection = $connection;
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Drops the application\'s designated database.')
             ->addOption(
@@ -66,7 +59,7 @@ EOT
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $style = new SymfonyStyle($input, $output);
 
@@ -77,7 +70,7 @@ EOT
         if (null === $name) {
             $style->error('A "path" or "dbname" connection parameter is required to determine the database to drop.');
 
-            return 1;
+            return self::FAILURE;
         }
 
         if (!$input->getOption('force')) {
@@ -88,7 +81,7 @@ EOT
                 'All data will be lost!',
             ]);
 
-            return self::RETURN_CODE_NO_FORCE;
+            return self::NO_FORCE;
         }
 
         // Strip all references to the database name from the parameters before initiating the connection, an error
@@ -109,11 +102,11 @@ EOT
                 $style->success(\sprintf('Database "%s" doesn\'t exist.', $name));
             }
 
-            return 0;
+            return self::SUCCESS;
         } catch (\Throwable $exception) {
             $style->error([\sprintf('Error occurred while dropping database "%s":', $name), $exception->getMessage()]);
 
-            return 1;
+            return self::FAILURE;
         } finally {
             $connection->close();
         }

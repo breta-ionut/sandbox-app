@@ -13,10 +13,8 @@ trait DoctrineCommandTrait
 {
     /**
      * Adds to the application's helper set additional helpers needed by Doctrine commands.
-     *
-     * @param HelperSet $helperSet
      */
-    public function setHelperSet(HelperSet $helperSet)
+    public function setHelperSet(HelperSet $helperSet): void
     {
         /** @var ContainerInterface $container */
         $container = $this->getApplication()

@@ -12,14 +12,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class RouterRedirectController
 {
     /**
-     * @param Request     $request
-     * @param string      $path
-     * @param string|null $scheme
-     * @param int         $httpPort
-     * @param int         $httpsPort
-     *
-     * @return RedirectResponse
-     *
      * @throws HttpException
      */
     public function __invoke(
@@ -27,7 +19,7 @@ class RouterRedirectController
         string $path,
         ?string $scheme,
         int $httpPort,
-        int $httpsPort
+        int $httpsPort,
     ): RedirectResponse {
         if ('' == $path) {
             throw new HttpException(Response::HTTP_GONE);
