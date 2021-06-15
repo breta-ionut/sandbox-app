@@ -58,7 +58,7 @@ return static function (ContainerConfigurator $container): void {
             'reset' => 'reset',
         ]);
 
-    $services->set('cache.adapter.system')
+    $services->set('cache.adapter.system', AdapterInterface::class)
         ->abstract()
         ->factory([AbstractAdapter::class, 'createSystemCache'])
         ->args([
