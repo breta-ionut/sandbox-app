@@ -14,14 +14,9 @@ use Symfony\Component\DependencyInjection\Exception\LogicException;
 trait ConfigurationExtensionTrait
 {
     /**
-     * @param array            $config
-     * @param ContainerBuilder $container
-     *
-     * @return ConfigurationInterface|null
-     *
      * @throws LogicException
      */
-    public function getConfiguration(array $config, ContainerBuilder $container)
+    public function getConfiguration(array $config, ContainerBuilder $container): ?ConfigurationInterface
     {
         $class = \str_replace('Extension', 'Configuration', \get_class($this));
         $reflection = $container->getReflectionClass($class);
