@@ -10,7 +10,7 @@ use Doctrine\Migrations\Metadata\Storage\TableMetadataStorageConfiguration;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
 class DoctrineMigrationsExtension extends ConfigurableExtension
@@ -20,20 +20,15 @@ class DoctrineMigrationsExtension extends ConfigurableExtension
     /**
      * {@inheritDoc}
      */
-    protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('doctrine_migrations.yaml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('doctrine_migrations.php');
 
         $container->getDefinition(ExistingConfiguration::class)
             ->setArgument('$configurations', $this->createMigrationsConfiguration($mergedConfig));
     }
 
-    /**
-     * @param array $config
-     *
-     * @return Definition
-     */
     private function createMigrationsConfiguration(array $config): Definition
     {
         $definition = (new Definition(Configuration::class))
@@ -58,11 +53,6 @@ class DoctrineMigrationsExtension extends ConfigurableExtension
         return $definition;
     }
 
-    /**
-     * @param array $config
-     *
-     * @return Definition
-     */
     private function createMigrationsStorageConfiguration(array $config): Definition
     {
         return (new Definition(TableMetadataStorageConfiguration::class))

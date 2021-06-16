@@ -13,7 +13,7 @@ class DoctrineMigrationsConfiguration implements ConfigurationInterface
     /**
      * {@inheritDoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('doctrine_migrations');
         $root = $treeBuilder->getRootNode();
