@@ -7,7 +7,7 @@ namespace App\Core\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\SessionHandlerFactory;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
@@ -24,10 +24,10 @@ class HttpExtension extends ConfigurableExtension
     /**
      * {@inheritDoc}
      */
-    protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('http.yaml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('http.php');
 
         $container->getDefinition(ErrorListener::class)->setArgument('$controller', $mergedConfig['error_controller']);
 
@@ -37,10 +37,6 @@ class HttpExtension extends ConfigurableExtension
             ->addTag('controller.argument_value_resolver');
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $config
-     */
     private function configureSession(ContainerBuilder $container, array $config): void
     {
         if ($config['test']) {
@@ -59,12 +55,6 @@ class HttpExtension extends ConfigurableExtension
         $container->setAlias(SessionStorageInterface::class, $storageId);
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $config
-     *
-     * @return Reference
-     */
     private function createSessionStorageHandler(ContainerBuilder $container, array $config): Reference
     {
         if (isset($config['id'])) {
