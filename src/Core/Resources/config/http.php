@@ -6,7 +6,6 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use App\Core\Http\SessionListener;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Console\EventListener\ErrorListener;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -29,6 +28,7 @@ use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpKernel\Controller\ContainerControllerResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener;
+use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\EventListener\ResponseListener;
 use Symfony\Component\HttpKernel\EventListener\StreamedResponseListener;
 use Symfony\Component\HttpKernel\EventListener\ValidateRequestListener;
