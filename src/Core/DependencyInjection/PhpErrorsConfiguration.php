@@ -9,20 +9,14 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class PhpErrorsConfiguration implements ConfigurationInterface
 {
-    private bool $debug;
-
-    /**
-     * @param bool $debug
-     */
-    public function __construct(bool $debug)
+    public function __construct(private bool $debug)
     {
-        $this->debug = $debug;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('php_errors');
         $root = $treeBuilder->getRootNode();
