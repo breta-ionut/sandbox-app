@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use App\Core\Routing\AnnotationControllerLoader;
+use App\Core\Routing\RedirectableCompiledUrlMatcher;
 use App\Core\Routing\RootLoader;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
@@ -15,6 +16,8 @@ use Symfony\Component\Routing\Loader\ContainerLoader;
 use Symfony\Component\Routing\Loader\GlobFileLoader;
 use Symfony\Component\Routing\Loader\PhpFileLoader;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Router;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
@@ -58,4 +61,19 @@ return static function (ContainerConfigurator $container): void {
     $services->set('routing.loader', DelegatingLoader::class)
         ->args([service('routing.resolver')]);
     // End of - Loaders.
+
+    $services->set(RequestContext::class);
+
+    $services->set(Router::class)
+        ->args([
+            service('routing.loader'),
+            \sprintf('%::load', RootLoader::class),
+            [
+                'cache_dir' => param('kernel.cache_dir'),
+                'debug' => param('kernel.debug'),
+                'matcher_class' => RedirectableCompiledUrlMatcher::class,
+                'resource_type' => 'service',
+            ],
+            service(RequestContext::class),
+        ]);
 };
