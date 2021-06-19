@@ -12,7 +12,7 @@ class TemplatingConfiguration implements ConfigurationInterface
     /**
      * {@inheritDoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('templating');
         $root = $treeBuilder->getRootNode();
