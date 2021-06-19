@@ -15,11 +15,6 @@ use Psr\Container\ContainerInterface;
 class RepositoryFactory implements RepositoryFactoryInterface
 {
     /**
-     * Contains the repositories registered as services.
-     */
-    private ContainerInterface $container;
-
-    /**
      * The instantiated repositories which are not services.
      *
      * @var ObjectRepository[]
@@ -27,17 +22,16 @@ class RepositoryFactory implements RepositoryFactoryInterface
     private array $repositories = [];
 
     /**
-     * @param ContainerInterface $container
+     * @param ContainerInterface $container Contains the repositories registered as services.
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(private ContainerInterface $container)
     {
-        $this->container = $container;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getRepository(EntityManagerInterface $entityManager, $entityName)
+    public function getRepository(EntityManagerInterface $entityManager, $entityName): ObjectRepository
     {
         $metadata = $entityManager->getClassMetadata($entityName);
 

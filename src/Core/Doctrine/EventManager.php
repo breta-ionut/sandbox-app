@@ -13,22 +13,17 @@ use Psr\Container\ContainerInterface;
  */
 class EventManager extends BaseEventManager
 {
-    private ContainerInterface $container;
     private array $listeners = [];
     private array $initialized = [];
 
-    /**
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
+    public function __construct(private ContainerInterface $container)
     {
-        $this->container = $container;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function dispatchEvent($eventName, ?EventArgs $eventArgs = null)
+    public function dispatchEvent($eventName, ?EventArgs $eventArgs = null): void
     {
         if (!$this->hasListeners($eventName)) {
             return;
@@ -45,7 +40,7 @@ class EventManager extends BaseEventManager
     /**
      * {@inheritDoc}
      */
-    public function getListeners($event = null)
+    public function getListeners($event = null): array
     {
         if (null === $event) {
             foreach (\array_keys($this->listeners) as $event) {
@@ -67,7 +62,7 @@ class EventManager extends BaseEventManager
     /**
      * {@inheritDoc}
      */
-    public function hasListeners($event)
+    public function hasListeners($event): bool
     {
         return !empty($this->listeners[$event]);
     }
@@ -75,7 +70,7 @@ class EventManager extends BaseEventManager
     /**
      * {@inheritDoc}
      */
-    public function addEventListener($events, $listener)
+    public function addEventListener($events, $listener): void
     {
         $hash = $this->getHash($listener);
 
@@ -91,7 +86,7 @@ class EventManager extends BaseEventManager
     /**
      * {@inheritDoc}
      */
-    public function removeEventListener($events, $listener)
+    public function removeEventListener($events, $listener): void
     {
         $hash = $this->getHash($listener);
 
@@ -100,9 +95,6 @@ class EventManager extends BaseEventManager
         }
     }
 
-    /**
-     * @param string $event
-     */
     private function initializeListeners(string $event): void
     {
         if (!empty($this->initialized[$event])) {
@@ -118,12 +110,7 @@ class EventManager extends BaseEventManager
         $this->initialized[$event] = true;
     }
 
-    /**
-     * @param string|object $listener
-     *
-     * @return string
-     */
-    private function getHash($listener): string
+    private function getHash(string|object $listener): string
     {
         return \is_string($listener) ? 'service:'.$listener : \spl_object_hash($listener);
     }

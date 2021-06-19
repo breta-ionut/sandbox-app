@@ -12,16 +12,9 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  */
 class BubblingEventDispatcher extends EventDispatcher
 {
-    private EventDispatcherInterface $eventDispatcher;
-
-    /**
-     * @param EventDispatcherInterface $eventDispatcher
-     */
-    public function __construct(EventDispatcherInterface $eventDispatcher)
+    public function __construct(private EventDispatcherInterface $eventDispatcher)
     {
         parent::__construct();
-
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

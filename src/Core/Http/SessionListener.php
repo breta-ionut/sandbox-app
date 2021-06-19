@@ -17,9 +17,6 @@ use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
  */
 class SessionListener extends AbstractSessionListener
 {
-    /**
-     * @param ContainerInterface $container
-     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -28,7 +25,7 @@ class SessionListener extends AbstractSessionListener
     /**
      * {@inheritDoc}
      */
-    protected function getSession()
+    protected function getSession(): ?SessionInterface
     {
         $request = $this->container
             ->get(RequestStack::class)
