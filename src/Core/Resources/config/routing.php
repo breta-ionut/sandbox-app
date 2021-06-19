@@ -74,7 +74,7 @@ return static function (ContainerConfigurator $container): void {
     $services->set(Router::class)
         ->args([
             service('routing.loader'),
-            \sprintf('%::load', RootLoader::class),
+            \sprintf('%s::load', RootLoader::class),
             [
                 'cache_dir' => param('kernel.cache_dir'),
                 'debug' => param('kernel.debug'),
