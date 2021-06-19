@@ -9,30 +9,18 @@ use Symfony\Component\Templating\Helper\Helper;
 
 class AssetsHelper extends Helper
 {
-    private Packages $packages;
-
-    /**
-     * @param Packages $packages
-     */
-    public function __construct(Packages $packages)
+    public function __construct(private Packages $packages)
     {
-        $this->packages = $packages;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'assets';
     }
 
-    /**
-     * @param string      $path
-     * @param string|null $packageName
-     *
-     * @return string
-     */
     public function getUrl(string $path, string $packageName = null): string
     {
         return $this->packages->getUrl($path, $packageName);

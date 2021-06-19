@@ -10,15 +10,11 @@ use Symfony\Component\Routing\RouteCollection;
 
 class RootLoader
 {
-    private PhpFileLoader $phpFileLoader;
-    private string $configDir;
-    private string $environment;
-
-    public function __construct(PhpFileLoader $phpFileLoader, string $configDir, string $environment)
-    {
-        $this->phpFileLoader = $phpFileLoader;
-        $this->configDir = $configDir;
-        $this->environment = $environment;
+    public function __construct(
+        private PhpFileLoader $phpFileLoader,
+        private string $configDir,
+        private string $environment,
+    ) {
     }
 
     public function load(): RouteCollection

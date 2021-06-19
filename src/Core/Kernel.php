@@ -121,9 +121,6 @@ abstract class Kernel extends BaseKernel
         return \array_merge(parent::getKernelParameters(), ['kernel.config_dir' => $this->getConfigDir()]);
     }
 
-    /**
-     * @return string
-     */
     private function getConfigDir(): string
     {
         return $this->getProjectDir().'/config';
@@ -153,9 +150,6 @@ abstract class Kernel extends BaseKernel
         ];
     }
 
-    /**
-     * @return array
-     */
     private function getCompilerPasses(): array
     {
         return [

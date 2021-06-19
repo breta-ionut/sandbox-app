@@ -12,16 +12,12 @@ use Symfony\Component\Templating\TemplateNameParserInterface;
 class EngineFactory
 {
     /**
-     * @param TemplateNameParserInterface $parser
-     * @param LoaderInterface             $loader
-     * @param HelperInterface[]|iterable  $helpers
-     *
-     * @return PhpEngine
+     * @param iterable<HelperInterface> $helpers
      */
     public static function create(
         TemplateNameParserInterface $parser,
         LoaderInterface $loader,
-        iterable $helpers
+        iterable $helpers,
     ): PhpEngine {
         $helpers = \is_array($helpers) ? $helpers : \iterator_to_array($helpers);
 
