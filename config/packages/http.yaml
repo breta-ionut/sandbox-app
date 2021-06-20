@@ -1,4 +1,0 @@
-http:
-    session:
-        handler:
-            url: '%env(REDIS_URL)%'

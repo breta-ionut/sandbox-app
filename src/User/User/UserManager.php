@@ -36,7 +36,7 @@ class UserManager
         $this->userAuthenticator->authenticateUser(
             $user,
             $this->authenticator,
-            $this->requestStack->getCurrentRequest()
+            $this->requestStack->getCurrentRequest(),
         );
     }
 }

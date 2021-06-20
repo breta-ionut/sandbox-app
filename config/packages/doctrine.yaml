@@ -1,6 +1,0 @@
-doctrine:
-    database:
-        driver: pdo_pgsql
-        url: '%env(resolve:DATABASE_URL)%'
-        server_version: '13.2'
-        charset: utf8
