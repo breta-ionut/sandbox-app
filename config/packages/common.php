@@ -47,7 +47,7 @@ return static function (ContainerConfigurator $container): void {
 
     $services->set(FilesystemAdapter::class)
         ->factory([service('app.common.filesystem.private_adapter_locator'), 'get'])
-        ->args([param('env(PRIVATE_FILESYSTEM')]);
+        ->args([param('env(PRIVATE_FILESYSTEM)')]);
 
     $services->set(PublicFilesystem::class)
         ->args([
