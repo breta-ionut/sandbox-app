@@ -18,19 +18,10 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class ConfigureApiEndpointsListener implements EventSubscriberInterface
 {
-    private string $apiPathPrefix;
-
-    /**
-     * @param string $apiPathPrefix
-     */
-    public function __construct(string $apiPathPrefix)
+    public function __construct(private string $apiPathPrefix)
     {
-        $this->apiPathPrefix = $apiPathPrefix;
     }
 
-    /**
-     * @param RequestEvent $event
-     */
     public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();

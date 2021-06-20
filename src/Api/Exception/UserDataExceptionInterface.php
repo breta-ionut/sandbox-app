@@ -9,8 +9,5 @@ namespace App\Api\Exception;
  */
 interface UserDataExceptionInterface
 {
-    /**
-     * @return mixed
-     */
     public function getUserData(): mixed;
 }

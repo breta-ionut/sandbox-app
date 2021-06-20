@@ -15,19 +15,11 @@ class ValidationException
 {
     use NoCustomHeadersHttpExceptionTrait;
 
-    private ConstraintViolationListInterface $violations;
-
-    /**
-     * @param ConstraintViolationListInterface $violations
-     * @param int                              $code
-     * @param \Throwable|null                  $previous
-     */
     public function __construct(
-        ConstraintViolationListInterface $violations,
+        private ConstraintViolationListInterface $violations,
         int $code = 0,
         \Throwable $previous = null,
     ) {
-        $this->violations = $violations;
         $message = 'Validation failed.';
 
         parent::__construct($message, $code, $previous);
@@ -41,25 +33,16 @@ class ValidationException
         return Response::HTTP_BAD_REQUEST;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getUserMessage(): string
     {
         return 'Validation failed.';
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getUserCode(): int
     {
         return UserCodes::VALIDATION;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getUserData(): ConstraintViolationListInterface
     {
         return $this->violations;

@@ -11,9 +11,6 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
  */
 trait NoCustomHeadersHttpExceptionTrait
 {
-    /**
-     * @return array
-     */
     public function getHeaders(): array
     {
         return [];

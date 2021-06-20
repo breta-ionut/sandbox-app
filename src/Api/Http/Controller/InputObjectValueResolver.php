@@ -31,15 +31,10 @@ class InputObjectValueResolver implements ArgumentValueResolverInterface
 {
     use ApiEndpointsConfigurationTrait;
 
-    private RequestReader $requestReader;
     private \SplObjectStorage $resolvedRequests;
 
-    /**
-     * @param RequestReader $requestReader
-     */
-    public function __construct(RequestReader $requestReader)
+    public function __construct(private RequestReader $requestReader)
     {
-        $this->requestReader = $requestReader;
         $this->resolvedRequests = new \SplObjectStorage();
     }
 
@@ -68,12 +63,6 @@ class InputObjectValueResolver implements ArgumentValueResolverInterface
         yield $inputObject;
     }
 
-    /**
-     * @param Request          $request
-     * @param ArgumentMetadata $argumentMetadata
-     *
-     * @return bool
-     */
     private function isInputObjectArgument(Request $request, ArgumentMetadata $argumentMetadata): bool
     {
         return !$this->hasApiSetting($request, 'receive_argument')
@@ -81,11 +70,6 @@ class InputObjectValueResolver implements ArgumentValueResolverInterface
     }
 
     /**
-     * @param Request          $request
-     * @param ArgumentMetadata $argumentMetadata
-     *
-     * @return string|null
-     *
      * @throws \LogicException
      */
     private function getInputClass(Request $request, ArgumentMetadata $argumentMetadata): ?string
@@ -112,11 +96,6 @@ class InputObjectValueResolver implements ArgumentValueResolverInterface
         return $inputClass;
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return array
-     */
     private function getDeserializationContext(Request $request): array
     {
         return [AbstractNormalizer::GROUPS => $this->getApiSetting($request, 'receive_deserialization_groups', [])]

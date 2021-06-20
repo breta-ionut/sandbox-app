@@ -20,8 +20,6 @@ class Problem
 
     /**
      * Can be the text of the status when there's no need for other info.
-     *
-     * @var string
      */
     private string $detail;
 
@@ -29,10 +27,8 @@ class Problem
 
     /**
      * Additional data to be exposed to API users.
-     *
-     * @var mixed
      */
-    private $data;
+    private mixed $data;
 
     private ?\Throwable $exception;
     private ?FlattenException $flattenException;
@@ -42,17 +38,12 @@ class Problem
         $this->detail = Response::$statusTexts[$this->status];
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string
     {
         return $this->title;
     }
 
     /**
-     * @param string $title
-     *
      * @return $this
      */
     public function setTitle(string $title): static
@@ -62,17 +53,12 @@ class Problem
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getCode(): int
     {
         return $this->code;
     }
 
     /**
-     * @param int $code
-     *
      * @return $this
      */
     public function setCode(int $code): static
@@ -82,18 +68,12 @@ class Problem
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getStatus(): int
     {
         return $this->status;
     }
 
     /**
-     * @param int  $status
-     * @param bool $updateDetail
-     *
      * @return $this
      */
     public function setStatus(int $status, bool $updateDetail = true): static
@@ -107,17 +87,12 @@ class Problem
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDetail(): string
     {
         return $this->detail;
     }
 
     /**
-     * @param string $detail
-     *
      * @return $this
      */
     public function setDetail(string $detail): static
@@ -127,17 +102,12 @@ class Problem
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getHeaders(): array
     {
         return $this->headers;
     }
 
     /**
-     * @param array $headers
-     *
      * @return $this
      */
     public function setHeaders(array $headers): static
@@ -147,25 +117,17 @@ class Problem
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function hasData(): bool
     {
         return null !== $this->data;
     }
 
-    /**
-     * @return mixed
-     */
     public function getData(): mixed
     {
         return $this->data;
     }
 
     /**
-     * @param mixed $data
-     *
      * @return $this
      */
     public function setData(mixed $data): static
@@ -176,8 +138,6 @@ class Problem
     }
 
     /**
-     * @param \Throwable $exception
-     *
      * @return $this
      */
     public function fromException(\Throwable $exception): static
@@ -203,25 +163,16 @@ class Problem
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function hasException(): bool
     {
         return null !== $this->exception;
     }
 
-    /**
-     * @return \Throwable|null
-     */
     public function getException(): ?\Throwable
     {
         return $this->exception;
     }
 
-    /**
-     * @return FlattenException|null
-     */
     public function getFlattenException(): ?FlattenException
     {
         return $this->flattenException;

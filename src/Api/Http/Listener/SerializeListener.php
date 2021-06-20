@@ -24,19 +24,10 @@ class SerializeListener implements EventSubscriberInterface
 {
     use ApiEndpointsConfigurationTrait;
 
-    private ResponseFactory $responseFactory;
-
-    /**
-     * @param ResponseFactory $responseFactory
-     */
-    public function __construct(ResponseFactory $responseFactory)
+    public function __construct(private ResponseFactory $responseFactory)
     {
-        $this->responseFactory = $responseFactory;
     }
 
-    /**
-     * @param ViewEvent $event
-     */
     public function onKernelView(ViewEvent $event): void
     {
         if (!$this->isApiRespondEnabled($event->getRequest())) {

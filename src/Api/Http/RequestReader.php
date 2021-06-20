@@ -13,23 +13,11 @@ class RequestReader
 {
     private const DEFAULT_DESERIALIZATION_GROUPS = ['api_request'];
 
-    private SerializerInterface $serializer;
-
-    /**
-     * @param SerializerInterface $serializer
-     */
-    public function __construct(SerializerInterface $serializer)
+    public function __construct(private SerializerInterface $serializer)
     {
-        $this->serializer = $serializer;
     }
 
     /**
-     * @param Request $request
-     * @param string  $type
-     * @param array   $context
-     *
-     * @return mixed
-     *
      * @throws MalformedInputException
      */
     public function read(Request $request, string $type, array $context = []): mixed
@@ -46,11 +34,6 @@ class RequestReader
         }
     }
 
-    /**
-     * @param array $context
-     *
-     * @return array
-     */
     private function setContextDefaults(array $context): array
     {
         $context[AbstractNormalizer::GROUPS] = \array_merge(

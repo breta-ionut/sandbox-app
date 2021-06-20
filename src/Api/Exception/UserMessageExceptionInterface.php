@@ -9,13 +9,7 @@ namespace App\Api\Exception;
  */
 interface UserMessageExceptionInterface
 {
-    /**
-     * @return string
-     */
     public function getUserMessage(): string;
 
-    /**
-     * @return int
-     */
     public function getUserCode(): int;
 }

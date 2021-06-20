@@ -14,14 +14,8 @@ class ProblemNormalizer implements NormalizerInterface, NormalizerAwareInterface
 {
     use NormalizerAwareTrait;
 
-    private bool $debug;
-
-    /**
-     * @param bool $debug
-     */
-    public function __construct(bool $debug)
+    public function __construct(private bool $debug)
     {
-        $this->debug = $debug;
     }
 
     /**
@@ -62,9 +56,6 @@ class ProblemNormalizer implements NormalizerInterface, NormalizerAwareInterface
         return $data instanceof Problem;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function hasCacheableSupportsMethod(): bool
     {
         return true;

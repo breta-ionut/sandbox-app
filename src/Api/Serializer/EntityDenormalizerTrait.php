@@ -12,8 +12,6 @@ trait EntityDenormalizerTrait
     private EntityManagerInterface $entityManager;
 
     /**
-     * @param EntityManagerInterface $entityManager
-     *
      * @required
      */
     public function setEntityManager(EntityManagerInterface $entityManager): void
@@ -21,21 +19,11 @@ trait EntityDenormalizerTrait
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @param array $context
-     *
-     * @return bool
-     */
     private function shouldApplyEntityDenormalizer(array $context): bool
     {
         return empty($context['bypass_entity_denormalizer']);
     }
 
-    /**
-     * @param array $context
-     *
-     * @return array
-     */
     private function configureToBypassEntityDenormalizer(array $context): array
     {
         $context['bypass_entity_denormalizer'] = true;
@@ -43,12 +31,6 @@ trait EntityDenormalizerTrait
         return $context;
     }
 
-    /**
-     * @param array  $context
-     * @param object $object
-     *
-     * @return array
-     */
     private function addObjectToPopulate(array $context, object $object): array
     {
         $context[AbstractNormalizer::OBJECT_TO_POPULATE] = $object;
@@ -56,12 +38,6 @@ trait EntityDenormalizerTrait
         return $context;
     }
 
-    /**
-     * @param array  $data
-     * @param string $entityClass
-     *
-     * @return array|null
-     */
     private function extractIdFromNormalizedData(array $data, string $entityClass): ?array
     {
         $idFields = $this->entityManager->getClassMetadata($entityClass)->getIdentifierFieldNames();

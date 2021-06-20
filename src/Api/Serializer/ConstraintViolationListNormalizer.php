@@ -10,14 +10,8 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ConstraintViolationListNormalizer implements NormalizerInterface, CacheableSupportsMethodInterface
 {
-    private BaseConstraintViolationListNormalizer $decorated;
-
-    /**
-     * @param BaseConstraintViolationListNormalizer $decorated
-     */
-    public function __construct(BaseConstraintViolationListNormalizer $decorated)
+    public function __construct(private BaseConstraintViolationListNormalizer $decorated)
     {
-        $this->decorated = $decorated;
     }
 
     /**
@@ -38,9 +32,6 @@ class ConstraintViolationListNormalizer implements NormalizerInterface, Cacheabl
         return $this->decorated->supportsNormalization($data, $format);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function hasCacheableSupportsMethod(): bool
     {
         return $this->decorated->hasCacheableSupportsMethod();

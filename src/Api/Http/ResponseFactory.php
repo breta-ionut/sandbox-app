@@ -14,24 +14,10 @@ class ResponseFactory
 {
     private const DEFAULT_SERIALIZATION_GROUPS = ['api_response'];
 
-    private SerializerInterface $serializer;
-
-    /**
-     * @param SerializerInterface $serializer
-     */
-    public function __construct(SerializerInterface $serializer)
+    public function __construct(private SerializerInterface $serializer)
     {
-        $this->serializer = $serializer;
     }
 
-    /**
-     * @param \Throwable $exception
-     * @param int        $status
-     * @param array      $headers
-     * @param array      $context
-     *
-     * @return JsonResponse
-     */
     public function createFromException(
         \Throwable $exception,
         int $status = Response::HTTP_INTERNAL_SERVER_ERROR,
@@ -46,12 +32,6 @@ class ResponseFactory
         return $this->createFromProblem($problem, $context);
     }
 
-    /**
-     * @param Problem $problem
-     * @param array   $context
-     *
-     * @return JsonResponse
-     */
     public function createFromProblem(Problem $problem, array $context = []): JsonResponse
     {
         $headers = $problem->getHeaders() + ['Content-Type' => 'application/problem+json'];
@@ -59,14 +39,6 @@ class ResponseFactory
         return $this->createFromData($problem, $problem->getStatus(), $headers, $context);
     }
 
-    /**
-     * @param mixed $data
-     * @param int   $status
-     * @param array $headers
-     * @param array $context
-     *
-     * @return JsonResponse
-     */
     public function createFromData(
         mixed $data,
         int $status = Response::HTTP_OK,
@@ -82,11 +54,6 @@ class ResponseFactory
         return new JsonResponse($json, $status, $headers, null !== $json);
     }
 
-    /**
-     * @param array $context
-     *
-     * @return array
-     */
     private function setContextDefaults(array $context): array
     {
         $context[AbstractNormalizer::GROUPS] = \array_merge(

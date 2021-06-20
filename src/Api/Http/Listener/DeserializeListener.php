@@ -31,22 +31,10 @@ class DeserializeListener implements EventSubscriberInterface
 {
     use ApiEndpointsConfigurationTrait;
 
-    private EntityManagerInterface $entityManager;
-    private RequestReader $requestReader;
-
-    /**
-     * @param EntityManagerInterface $entityManager
-     * @param RequestReader          $requestReader
-     */
-    public function __construct(EntityManagerInterface $entityManager, RequestReader $requestReader)
+    public function __construct(private EntityManagerInterface $entityManager, private RequestReader $requestReader)
     {
-        $this->entityManager = $entityManager;
-        $this->requestReader = $requestReader;
     }
 
-    /**
-     * @param ControllerArgumentsEvent $event
-     */
     public function onKernelControllerArguments(ControllerArgumentsEvent $event): void
     {
         $request = $event->getRequest();
@@ -80,12 +68,6 @@ class DeserializeListener implements EventSubscriberInterface
     }
 
     /**
-     * @param Request  $request
-     * @param callable $controller
-     * @param array    $arguments
-     *
-     * @return array
-     *
      * @throws \LogicException
      */
     private function getArgumentsToCheck(Request $request, callable $controller, array $arguments): array
@@ -108,12 +90,6 @@ class DeserializeListener implements EventSubscriberInterface
         throw new \LogicException(\sprintf('No argument to update with name "%s" found.', $argumentToUpdateName));
     }
 
-    /**
-     * @param Request $request
-     * @param object  $entity
-     *
-     * @return array
-     */
     private function getEntityDeserializationContext(Request $request, object $entity): array
     {
         return [

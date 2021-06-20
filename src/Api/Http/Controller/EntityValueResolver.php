@@ -18,15 +18,10 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
  */
 class EntityValueResolver implements ArgumentValueResolverInterface
 {
-    private EntityManagerInterface $entityManager;
     private array $ids = [];
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -64,12 +59,6 @@ class EntityValueResolver implements ArgumentValueResolverInterface
         yield $entity;
     }
 
-    /**
-     * @param Request $request
-     * @param string  $entityClass
-     *
-     * @return array|null
-     */
     private function extractIdFromRequest(Request $request, string $entityClass): ?array
     {
         $idFields = $this->entityManager->getClassMetadata($entityClass)->getIdentifierFieldNames();
@@ -95,12 +84,6 @@ class EntityValueResolver implements ArgumentValueResolverInterface
         return $id;
     }
 
-    /**
-     * @param Request $request
-     * @param string  $argumentName
-     *
-     * @return string
-     */
     private function getIdStorageKey(Request $request, string $argumentName): string
     {
         return \spl_object_hash($request).'_'.$argumentName;

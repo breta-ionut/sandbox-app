@@ -12,10 +12,6 @@ class MalformedInputException extends \RuntimeException implements HttpException
 {
     use NoCustomHeadersHttpExceptionTrait;
 
-    /**
-     * @param int             $code
-     * @param \Throwable|null $previous
-     */
     public function __construct(int $code = 0, \Throwable $previous = null)
     {
         $message = 'Bad JSON or with invalid fields sent as input.';
@@ -31,17 +27,11 @@ class MalformedInputException extends \RuntimeException implements HttpException
         return Response::HTTP_BAD_REQUEST;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getUserMessage(): string
     {
         return 'Malformed input sent.';
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getUserCode(): int
     {
         return UserCodes::MALFORMED_INPUT;

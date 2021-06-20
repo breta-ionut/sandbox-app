@@ -18,19 +18,10 @@ class ExceptionListener implements EventSubscriberInterface
 {
     use ApiEndpointsConfigurationTrait;
 
-    private ErrorListener $wrappedExceptionListener;
-
-    /**
-     * @param ErrorListener $wrappedExceptionListener
-     */
-    public function __construct(ErrorListener $wrappedExceptionListener)
+    public function __construct(private ErrorListener $wrappedExceptionListener)
     {
-        $this->wrappedExceptionListener = $wrappedExceptionListener;
     }
 
-    /**
-     * @param ExceptionEvent $event
-     */
     public function onKernelException(ExceptionEvent $event): void
     {
         if ($this->isApiRequest($event->getRequest())) {
