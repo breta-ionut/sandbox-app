@@ -13,7 +13,7 @@ class ImageExtension extends Extension
     /**
      * {@inheritDoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $container->registerForAutoconfiguration(ImageStyleInterface::class)->addTag('app.image.style');
     }

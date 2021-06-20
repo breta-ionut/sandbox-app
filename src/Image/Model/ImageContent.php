@@ -14,8 +14,6 @@ class ImageContent implements \Stringable
     private int $type;
 
     /**
-     * @param string $content
-     *
      * @throws \UnexpectedValueException
      */
     public function __construct(string $content)
@@ -30,9 +28,6 @@ class ImageContent implements \Stringable
         $this->type = $info[2];
     }
 
-    /**
-     * @return string
-     */
     public function getFormat(): string
     {
         return \image_type_to_extension($this->type, false);

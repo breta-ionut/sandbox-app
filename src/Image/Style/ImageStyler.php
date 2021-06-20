@@ -10,25 +10,11 @@ use Psr\Container\ContainerInterface;
 
 class ImageStyler
 {
-    private ImagineInterface $imagine;
-    private ContainerInterface $imageStylesLocator;
-
-    /**
-     * @param ImagineInterface   $imagine
-     * @param ContainerInterface $imageStylesLocator
-     */
-    public function __construct(ImagineInterface $imagine, ContainerInterface $imageStylesLocator)
+    public function __construct(private ImagineInterface $imagine, private ContainerInterface $imageStylesLocator)
     {
-        $this->imagine = $imagine;
-        $this->imageStylesLocator = $imageStylesLocator;
     }
 
     /**
-     * @param ImageContent $imageContent
-     * @param string       $style
-     *
-     * @return ImageContent
-     *
      * @throws \DomainException
      */
     public function apply(ImageContent $imageContent, string $style): ImageContent

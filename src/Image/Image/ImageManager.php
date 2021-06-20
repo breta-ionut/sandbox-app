@@ -9,19 +9,10 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ImageManager
 {
-    private EntityManagerInterface $entityManager;
-
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
-    /**
-     * @param Image $image
-     */
     public function upload(Image $image): void
     {
         $this->entityManager->persist($image);

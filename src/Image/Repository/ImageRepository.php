@@ -13,9 +13,6 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class ImageRepository extends ServiceEntityRepository
 {
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager, Image::class);

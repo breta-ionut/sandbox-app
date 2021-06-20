@@ -8,13 +8,7 @@ use Imagine\Image\ImageInterface;
 
 interface ImageStyleInterface
 {
-    /**
-     * @param ImageInterface $image
-     */
     public function apply(ImageInterface $image): void;
 
-    /**
-     * @return string
-     */
     public static function getName(): string;
 }

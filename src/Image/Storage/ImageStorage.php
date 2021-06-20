@@ -13,32 +13,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ImageStorage
 {
-    private FilesystemOperator $privateFilesystem;
-    private PublicFilesystemOperator $publicFilesystem;
-    private ImageStyler $imageStyler;
-    private UrlGeneratorInterface $urlGenerator;
-
-    /**
-     * @param FilesystemOperator       $privateFilesystem
-     * @param PublicFilesystemOperator $publicFilesystem
-     * @param ImageStyler              $imageStyler
-     * @param UrlGeneratorInterface    $urlGenerator
-     */
     public function __construct(
-        FilesystemOperator $privateFilesystem,
-        PublicFilesystemOperator $publicFilesystem,
-        ImageStyler $imageStyler,
-        UrlGeneratorInterface $urlGenerator,
+        private FilesystemOperator $privateFilesystem,
+        private PublicFilesystemOperator $publicFilesystem,
+        private ImageStyler $imageStyler,
+        private UrlGeneratorInterface $urlGenerator,
     ) {
-        $this->privateFilesystem = $privateFilesystem;
-        $this->publicFilesystem = $publicFilesystem;
-        $this->imageStyler = $imageStyler;
-        $this->urlGenerator = $urlGenerator;
     }
 
-    /**
-     * @param Image $image
-     */
     public function upload(Image $image): void
     {
         $path = $this->getPath($image);
@@ -47,18 +29,11 @@ class ImageStorage
         $this->privateFilesystem->write($path, (string) $image->getContent());
     }
 
-    /**
-     * @param Image $image
-     */
     public function delete(Image $image): void
     {
         $this->privateFilesystem->delete($image->getPath());
     }
 
-    /**
-     * @param Image       $image
-     * @param string|null $style
-     */
     public function publish(Image $image, string $style = null): void
     {
         $imageContent = new ImageContent($this->privateFilesystem->read($image->getPath()));
@@ -71,8 +46,6 @@ class ImageStorage
     }
 
     /**
-     * @param Image    $image
-     * @param bool     $original
      * @param string[] $forStyles
      */
     public function setPublicUrls(Image $image, bool $original = false, array $forStyles = []): void
@@ -86,11 +59,6 @@ class ImageStorage
         }
     }
 
-    /**
-     * @param Image $image
-     *
-     * @return string
-     */
     private function getPath(Image $image): string
     {
         return \sprintf(
@@ -101,22 +69,11 @@ class ImageStorage
         );
     }
 
-    /**
-     * @param \DateTime $date
-     *
-     * @return string
-     */
     private function getDateDirectory(\DateTime $date): string
     {
         return $date->format('Y-m-d');
     }
 
-    /**
-     * @param Image       $image
-     * @param string|null $style
-     *
-     * @return string
-     */
     private function getPublicPath(Image $image, ?string $style): string
     {
         return \sprintf(
@@ -127,12 +84,6 @@ class ImageStorage
         );
     }
 
-    /**
-     * @param Image       $image
-     * @param string|null $style
-     *
-     * @return string
-     */
     private function getPublicUrl(Image $image, string $style = null): string
     {
         $publicPath = $this->getPublicPath($image, $style);
@@ -144,12 +95,6 @@ class ImageStorage
         return $this->generatePublicUrl($image, $style);
     }
 
-    /**
-     * @param Image       $image
-     * @param string|null $style
-     *
-     * @return string
-     */
     private function generatePublicUrl(Image $image, ?string $style): string
     {
         $parameters = ['token' => $image->getToken()] + (null !== $style ? \compact($style) : []);
