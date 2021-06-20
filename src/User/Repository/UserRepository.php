@@ -10,9 +10,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class UserRepository extends ServiceEntityRepository
 {
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager, User::class);

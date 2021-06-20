@@ -14,20 +14,14 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 
 class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
 {
-    private ResponseFactory $responseFactory;
-
-    /**
-     * @param ResponseFactory $responseFactory
-     */
-    public function __construct(ResponseFactory $responseFactory)
+    public function __construct(private ResponseFactory $responseFactory)
     {
-        $this->responseFactory = $responseFactory;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function start(Request $request, AuthenticationException $authException = null)
+    public function start(Request $request, AuthenticationException $authException = null): Response
     {
         $problem = (new Problem())
             ->setTitle('Authentication required.')

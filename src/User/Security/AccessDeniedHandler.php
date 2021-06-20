@@ -14,20 +14,14 @@ use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
 
 class AccessDeniedHandler implements AccessDeniedHandlerInterface
 {
-    private ResponseFactory $responseFactory;
-
-    /**
-     * @param ResponseFactory $responseFactory
-     */
-    public function __construct(ResponseFactory $responseFactory)
+    public function __construct(private ResponseFactory $responseFactory)
     {
-        $this->responseFactory = $responseFactory;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function handle(Request $request, AccessDeniedException $accessDeniedException)
+    public function handle(Request $request, AccessDeniedException $accessDeniedException): ?Response
     {
         $problem = (new Problem())
             ->setTitle('Access denied.')

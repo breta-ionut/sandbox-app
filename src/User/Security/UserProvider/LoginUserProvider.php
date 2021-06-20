@@ -4,19 +4,30 @@ declare(strict_types=1);
 
 namespace App\User\Security\UserProvider;
 
-use App\User\Model\User;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class LoginUserProvider extends AbstractUserProvider
 {
     /**
      * {@inheritDoc}
      */
-    public function loadUserByUsername(string $username): User
+    public function loadUserByUsername(string $username): UserInterface
     {
-        $user = $this->userRepository->findOneBy(['email' => $username]);
+        return $this->loadUserByIdentifier($username);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function loadUserByIdentifier(string $identifier): UserInterface
+    {
+        $user = $this->userRepository->findOneBy(['email' => $identifier]);
         if (null === $user) {
-            throw new UsernameNotFoundException(\sprintf('No user with email "%s" found.', $username));
+            $exception = new UserNotFoundException(\sprintf('No user with email "%s" found.', $identifier));
+            $exception->setUserIdentifier($identifier);
+
+            throw $exception;
         }
 
         return $user;

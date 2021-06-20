@@ -17,10 +17,6 @@ class AuthenticationFailedException
 {
     use NoCustomHeadersHttpExceptionTrait;
 
-    /**
-     * @param int             $code
-     * @param \Throwable|null $previous
-     */
     public function __construct(int $code = 0, \Throwable $previous = null)
     {
         parent::__construct('Authentication failed.', $code, $previous);
@@ -29,22 +25,16 @@ class AuthenticationFailedException
     /**
      * {@inheritDoc}
      */
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return Response::HTTP_UNAUTHORIZED;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getUserMessage(): string
     {
         return 'Authentication failed.';
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getUserCode(): int
     {
         return UserCodes::AUTHENTICATION_FAILED;

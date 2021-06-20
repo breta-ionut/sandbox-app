@@ -11,19 +11,11 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class TokenRepository extends ServiceEntityRepository
 {
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager, Token::class);
     }
 
-    /**
-     * @param string $token
-     *
-     * @return Token|null
-     */
     public function findOneAvailableByToken(string $token): ?Token
     {
         return $this->createQueryBuilder('t')
@@ -35,11 +27,6 @@ class TokenRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    /**
-     * @param User $user
-     *
-     * @return Token|null
-     */
     public function findOneAvailableByUser(User $user): ?Token
     {
         return $this->createQueryBuilder('t')

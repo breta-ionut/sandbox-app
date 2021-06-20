@@ -7,20 +7,14 @@ namespace App\User\Security\UserProvider;
 use App\User\Model\User;
 use App\User\Repository\UserRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 abstract class AbstractUserProvider implements UserProviderInterface
 {
-    protected UserRepository $userRepository;
-
-    /**
-     * @param UserRepository $userRepository
-     */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(protected UserRepository $userRepository)
     {
-        $this->userRepository = $userRepository;
     }
 
     /**
@@ -32,11 +26,14 @@ abstract class AbstractUserProvider implements UserProviderInterface
             throw new UnsupportedUserException(\sprintf('Users of type "%s" are not supported.', \get_class($user)));
         }
 
-        $userId = $user->getId();
-        $refreshedUser = $this->userRepository->find($userId);
+        $email = $user->getEmail();
+        $refreshedUser = $this->userRepository->findOneBy(['email' => $email]);
 
         if (null === $refreshedUser) {
-            throw new UsernameNotFoundException(\sprintf('No user with id "%d" found.', $userId));
+            $exception = new UserNotFoundException(\sprintf('No user with email "%s" found.', $email));
+            $exception->setUserIdentifier($email);
+
+            throw $exception;
         }
 
         return $refreshedUser;

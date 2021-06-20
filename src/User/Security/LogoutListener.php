@@ -11,19 +11,10 @@ use Symfony\Component\Security\Http\Event\LogoutEvent;
 
 class LogoutListener implements EventSubscriberInterface
 {
-    private ResponseFactory $responseFactory;
-
-    /**
-     * @param ResponseFactory $responseFactory
-     */
-    public function __construct(ResponseFactory $responseFactory)
+    public function __construct(private ResponseFactory $responseFactory)
     {
-        $this->responseFactory = $responseFactory;
     }
 
-    /**
-     * @param LogoutEvent $event
-     */
     public function onLogout(LogoutEvent $event): void
     {
         $event->setResponse($this->responseFactory->createFromData(null, Response::HTTP_NO_CONTENT));
@@ -32,7 +23,7 @@ class LogoutListener implements EventSubscriberInterface
     /**
      * {@inheritDoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [LogoutEvent::class => ['onLogout', 64]];
     }

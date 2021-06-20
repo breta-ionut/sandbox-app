@@ -11,34 +11,16 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class TokenManager
 {
-    private TokenRepository $repository;
-    private EntityManagerInterface $entityManager;
-
     /**
-     * @var int In minutes.
-     */
-    private int $tokenAvailability;
-
-    /**
-     * @param TokenRepository        $repository
-     * @param EntityManagerInterface $entityManager
-     * @param int                    $tokenAvailability
+     * @param int $tokenAvailability In minutes.
      */
     public function __construct(
-        TokenRepository $repository,
-        EntityManagerInterface $entityManager,
-        int $tokenAvailability
+        private TokenRepository $repository,
+        private EntityManagerInterface $entityManager,
+        private int $tokenAvailability,
     ) {
-        $this->repository = $repository;
-        $this->entityManager = $entityManager;
-        $this->tokenAvailability = $tokenAvailability;
     }
 
-    /**
-     * @param User $user
-     *
-     * @return Token
-     */
     public function getOrCreate(User $user): Token
     {
         if (null === ($token = $this->repository->findOneAvailableByUser($user))) {
@@ -52,11 +34,6 @@ class TokenManager
         return $token;
     }
 
-    /**
-     * @param User $user
-     *
-     * @return Token
-     */
     private function create(User $user): Token
     {
         $token = (new Token())->setUser($user);

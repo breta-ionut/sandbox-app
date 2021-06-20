@@ -23,20 +23,11 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class LoginAuthenticator extends AbstractAuthenticator
 {
-    private RequestReader $requestReader;
-    private ValidatorInterface $validator;
-    private TokenManager $tokenManager;
-
-    /**
-     * @param RequestReader      $requestReader
-     * @param ValidatorInterface $validator
-     * @param TokenManager       $tokenManager
-     */
-    public function __construct(RequestReader $requestReader, ValidatorInterface $validator, TokenManager $tokenManager)
-    {
-        $this->requestReader = $requestReader;
-        $this->validator = $validator;
-        $this->tokenManager = $tokenManager;
+    public function __construct(
+        private RequestReader $requestReader,
+        private ValidatorInterface $validator,
+        private TokenManager $tokenManager,
+    ) {
     }
 
     /**
@@ -83,8 +74,6 @@ class LoginAuthenticator extends AbstractAuthenticator
     }
 
     /**
-     * @param Credentials $credentials
-     *
      * @throws ValidationException
      */
     private function validateCredentials(Credentials $credentials): void

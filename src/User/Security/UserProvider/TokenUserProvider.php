@@ -4,34 +4,37 @@ declare(strict_types=1);
 
 namespace App\User\Security\UserProvider;
 
-use App\User\Model\User;
 use App\User\Repository\TokenRepository;
 use App\User\Repository\UserRepository;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class TokenUserProvider extends AbstractUserProvider
 {
-    private TokenRepository $tokenRepository;
-
-    /**
-     * @param UserRepository  $userRepository
-     * @param TokenRepository $tokenRepository
-     */
-    public function __construct(UserRepository $userRepository, TokenRepository $tokenRepository)
+    public function __construct(private TokenRepository $tokenRepository, UserRepository $userRepository)
     {
         parent::__construct($userRepository);
-
-        $this->tokenRepository = $tokenRepository;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function loadUserByUsername(string $username): User
+    public function loadUserByUsername(string $username): UserInterface
     {
-        $token = $this->tokenRepository->findOneAvailableByToken($username);
+        return $this->loadUserByIdentifier($username);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function loadUserByIdentifier(string $identifier): UserInterface
+    {
+        $token = $this->tokenRepository->findOneAvailableByToken($identifier);
         if (null === $token) {
-            throw new UsernameNotFoundException(\sprintf('Token "%s" does not exist or is expired.', $username));
+            $exception = new UserNotFoundException(\sprintf('Token "%s" does not exist or is expired.', $identifier));
+            $exception->setUserIdentifier($identifier);
+
+            throw $exception;
         }
 
         $user = $token->getUser();
