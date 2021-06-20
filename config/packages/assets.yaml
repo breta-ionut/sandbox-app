@@ -1,6 +1,0 @@
-assets:
-    json_manifest_path: '%kernel.project_dir%/public/build/app/manifest.json'
-
-    packages:
-        static:
-        api_doc: {base_path: '/build/api_doc'}

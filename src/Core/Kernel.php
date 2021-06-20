@@ -67,8 +67,8 @@ abstract class Kernel extends BaseKernel
     {
         $configDir = $this->getConfigDir();
 
-        $loader->load($configDir.'/{packages}/*.yaml', 'glob');
-        $loader->load($configDir.'/{packages}/'.$this->environment.'/**/*.yaml', 'glob');
+        $loader->load($configDir.'/{packages}/*.php', 'glob');
+        $loader->load($configDir.'/{packages}/'.$this->environment.'/**/*.php', 'glob');
     }
 
     /**
