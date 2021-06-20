@@ -28,7 +28,7 @@ class Problem
     /**
      * Additional data to be exposed to API users.
      */
-    private mixed $data;
+    private mixed $data = null;
 
     private ?\Throwable $exception;
     private ?FlattenException $flattenException;
