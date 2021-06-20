@@ -8,10 +8,5 @@ use League\Flysystem\FilesystemAdapter;
 
 interface PublicFilesystemAdapter extends FilesystemAdapter
 {
-    /**
-     * @param string $path
-     *
-     * @return string
-     */
     public function publicUrl(string $path): string;
 }

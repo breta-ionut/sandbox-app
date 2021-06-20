@@ -8,10 +8,5 @@ use League\Flysystem\FilesystemOperator;
 
 interface PublicFilesystemOperator extends FilesystemOperator
 {
-    /**
-     * @param string $path
-     *
-     * @return string
-     */
     public function publicUrl(string $path): string;
 }

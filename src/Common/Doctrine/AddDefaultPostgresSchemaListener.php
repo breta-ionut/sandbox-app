@@ -11,9 +11,6 @@ use Doctrine\ORM\Tools\ToolEvents;
 
 class AddDefaultPostgresSchemaListener implements EventSubscriber
 {
-    /**
-     * @param GenerateSchemaEventArgs $eventArgs
-     */
     public function postGenerateSchema(GenerateSchemaEventArgs $eventArgs): void
     {
         $schemaManager = $eventArgs->getEntityManager()

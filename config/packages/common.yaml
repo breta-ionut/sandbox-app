@@ -11,7 +11,7 @@ services:
         resource: '../../src/Common/*'
 
     App\Common\Filesystem\Adapter\PublicLocalFilesystemAdapter:
-        arguments: ['%kernel.project_dir%/public']
+        $location: '%kernel.project_dir%/public'
 
     app.common.filesystem.public_adapter_locator:
         class: Symfony\Component\DependencyInjection\ServiceLocator

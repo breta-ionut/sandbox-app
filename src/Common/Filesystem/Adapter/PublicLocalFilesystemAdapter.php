@@ -12,32 +12,17 @@ use Symfony\Component\Routing\RequestContext;
 
 class PublicLocalFilesystemAdapter extends LocalFilesystemAdapter implements PublicFilesystemAdapter
 {
-    private RequestContext $requestContext;
-
-    /**
-     * @param string                   $location
-     * @param RequestContext           $requestContext
-     * @param VisibilityConverter|null $visibility
-     * @param int                      $writeFlags
-     * @param int                      $linkHandling
-     * @param MimeTypeDetector|null    $mimeTypeDetector
-     */
     public function __construct(
+        private RequestContext $requestContext,
         string $location,
-        RequestContext $requestContext,
         VisibilityConverter $visibility = null,
         int $writeFlags = LOCK_EX,
         int $linkHandling = self::DISALLOW_LINKS,
-        MimeTypeDetector $mimeTypeDetector = null
+        MimeTypeDetector $mimeTypeDetector = null,
     ) {
         parent::__construct($location, $visibility, $writeFlags, $linkHandling, $mimeTypeDetector);
-
-        $this->requestContext = $requestContext;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function publicUrl(string $path): string
     {
         $path = '' === $path || '/' === $path[0] ? $path : "/$path";
@@ -45,9 +30,6 @@ class PublicLocalFilesystemAdapter extends LocalFilesystemAdapter implements Pub
         return $this->schemeAuthority().$this->requestContext->getBaseUrl().$path;
     }
 
-    /**
-     * @return string
-     */
     private function schemeAuthority(): string
     {
         $scheme = $this->requestContext->getScheme();

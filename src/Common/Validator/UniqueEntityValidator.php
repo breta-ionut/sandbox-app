@@ -17,11 +17,8 @@ class UniqueEntityValidator extends ConstraintValidator
 {
     private const ENTITY_ID = 4;
 
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     /**
