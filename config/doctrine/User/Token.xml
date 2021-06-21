@@ -16,6 +16,8 @@
         <field name="token" type="text" unique="true" />
         <field name="expiresAt" type="datetimetz" />
 
-        <many-to-one field="user" target-entity="App\User\Model\User" />
+        <many-to-one field="user" target-entity="App\User\Model\User">
+            <join-column nullable="false" />
+        </many-to-one>
     </entity>
 </doctrine-mapping>

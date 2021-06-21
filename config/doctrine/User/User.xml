@@ -18,5 +18,9 @@
         <field name="email" type="text" unique="true" />
         <field name="roles" type="json" />
         <field name="password" type="text" />
+
+        <one-to-one field="image" target-entity="App\Image\Model\Image" orphan-removal="true">
+            <join-column nullable="false" />
+        </one-to-one>
     </entity>
 </doctrine-mapping>
