@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\User\Model;
 
 use App\Common\Validator\UniqueEntity;
+use App\Image\Model\Image;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -13,6 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 #[UniqueEntity('email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, LegacyPasswordAuthenticatedUserInterface
@@ -53,6 +55,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, LegacyP
     private string $plainPassword;
 
     private string $password;
+
+    #[Groups('api_request')]
+
+    #[NotNull]
+    private Image $image;
 
     #[Groups('api_response')]
     private Token $currentToken;
@@ -180,6 +187,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, LegacyP
     public function setPassword(string $password): static
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getImage(): Image
+    {
+        return $this->image;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setImage(Image $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }

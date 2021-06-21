@@ -22,7 +22,7 @@ class Image
 
     #[NotNull]
     #[ImageConstraint(maxSize: '16M', detectCorrupted: true)]
-    private ?File $file;
+    private File $file;
 
     private ?ImageContent $content;
 
@@ -35,9 +35,8 @@ class Image
     #[Groups('api_response')]
     private array $publicUrlsPerStyles = [];
 
-    public function __construct(?File $file)
+    public function __construct()
     {
-        $this->file = $file;
         $this->token = \bin2hex(\random_bytes(self::TOKEN_SIZE));
         $this->createdAt = new \DateTime();
     }
@@ -72,9 +71,19 @@ class Image
         return $this->createdAt;
     }
 
-    public function getFile(): ?File
+    public function getFile(): File
     {
         return $this->file;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setFile(File $file): static
+    {
+        $this->file = $file;
+
+        return $this;
     }
 
     /**

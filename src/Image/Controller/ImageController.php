@@ -52,8 +52,12 @@ class ImageController extends AbstractController
     #[Route(name: 'upload', defaults: ['_api_receive' => false], methods: 'POST')]
     public function upload(Request $request, ValidatorInterface $validator, ImageManager $imageManager): View
     {
+        $image = new Image();
+
         $files = $request->files->all();
-        $image = new Image(\reset($files) ?: null);
+        if ($file = \reset($files)) {
+            $image->setFile($file);
+        }
 
         $violations = $validator->validate($image);
         if (0 !== \count($violations)) {
