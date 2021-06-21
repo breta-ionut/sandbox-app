@@ -7,6 +7,7 @@ namespace App\User\Security;
 use App\Api\Error\Problem;
 use App\Api\Http\ResponseFactory;
 use App\User\Error\UserCodes;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -21,7 +22,7 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function handle(Request $request, AccessDeniedException $accessDeniedException): ?Response
+    public function handle(Request $request, AccessDeniedException $accessDeniedException): JsonResponse
     {
         $problem = (new Problem())
             ->setTitle('Access denied.')

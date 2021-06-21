@@ -25,7 +25,7 @@ class SessionListener extends AbstractSessionListener
     /**
      * {@inheritDoc}
      */
-    protected function getSession(): ?SessionInterface
+    protected function getSession(): SessionInterface
     {
         $request = $this->container
             ->get(RequestStack::class)

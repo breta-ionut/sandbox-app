@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Core\DependencyInjection;
 
-use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
@@ -16,7 +15,7 @@ class PhpErrorsExtension extends ConfigurableExtension
     /**
      * {@inheritDoc}
      */
-    public function getConfiguration(array $config, ContainerBuilder $container): ?ConfigurationInterface
+    public function getConfiguration(array $config, ContainerBuilder $container): PhpErrorsConfiguration
     {
         return new PhpErrorsConfiguration($container->getParameter('kernel.debug'));
     }

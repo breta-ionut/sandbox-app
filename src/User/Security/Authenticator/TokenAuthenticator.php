@@ -11,14 +11,13 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 
 class TokenAuthenticator extends AbstractAuthenticator
 {
     /**
      * {@inheritDoc}
      */
-    public function supports(Request $request): ?bool
+    public function supports(Request $request): bool
     {
         return $request->headers->has('Authorization')
             && \str_starts_with($request->headers->get('Authorization'), 'Token ');
@@ -27,7 +26,7 @@ class TokenAuthenticator extends AbstractAuthenticator
     /**
      * {@inheritDoc}
      */
-    public function authenticate(Request $request): PassportInterface
+    public function authenticate(Request $request): Passport
     {
         $token = \substr($request->headers->get('Authorization'), 6);
 

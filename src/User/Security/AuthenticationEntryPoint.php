@@ -7,6 +7,7 @@ namespace App\User\Security;
 use App\Api\Error\Problem;
 use App\Api\Http\ResponseFactory;
 use App\User\Error\UserCodes;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -21,7 +22,7 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
     /**
      * {@inheritDoc}
      */
-    public function start(Request $request, AuthenticationException $authException = null): Response
+    public function start(Request $request, AuthenticationException $authException = null): JsonResponse
     {
         $problem = (new Problem())
             ->setTitle('Authentication required.')

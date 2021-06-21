@@ -12,7 +12,7 @@ final class Version20210612131451 extends AbstractMigration
     /**
      * {@inheritDoc}
      */
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         $this->addSql('CREATE TABLE images (id SERIAL NOT NULL, token TEXT NOT NULL, path TEXT NOT NULL, created_at TIMESTAMP(0) WITH TIME ZONE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_E01FBE6A5F37A13B ON images (token)');
@@ -27,7 +27,7 @@ final class Version20210612131451 extends AbstractMigration
     /**
      * {@inheritDoc}
      */
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         $this->addSql('ALTER TABLE tokens DROP CONSTRAINT FK_AA5A118EA76ED395');
         $this->addSql('DROP TABLE images');

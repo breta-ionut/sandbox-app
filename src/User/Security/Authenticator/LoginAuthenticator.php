@@ -18,7 +18,6 @@ use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class LoginAuthenticator extends AbstractAuthenticator
@@ -33,7 +32,7 @@ class LoginAuthenticator extends AbstractAuthenticator
     /**
      * {@inheritDoc}
      */
-    public function supports(Request $request): ?bool
+    public function supports(Request $request): bool
     {
         return true;
     }
@@ -41,7 +40,7 @@ class LoginAuthenticator extends AbstractAuthenticator
     /**
      * {@inheritDoc}
      */
-    public function authenticate(Request $request): PassportInterface
+    public function authenticate(Request $request): Passport
     {
         /** @var Credentials $credentials */
         $credentials = $this->requestReader->read($request, Credentials::class);

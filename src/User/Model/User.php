@@ -169,7 +169,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, LegacyP
     /**
      * {@inheritDoc}
      */
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
         return $this->password;
     }
