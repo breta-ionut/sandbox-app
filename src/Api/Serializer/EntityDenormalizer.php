@@ -28,7 +28,7 @@ class EntityDenormalizer implements ContextAwareDenormalizerInterface, Denormali
             throw new ResourceNotFoundException($type, $id);
         }
 
-        return $this->denormalizer->denormalize($data, $type, $format, $this->addObjectToPopulate($context, $entity));
+        return $this->denormalizer->denormalize($data, $type, $format, $this->addEntityToPopulate($context, $entity));
     }
 
     /**

@@ -24,11 +24,11 @@ class EntityCollectionDenormalizer implements ContextAwareDenormalizerInterface,
         $ids = $this->extractIdsFromNormalizedData($data, $entityClass);
         $entities = $this->getEntities($entityClass, \array_values($ids));
 
-        $context = $this->configureToBypassEntityDenormalizer($context);
-
         $objects = [];
 
         foreach ($data as $index => $item) {
+            $context = $this->configureToBypassEntityDenormalizer($context);
+
             if (!isset($ids[$index])) {
                 $objects[$index] = $this->denormalizer->denormalize($item, $entityClass, $format, $context);
 
@@ -42,7 +42,7 @@ class EntityCollectionDenormalizer implements ContextAwareDenormalizerInterface,
                 throw new ResourceNotFoundException($entityClass, $id);
             }
 
-            $entityContext = $this->addObjectToPopulate($context, $entities[$idHash]);
+            $entityContext = $this->addEntityToPopulate($context, $entities[$idHash]);
 
             $objects[$index] = $this->denormalizer->denormalize($item, $entityClass, $format, $entityContext);
         }
@@ -55,7 +55,7 @@ class EntityCollectionDenormalizer implements ContextAwareDenormalizerInterface,
      */
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
-        if (!$this->shouldApplyEntityDenormalizer($context) || !\str_ends_with($type, '[]')) {
+        if (!\str_ends_with($type, '[]')) {
             return false;
         }
 

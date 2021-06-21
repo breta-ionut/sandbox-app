@@ -6,6 +6,7 @@ namespace App\Api\Http;
 
 use App\Api\Exception\MalformedInputException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -29,7 +30,7 @@ class RequestReader
                 'json',
                 $this->setContextDefaults($context),
             );
-        } catch (\Throwable $exception) {
+        } catch (ExceptionInterface $exception) {
             throw new MalformedInputException(0, $exception);
         }
     }
