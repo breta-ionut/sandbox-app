@@ -18,7 +18,7 @@ class EntityDenormalizer implements ContextAwareDenormalizerInterface, Denormali
      */
     public function denormalize(mixed $data, string $type, string $format = null, array $context = []): object
     {
-        $context = $this->configureToBypassEntityDenormalizer($context);
+        $context = $this->addConfigurationToBypassEntityDenormalizer($context, $data);
 
         if (null === ($id = $this->extractIdFromNormalizedData($data, $type))) {
             return $this->denormalizer->denormalize($data, $type, $format, $context);
@@ -36,8 +36,8 @@ class EntityDenormalizer implements ContextAwareDenormalizerInterface, Denormali
      */
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
-        return $this->shouldApplyEntityDenormalizer($context)
-            && \class_exists($type)
-            && !$this->entityManager->getMetadataFactory()->isTransient($type);
+        return \class_exists($type)
+            && !$this->entityManager->getMetadataFactory()->isTransient($type)
+            && $this->shouldApplyEntityDenormalizer($data, $context);
     }
 }

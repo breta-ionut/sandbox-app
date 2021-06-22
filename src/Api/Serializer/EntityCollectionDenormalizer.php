@@ -27,7 +27,7 @@ class EntityCollectionDenormalizer implements ContextAwareDenormalizerInterface,
         $objects = [];
 
         foreach ($data as $index => $item) {
-            $context = $this->configureToBypassEntityDenormalizer($context);
+            $context = $this->addConfigurationToBypassEntityDenormalizer($context, $item);
 
             if (!isset($ids[$index])) {
                 $objects[$index] = $this->denormalizer->denormalize($item, $entityClass, $format, $context);

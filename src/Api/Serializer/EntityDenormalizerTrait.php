@@ -19,38 +19,20 @@ trait EntityDenormalizerTrait
         $this->entityManager = $entityManager;
     }
 
-    private function shouldApplyEntityDenormalizer(array $context): bool
+    private function shouldApplyEntityDenormalizer(array $data, array $context): bool
     {
-        if (empty($context['bypass_entity_denormalizer'])) {
-            return true;
-        }
-
-        // Reset the flag to its initial value to avoid a second bypassing. The flag is passed as a reference, so this
-        // change will be reflected outside the current scope.
-        /** @noinspection PhpArrayWriteIsNotUsedInspection */
-        $context['bypass_entity_denormalizer'] = false;
-
-        return false;
+        return empty($context['bypass_entity_denormalizer'])
+            || $this->dataHash($data) !== $context['bypass_entity_denormalizer'];
     }
 
-    private function configureToBypassEntityDenormalizer(array $context): array
+    private function dataHash(array $data): string
     {
-        // By setting the flag as a reference to a static variable, its value becomes alterable from other scopes
-        // without needing to pass the context by reference. The bypassing of the entity denormalizer should be done
-        // only once upon the call of this function, therefore it is a need to have the value of the flag reset after
-        // the bypass.
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        static $bypassEntityDenormalizer;
-
-        $bypassEntityDenormalizer = true;
-        $context['bypass_entity_denormalizer'] =& $bypassEntityDenormalizer;
-
-        return $context;
+        return \md5(\serialize($data));
     }
 
-    private function addEntityToPopulate(array $context, object $entity): array
+    private function addConfigurationToBypassEntityDenormalizer(array $context, array $data): array
     {
-        $context[AbstractNormalizer::OBJECT_TO_POPULATE] = $entity;
+        $context['bypass_entity_denormalizer'] = $this->dataHash($data);
 
         return $context;
     }
@@ -69,5 +51,12 @@ trait EntityDenormalizerTrait
         }
 
         return $id;
+    }
+
+    private function addEntityToPopulate(array $context, object $entity): array
+    {
+        $context[AbstractNormalizer::OBJECT_TO_POPULATE] = $entity;
+
+        return $context;
     }
 }
