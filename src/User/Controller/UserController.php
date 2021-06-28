@@ -9,6 +9,7 @@ use App\Api\Http\View;
 use App\Core\Controller\AbstractController;
 use App\User\Model\User;
 use App\User\User\UserManager;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -21,6 +22,20 @@ class UserController extends AbstractController
     public function getUser(UserInterface $user): UserInterface
     {
         return $user;
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    #[Route('/validate', name: 'validate', methods: 'POST')]
+    public function validate(User $user, ValidatorInterface $validator): JsonResponse
+    {
+        $violations = $validator->validate($user);
+        if (0 !== \count($violations)) {
+            throw new ValidationException($violations);
+        }
+
+        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
 
     /**

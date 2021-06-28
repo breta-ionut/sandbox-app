@@ -29,11 +29,7 @@ paths:
             responses:
                 '301':
                     description: 'A redirect to the public URL of the successfully retrieved image.'
-                '500':
-                    description: 'If an internal error occurred.'
-                    content:
-                        application/json:
-                            schema: {$ref: '#/components/responses/ErrorResponse'}
+                '500': {$ref: '#/components/responses/InternalServerError'}
 
     /api/image:
         post:
@@ -69,12 +65,8 @@ paths:
                     description: 'If no image was sent or the one sent is invalid.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/responses/ValidationErrorResponse'}
-                '500':
-                    description: 'If an internal error occurred.'
-                    content:
-                        application/json:
-                            schema: {$ref: '#/components/responses/ErrorResponse'}
+                            schema: {$ref: '#/components/schemas/ValidationError'}
+                '500': {$ref: '#/components/responses/InternalServerError'}
 
     /api/user:
         get:
@@ -86,17 +78,13 @@ paths:
                     description: 'If the data of the current user is successfully returned.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/responses/UserResponse'}
+                            schema: {$ref: '#/components/schemas/UserOutput'}
                 '401':
                     description: 'If the request is anonymous.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/responses/ErrorResponse'}
-                '500':
-                    description: 'If an internal error occurred.'
-                    content:
-                        application/json:
-                            schema: {$ref: '#/components/responses/ErrorResponse'}
+                            schema: {$ref: '#/components/schemas/Error'}
+                '500': {$ref: '#/components/responses/InternalServerError'}
 
         post:
             summary: Register
@@ -126,22 +114,18 @@ paths:
                     description: 'If the user was successfully registered.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/responses/UserResponse'}
+                            schema: {$ref: '#/components/schemas/UserOutput'}
                 '400':
                     description: 'If the data sent for register is malformed (e.g. bad JSON) or invalid (e.g. email is already in use).'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/responses/ValidationErrorResponse'}
+                            schema: {$ref: '#/components/schemas/ValidationError'}
                 '403':
                     description: 'If the request was made by an authenticated user.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/responses/ErrorResponse'}
-                '500':
-                    description: 'If an internal error occurred.'
-                    content:
-                        application/json:
-                            schema: {$ref: '#/components/responses/ErrorResponse'}
+                            schema: {$ref: '#/components/schemas/Error'}
+                '500': {$ref: '#/components/responses/InternalServerError'}
 
     /api/user/login:
         post:
@@ -166,27 +150,23 @@ paths:
                     description: 'If the user successfully logged in.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/responses/UserResponse'}
+                            schema: {$ref: '#/components/schemas/UserOutput'}
                 '400':
                     description: 'If the data sent for login is malformed (e.g. bad JSON) or invalid (e.g. email has invalid format).'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/responses/ValidationErrorResponse'}
+                            schema: {$ref: '#/components/schemas/ValidationError'}
                 '401':
                     description: 'If the login was unsuccessful.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/responses/ErrorResponse'}
+                            schema: {$ref: '#/components/schemas/Error'}
                 '403':
                     description: 'If the request was made by an authenticated user.'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/responses/ErrorResponse'}
-                '500':
-                    description: 'If an internal error occurred.'
-                    content:
-                        application/json:
-                            schema: {$ref: '#/components/responses/ErrorResponse'}
+                            schema: {$ref: '#/components/schemas/Error'}
+                '500': {$ref: '#/components/responses/InternalServerError'}
 
     /api/user/logout:
         delete:
@@ -196,21 +176,11 @@ paths:
             responses:
                 '204':
                     description: 'If the current user was successfully logged out.'
-                '500':
-                    description: 'If an internal error occurred.'
-                    content:
-                        application/json:
-                            schema: {$ref: '#/components/responses/ErrorResponse'}
+                '500': {$ref: '#/components/responses/InternalServerError'}
 
 components:
-    securitySchemes:
-        TokenAuth:
-            type: apiKey
-            in: header
-            name: Authorization
-
-    responses:
-        UserResponse:
+    schemas:
+        UserOutput:
             type: object
             properties:
                 id: {type: integer}
@@ -227,26 +197,16 @@ components:
                             type: string
                             format: date-time
 
-        # Error responses.
-        ErrorResponseDebug:
-            type: object
-            properties:
-                message: {type: string}
-                class: {type: string}
-                trace:
-                    type: array
-                    items: {type: object}
-
-        ErrorResponse:
+        Error:
             type: object
             properties:
                 title: {type: string}
                 code: {type: integer}
                 status: {type: integer}
                 detail: {type: string}
-                debug: {$ref: '#/components/responses/ErrorResponseDebug'}
+                debug: {$ref: '#/components/schemas/ErrorDebug'}
 
-        ValidationErrorResponse:
+        ValidationError:
             type: object
             properties:
                 title: {type: string}
@@ -265,5 +225,26 @@ components:
                                 items: {type: string}
                             type: {type: string}
                             payload: {type: object}
-                debug: {$ref: '#/components/responses/ErrorResponseDebug'}
-        # End of - Error responses.
+                debug: {$ref: '#/components/schemas/ErrorDebug'}
+
+        ErrorDebug:
+            type: object
+            properties:
+                message: {type: string}
+                class: {type: string}
+                trace:
+                    type: array
+                    items: {type: object}
+
+    responses:
+        InternalServerError:
+            description: 'If an internal error occurred.'
+            content:
+                application/json:
+                    schema: {$ref: '#/components/schemas/Error'}
+
+    securitySchemes:
+        TokenAuth:
+            type: apiKey
+            in: header
+            name: Authorization
