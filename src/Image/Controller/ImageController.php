@@ -24,7 +24,7 @@ class ImageController extends AbstractController
     /**
      * @throws ResourceNotFoundException
      */
-    #[Route('/{token}/{style}', name: 'get', methods: 'GET')]
+    #[Route('/{token}/{style}', name: 'get', methods: Request::METHOD_GET)]
     public function getImage(
         ImageRepository $imageRepository,
         ImageStorage $imageStorage,
@@ -49,7 +49,7 @@ class ImageController extends AbstractController
     /**
      * @throws ValidationException
      */
-    #[Route(name: 'upload', defaults: ['_api_receive' => false], methods: 'POST')]
+    #[Route(name: 'upload', defaults: ['_api_receive' => false], methods: Request::METHOD_POST)]
     public function upload(Request $request, ValidatorInterface $validator, ImageManager $imageManager): View
     {
         $image = new Image();

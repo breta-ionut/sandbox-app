@@ -10,6 +10,7 @@ use App\Core\Controller\AbstractController;
 use App\User\Model\User;
 use App\User\User\UserManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -18,7 +19,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[Route(name: 'user_')]
 class UserController extends AbstractController
 {
-    #[Route(name: 'get', methods: 'GET')]
+    #[Route(name: 'get', methods: Request::METHOD_GET)]
     public function getUser(UserInterface $user): UserInterface
     {
         return $user;
@@ -27,7 +28,7 @@ class UserController extends AbstractController
     /**
      * @throws ValidationException
      */
-    #[Route('/validate', name: 'validate', methods: 'POST')]
+    #[Route('/validate', name: 'validate', methods: Request::METHOD_POST)]
     public function validate(User $user, ValidatorInterface $validator): JsonResponse
     {
         $violations = $validator->validate($user);
@@ -41,7 +42,7 @@ class UserController extends AbstractController
     /**
      * @throws ValidationException
      */
-    #[Route(name: 'register', methods: 'POST')]
+    #[Route(name: 'register', methods: Request::METHOD_POST)]
     public function register(User $user, ValidatorInterface $validator, UserManager $userManager): View
     {
         $violations = $validator->validate($user);
@@ -55,7 +56,7 @@ class UserController extends AbstractController
         return new View($user, Response::HTTP_CREATED);
     }
 
-    #[Route('/login', name: 'login', methods: 'POST')]
+    #[Route('/login', name: 'login', methods: Request::METHOD_POST)]
     public function login(UserInterface $user): UserInterface
     {
         return $user;
@@ -64,7 +65,7 @@ class UserController extends AbstractController
     /**
      * @throws \BadMethodCallException
      */
-    #[Route('/logout', name: 'logout', methods: 'DELETE')]
+    #[Route('/logout', name: 'logout', methods: Request::METHOD_DELETE)]
     public function logout(): void
     {
         throw new \BadMethodCallException('This controller should not get called.');
