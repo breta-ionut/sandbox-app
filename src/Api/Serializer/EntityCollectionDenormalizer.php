@@ -19,7 +19,7 @@ class EntityCollectionDenormalizer implements ContextAwareDenormalizerInterface,
      */
     public function denormalize(mixed $data, string $type, string $format = null, array $context = []): array
     {
-        $entityClass = \substr(0, -2, $type);
+        $entityClass = \substr($type, 0, -2);
 
         $ids = $this->extractIdsFromNormalizedData($data, $entityClass);
         $entities = $this->getEntities($entityClass, \array_values($ids));
