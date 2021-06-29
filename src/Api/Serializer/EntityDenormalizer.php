@@ -36,7 +36,8 @@ class EntityDenormalizer implements ContextAwareDenormalizerInterface, Denormali
      */
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
-        return \class_exists($type)
+        return \is_array($data)
+            && \class_exists($type)
             && !$this->entityManager->getMetadataFactory()->isTransient($type)
             && $this->shouldApplyEntityDenormalizer($data, $context);
     }

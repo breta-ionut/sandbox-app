@@ -55,7 +55,7 @@ class EntityCollectionDenormalizer implements ContextAwareDenormalizerInterface,
      */
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
-        if (!\str_ends_with($type, '[]')) {
+        if (!\is_array($data) || !\str_ends_with($type, '[]')) {
             return false;
         }
 
