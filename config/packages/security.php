@@ -54,6 +54,11 @@ return static function (ContainerConfigurator $container): void {
                 'roles' => 'PUBLIC_ACCESS',
             ],
             [
+                'path' => '^/api/user/validate$',
+                'methods' => Request::METHOD_POST,
+                'roles' => 'PUBLIC_ACCESS',
+            ],
+            [
                 'path' => '^/api/user$',
                 'methods' => Request::METHOD_POST,
                 'roles' => 'IS_ANONYMOUS',

@@ -90,25 +90,7 @@ paths:
             summary: Register
             description: 'Registers a user given its data.'
             tags: [User]
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                firstName: {type: string}
-                                lastName: {type: string}
-                                email:
-                                    type: string
-                                    format: email
-                                plainPassword:
-                                    type: string
-                                    format: password
-                                image:
-                                    type: object
-                                    properties:
-                                        id: {type: integer}
+            requestBody: {$ref: '#/components/requestBodies/UserInput'}
             responses:
                 '201':
                     description: 'If the user was successfully registered.'
@@ -120,11 +102,23 @@ paths:
                     content:
                         application/json:
                             schema: {$ref: '#/components/schemas/ValidationError'}
-                '403':
-                    description: 'If the request was made by an authenticated user.'
+                '403': {$ref: '#/components/responses/AccessDeniedForAuthenticatedUser'}
+                '500': {$ref: '#/components/responses/InternalServerError'}
+
+    /api/user/validate:
+        post:
+            summary: Validate user data
+            description: 'Validates given user data.'
+            tags: [User]
+            requestBody: {$ref: '#/components/requestBodies/UserInput'}
+            responses:
+                '204':
+                    description: 'If the user data is valid.'
+                '400':
+                    description: 'If the user data is malformed (e.g. bad JSON) or invalid (e.g. email is already in use).'
                     content:
                         application/json:
-                            schema: {$ref: '#/components/schemas/Error'}
+                            schema: {$ref: '#/components/schemas/ValidationError'}
                 '500': {$ref: '#/components/responses/InternalServerError'}
 
     /api/user/login:
@@ -161,11 +155,7 @@ paths:
                     content:
                         application/json:
                             schema: {$ref: '#/components/schemas/Error'}
-                '403':
-                    description: 'If the request was made by an authenticated user.'
-                    content:
-                        application/json:
-                            schema: {$ref: '#/components/schemas/Error'}
+                '403': {$ref: '#/components/responses/AccessDeniedForAuthenticatedUser'}
                 '500': {$ref: '#/components/responses/InternalServerError'}
 
     /api/user/logout:
@@ -237,11 +227,38 @@ components:
                     items: {type: object}
 
     responses:
+        AccessDeniedForAuthenticatedUser:
+            description: 'If the request was made by an authenticated user.'
+            content:
+                application/json:
+                    schema: {$ref: '#/components/schemas/Error'}
+
         InternalServerError:
             description: 'If an internal error occurred.'
             content:
                 application/json:
                     schema: {$ref: '#/components/schemas/Error'}
+
+    requestBodies:
+        UserInput:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            firstName: {type: string}
+                            lastName: {type: string}
+                            email:
+                                type: string
+                                format: email
+                            plainPassword:
+                                type: string
+                                format: password
+                            image:
+                                type: object
+                                properties:
+                                    id: {type: integer}
 
     securitySchemes:
         TokenAuth:
