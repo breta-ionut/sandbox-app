@@ -65,8 +65,6 @@ class EntityCollectionDenormalizer implements ContextAwareDenormalizerInterface,
     }
 
     /**
-     * @param array[] $data
-     *
      * @return array<int, array<string, mixed>>
      */
     private function extractIdsFromNormalizedData(array $data, string $entityClass): array

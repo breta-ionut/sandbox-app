@@ -19,26 +19,30 @@ trait EntityDenormalizerTrait
         $this->entityManager = $entityManager;
     }
 
-    private function shouldApplyEntityDenormalizer(array $data, array $context): bool
+    private function shouldApplyEntityDenormalizer(mixed $data, array $context): bool
     {
         return empty($context['bypass_entity_denormalizer'])
             || $this->dataHash($data) !== $context['bypass_entity_denormalizer'];
     }
 
-    private function dataHash(array $data): string
+    private function dataHash(mixed $data): string
     {
         return \md5(\serialize($data));
     }
 
-    private function addConfigurationToBypassEntityDenormalizer(array $context, array $data): array
+    private function addConfigurationToBypassEntityDenormalizer(array $context, mixed $data): array
     {
         $context['bypass_entity_denormalizer'] = $this->dataHash($data);
 
         return $context;
     }
 
-    private function extractIdFromNormalizedData(array $data, string $entityClass): ?array
+    private function extractIdFromNormalizedData(mixed $data, string $entityClass): ?array
     {
+        if (!\is_array($data)) {
+            return null;
+        }
+
         $idFields = $this->entityManager->getClassMetadata($entityClass)->getIdentifierFieldNames();
         $id = [];
 
