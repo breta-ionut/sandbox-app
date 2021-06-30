@@ -13,7 +13,7 @@ export default class Credentials {
      * @returns {Credentials}
      */
     static fromViewData({username, password}) {
-        const instance = new Credentials()
+        const instance = new this()
 
         instance.#username = username
         instance.#password = password

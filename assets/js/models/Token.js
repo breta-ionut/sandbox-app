@@ -13,7 +13,7 @@ export default class Token {
      * @returns {Token}
      */
     static fromApiResponseData({token, expiresAt}) {
-        let instance = new Token()
+        const instance = new this()
 
         instance.#token = token
         instance.#expiresAt = new Date(expiresAt)

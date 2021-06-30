@@ -13,7 +13,7 @@ export default class ConstraintViolation {
      * @returns {ConstraintViolation}
      */
     static fromApiResponseData({propertyPath, title}) {
-        const instance = new ConstraintViolation()
+        const instance = new this()
 
         instance.#propertyPath = propertyPath
         instance.#title = title

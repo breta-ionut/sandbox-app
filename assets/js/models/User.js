@@ -35,7 +35,7 @@ export default class User {
      * @returns {User}
      */
     static fromViewData({firstName, lastName, email, plainPassword}) {
-        let instance = new User()
+        const instance = new this()
 
         instance.#firstName = firstName
         instance.#lastName = lastName
@@ -49,7 +49,7 @@ export default class User {
      * @returns {User}
      */
     static fromApiResponseData({id, firstName, lastName, email, currentToken}) {
-        let instance = new User()
+        const instance = new this()
 
         instance.#id = id
         instance.#firstName = firstName
