@@ -29,7 +29,7 @@ class SessionListener extends AbstractSessionListener
     {
         $request = $this->container
             ->get(RequestStack::class)
-            ->getMasterRequest();
+            ->getMainRequest();
 
         if (null !== $request
             && $request->isSecure()
