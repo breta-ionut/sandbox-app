@@ -1,4 +1,3 @@
-import Credentials from '../models/Credentials.js'
 import router from '../router.js'
 import store from '../store/index.js'
 

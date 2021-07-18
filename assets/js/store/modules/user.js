@@ -1,7 +1,5 @@
 import userApi from '../../api/user.js'
 import ApiAuthenticationRequiredError from '../../errors/ApiAuthenticationRequiredError.js'
-import Credentials from '../../models/Credentials.js'
-import User from '../../models/User.js'
 
 /**
  * @throws {Error}

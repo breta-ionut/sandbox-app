@@ -1,5 +1,3 @@
-import ApiValidationError from '../errors/ApiValidationError.js'
-
 /**
  * @return {Object}
  */

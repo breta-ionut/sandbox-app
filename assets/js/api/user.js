@@ -1,5 +1,4 @@
 import axios from '../axios.js'
-import Credentials from '../models/Credentials.js'
 import User from '../models/User.js'
 
 export default {
